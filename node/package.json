@@ -1,0 +1,24 @@
+{
+  "name": "ng-checkers",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "browser-sync": "*",
+    "del": "^2.2.0",
+    "event-stream": "^3.3.2",
+    "gulp": "*",
+    "gulp-angular-modules": "^0.1.8",
+    "gulp-concat": "*",
+    "gulp-csslint": "^0.3.0",
+    "gulp-debug": "^2.1.0",
+    "gulp-express": "^0.3.5",
+    "gulp-less": "*",
+    "gulp-sourcemaps": "*",
+    "merge-stream": "^1.0.0",
+    "require-dir": "^0.3.0",
+    "run-sequence": "^1.1.5"
+  }
+}

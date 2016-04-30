@@ -11,13 +11,15 @@ var gulp = require('gulp'),
     sourceMaps = require('gulp-sourcemaps'),
     templateCache = require('gulp-angular-templatecache');
 
-var BUILD_PATH = '../../target';
-var APP_JS_FILES = ["../../app/views/**/*.js", "../../app/components/**/*.js"];  // TODO: add dev script
-var TEMPLATES = [
-    '../../app/**/*.html',
-    '../../app/common*/**/*.html'
-];
-var ASSETS = ['../../app/index.html', '../assets/**'];
+var Project = require('./Project');
+var project = new Project();
+
+var BUILD_PATH = project.BUILD_PATH;
+var APP_JS_SUB_MODULES = project.APP_JS_SUB_MODULES;
+var APP_JS_FILES = project.APP_JS_FILES;  // TODO: add dev script
+var TEMPLATES = project.TEMPLATES_REFERENCES;
+var ASSETS = project.ASSETS_REFERENCES;
+
 var BOWER_PATH = '../../target/bower_components';
 var VENDORS = [
     BOWER_PATH + '/jquery/dist/jquery.js',
@@ -31,14 +33,14 @@ var VENDORS = [
 ];
 
 
-gulp.task('compile-clean', function (done) {
+gulp.task('compile-clean', function () {
     var deletePath = BUILD_PATH + '/**/*';
     return del([deletePath], {force: true});
 });
 
 gulp.task('compile-app.js', function () {
 
-    var appSubModules = gulp.src(APP_JS_FILES)
+    var appSubModules = gulp.src(APP_JS_SUB_MODULES)
         .pipe(angularModules("app-sub-modules.js", {name: "app-sub-modules"}));
 
     var jsStream = gulp.src(APP_JS_FILES)
@@ -58,7 +60,7 @@ gulp.task('compile-app.js', function () {
 gulp.task('compile-app.css', function () {
     //var devServer = browserSync.get('devServer');
 
-    return gulp.src('../../app/css/**/*.less')
+    return gulp.src('../../app/**/*.less')
         .pipe(sourceMaps.init())
         .pipe(less())
         .pipe(csslint())             // will report what less compile misses.

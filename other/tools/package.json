@@ -6,7 +6,7 @@
     "express": "^4.13.3"
   },
   "devDependencies": {
-    "browser-sync": "*",
+    "browser-sync": "^2.12.5",
     "del": "^2.2.0",
     "event-stream": "^3.3.2",
     "gulp": "*",
@@ -19,6 +19,7 @@
     "gulp-less": "*",
     "gulp-sourcemaps": "*",
     "merge-stream": "^1.0.0",
+    "proxy-middleware": "^0.15.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.5"
   }

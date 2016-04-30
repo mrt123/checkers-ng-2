@@ -1,7 +1,7 @@
 var app = angular.module('app', [
+    'ui.router',
     'templates',
-    'gulp-angular-modules',
-    'ui.router'
+    'app-sub-modules'
 ]);
 
 app.config([

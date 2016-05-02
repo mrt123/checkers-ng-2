@@ -1,29 +1,26 @@
 var app = angular.module('app', [
-    'ui.router',
     'templates',
     'app-sub-modules'
 ]);
 
 app.config([
     '$stateProvider',
-    '$routeProvider',
-    function ($stateProvider, $routeProvider) {
+    function ($stateProvider) {
 
         $stateProvider
             .state('user', {  // not materialised in url
-                templateUrl: 'views/user/user.html',
+                templateUrl: 'user/user.html',
                 controller: 'UserCtrl'
             })
             .state('index', {
                 url: '',
-                templateUrl: 'views/index/index.html',
-                controller: 'IndexCtrl'
+                templateUrl: 'root/root.html'
             })
             .state('user.game', {
                 url: '/game',
                 views: {
                     'game': {
-                        templateUrl: 'views/game/game.html',
+                        templateUrl: 'game/game.html',
                         controller: 'GameCtrl'
                     }
                 }
@@ -31,7 +28,7 @@ app.config([
             .state('user.game.board', {  // not materialised in url
                 views: {
                     'board': {
-                        templateUrl: 'views/board/board.html',
+                        templateUrl: 'board/board.html',
                         controller: 'BoardCtrl'
                     }
                 }

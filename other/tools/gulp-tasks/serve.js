@@ -22,7 +22,8 @@ gulp.task('serve', [], function () {
         notify: {
             styles: {
                 top: 'auto',
-                bottom: '0'
+                bottom: '0',
+                'font-size': '22px'
             }
         },
         open: false

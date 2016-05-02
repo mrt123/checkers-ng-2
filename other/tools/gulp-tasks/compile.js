@@ -4,12 +4,12 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync'),
     concat = require('gulp-concat'),
     del = require('del'),
-    eventStream = require('event-stream'),
     less = require('gulp-less'),
     cssLint = require('gulp-csslint'),
     merge = require('merge-stream'),
     runSequence = require('run-sequence'),
     sourceMaps = require('gulp-sourcemaps'),
+    streamqueue = require('streamqueue'),
     templateCache = require('gulp-angular-templatecache');
 
 var Project = require('./Project');
@@ -35,12 +35,13 @@ gulp.task('compile-app.js', function () {
     var jsStream = gulp.src(project.JS_FILES)
         .pipe(sourceMaps.init());
 
-    var streams = [
-        subModulesStream,
-        jsStream
-    ];
+    var queue = streamqueue(
+        { objectMode: true },
+        jsStream,
+        subModulesStream
+    );
 
-    return eventStream.merge(streams)
+    return queue
         .pipe(concat('app.js'))
         .pipe(sourceMaps.write())
         .pipe(gulp.dest(BUILD_PATH));

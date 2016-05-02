@@ -5,7 +5,11 @@ var Project = function (opt) {
         APP_PATH + '/views/**/*.js',
         APP_PATH + '/components/**/*.js'
     ];
-    this.JS_FILES = this.JS_SUB_MODULES.concat([APP_PATH + '/app.js']);
+    this.JS_FILES =
+        ['_devAPI.js']
+            .concat(this.JS_SUB_MODULES)
+            .concat([APP_PATH + '/app.js']);
+
     this.CSS_FILES = [APP_PATH + '/**/*.less'];
     this.TEMPLATES = [
         APP_PATH + '/**/*.html',

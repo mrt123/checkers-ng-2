@@ -9,7 +9,7 @@ gulp.task('default', ['develop']);
 gulp.task('develop', function (callback) {
     runSequence(
         [ 'compile' /*,'rest-server' */ ],
-        //'serve',
+        'serve',
         callback
     );
 });

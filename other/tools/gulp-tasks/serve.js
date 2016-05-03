@@ -10,8 +10,8 @@ var project = new Project();
 // assuming task is sequenced externally (no dependent tasks here).
 gulp.task('serve', [], function () {
 
-    var urlObj = url.parse('http://localhost:3005/api');
-    urlObj.route = '/api';
+    var urlObj = url.parse('http://127.0.0.1:6004/_api');
+    urlObj.route = '/_api';
 
     devServer.init({
         port: 3000,
@@ -29,7 +29,7 @@ gulp.task('serve', [], function () {
         open: false
     });
 
-    // notice: '**/*' or '/**/*' will watch entire drive
+    // XXX: '**/*' or '/**/*' will watch entire drive
     // TODO: pipe watch output to modules without getting src again!
     gulp.watch(project.JS_FILES, {}, ['compile-app.js', devServer.reload]);
     gulp.watch([project.TEMPLATES], {},['compile-templates', devServer.reload]);

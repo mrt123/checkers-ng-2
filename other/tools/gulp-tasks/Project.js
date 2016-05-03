@@ -2,8 +2,7 @@ var Project = function (opt) {
     this.BUILD_PATH = '../../target';
     var APP_PATH = '../../app';
     this.JS_SUB_MODULES = [
-        APP_PATH + '/views/**/*.js',
-        APP_PATH + '/components/**/*.js'
+        APP_PATH + '/**/*.js'
     ];
     this.JS_FILES =
         ['_devAPI.js']
@@ -30,7 +29,8 @@ var Project = function (opt) {
         BOWER_PATH + '/angular/angular.js',
         BOWER_PATH + '/angular-route/angular-route.js',
         BOWER_PATH + '/ui-router/release/angular-ui-router.js',
-        BOWER_PATH + '/angular-route/angular-route.js'
+        BOWER_PATH + '/angular-bootstrap/ui-bootstrap.js',
+        BOWER_PATH + '/angular-bootstrap/ui-bootstrap-tpls.js'
     ];
 };
 module.exports = Project;

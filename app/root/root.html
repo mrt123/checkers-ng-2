@@ -1,1 +1,4 @@
-<ng-include src="'nav-bar/nav-bar.html'"></ng-include>
+<div ng-controller="RootCtrl as root">
+    <ng-include src="'nav-bar/nav-bar.html'"></ng-include>
+    <button type="button" class="btn btn-default" ng-click="root.openSignUpModal()">Sign Up!</button>
+</div>

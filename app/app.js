@@ -1,4 +1,7 @@
+var hoodie  = new Hoodie();
+
 var app = angular.module('app', [
+    'ui.bootstrap',
     'templates',
     'app-sub-modules'
 ]);

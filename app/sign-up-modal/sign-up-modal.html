@@ -1,5 +1,6 @@
 <div id="sign-up">
     <div class="modal-header">
+        <button class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
         <h3>Sign Up</h3>
     </div>
     <form>
@@ -9,7 +10,7 @@
             <input type="password" placeholder="password" type="password" ng-model="sign.password">
         </div>
         <div class="modal-footer">
-            <input type="submit" value="Register Now" ng-click="ok()">
+            <input type="submit" value="Register Now" ng-click="ok(sign.email, sign.password)">
         </div>
     </form>
 </div>

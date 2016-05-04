@@ -1,29 +1,15 @@
-<div id="sign-up">   <!--ng-controller="SignUpCtrl" as sign-->
-
-
-    <!--<h3>Sign Up</h3>  ... use modal?-->
-    <!--<form>-->
-    <!--<input type="text" placeholder="{{sign.emailPlaceholder}}" ng-model="sign.email">-->
-    <!--<input type="text" placeholder="{{sign.passwordPlaceholder}}" type="password" ng-model="sign.password">-->
-    <!--<input type="submit" value="Sign Up">-->
-    <!--</form>-->
-
-
-        <div class="modal-header">
-            <h3 class="modal-title">I'm a modal!</h3>
-        </div>
+<div id="sign-up">
+    <div class="modal-header">
+        <h3>Sign Up</h3>
+    </div>
+    <form>
         <div class="modal-body">
-            <ul>
-                <li ng-repeat="item in items">
-                    <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
-                </li>
-            </ul>
-            Selected: <b>{{ selected.item }}</b>
+            <p>Sign up and keep yor games saved...</p>
+            <input type="text" placeholder="email" ng-model="sign.email">
+            <input type="password" placeholder="password" type="password" ng-model="sign.password">
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <input type="submit" value="Register Now" ng-click="ok()">
         </div>
-
-
+    </form>
 </div>

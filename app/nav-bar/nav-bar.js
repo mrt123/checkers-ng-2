@@ -10,7 +10,8 @@ function NavBarCtrl($uibModal) {
     function openSignUpModal() {
         $uibModal.open({
             templateUrl: 'sign-up-modal/sign-up-modal.html',
-            controller: 'SignUpModalCtrl'
+            controller: 'SignUpModalCtrl',
+            size: 'sm'
         });
     }
 }

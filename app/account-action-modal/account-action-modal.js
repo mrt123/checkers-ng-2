@@ -1,7 +1,7 @@
 angular.module('app.AccountActionModalCtrl', [])
     .controller('AccountActionModalCtrl', AccountActionModalCtrl);
 
-function AccountActionModalCtrl($scope, $uibModalInstance, account, type, config) {
+function AccountActionModalCtrl($scope, $uibModalInstance, account, config) {
 
     $scope.ok = ok;
     $scope.cancel = cancel;
@@ -29,13 +29,13 @@ function AccountActionModalCtrl($scope, $uibModalInstance, account, type, config
     // PRIVATE METHODS
 
     function actionSuccess() {
-        config.success.apply(this, arguments);
+        config.actionSuccess.apply(this, arguments);
         $uibModalInstance.close();
     }
 
     function getText() {
-        if (type === 'register') return getRegisterText();
-        if (type === 'login') return getLoginText();
+        if (config.type === 'register') return getRegisterText();
+        if (config.type === 'login') return getLoginText();
     }
 
     function getLoginText() {

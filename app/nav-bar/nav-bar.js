@@ -47,13 +47,11 @@ function NavBarCtrl($uibModal, account, $scope) {
             controller: 'AccountActionModalCtrl',
             size: 'sm',
             resolve: {
-                type: function () {
-                    return type;
-                },
                 config: function () {
                     return {
+                        type: type,
                         action: action,
-                        success: updateAccountLabel
+                        actionSuccess: updateAccountLabel
                     }
                 }
             }
@@ -63,6 +61,7 @@ function NavBarCtrl($uibModal, account, $scope) {
     function updateAccountLabel(val) {
         $scope.$apply(function () {
             vm.accountLabel = val;
+            vm.loginLabel = getLoginLabel();
         });
     }
 }

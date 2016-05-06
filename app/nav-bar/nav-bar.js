@@ -3,13 +3,17 @@ angular
     .controller('NavBarCtrl', NavBarCtrl);
 
 function NavBarCtrl($uibModal, account, $scope) {
-    var ACCOUNT_DEFAULT_VALUE = 'account';
+    var ACCOUNT_DEFAULT_LABEL = 'My Account';
     var vm = this;
 
-    vm.accountValue = ACCOUNT_DEFAULT_VALUE;
+    vm.accountLabel = getAccountLabel();
     vm.openSignUpModal = openSignUpModal;
     vm.openLogInModal = openLogInModal;
     vm.logout = logout;
+
+    function getAccountLabel() {
+        return account.getUsername() || ACCOUNT_DEFAULT_LABEL;
+    }
 
     function openSignUpModal() {
         $uibModal.open(getModalConfig('register'));
@@ -21,7 +25,7 @@ function NavBarCtrl($uibModal, account, $scope) {
 
     function logout() {
         account.signOut().then(function () {
-            updateAccountScope(ACCOUNT_DEFAULT_VALUE);
+            updateAccountLabel(ACCOUNT_DEFAULT_LABEL);
         });
     }
 
@@ -29,23 +33,23 @@ function NavBarCtrl($uibModal, account, $scope) {
 
     function getModalConfig(type) {
         return {
-            templateUrl: 'sign-up-modal/sign-up-modal.html',
-            controller: 'SignUpModalCtrl',
+            templateUrl: 'account-action-modal/account-action-modal.html',
+            controller: 'AccountActionModalCtrl',
             size: 'sm',
             resolve: {
                 type: function () {
                     return type;
                 },
                 callback: function () {
-                    return updateAccountScope
+                    return updateAccountLabel
                 }
             }
         }
     }
 
-    function updateAccountScope(val) {
+    function updateAccountLabel(val) {
         $scope.$apply(function () {
-            vm.accountValue = val;
+            vm.accountLabel = val;
         });
     }
 }

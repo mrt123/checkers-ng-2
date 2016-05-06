@@ -1,7 +1,7 @@
-angular.module('app.SignUpModalCtrl', [])
-    .controller('SignUpModalCtrl', SignUpModalCtrl);
+angular.module('app.AccountActionModalCtrl', [])
+    .controller('AccountActionModalCtrl', AccountActionModalCtrl);
 
-function SignUpModalCtrl($scope, $uibModalInstance, account, type, callback) {
+function AccountActionModalCtrl($scope, $uibModalInstance, account, type, callback) {
 
 
     var SIGN_UP_HEADING = 'Sign Up';
@@ -16,7 +16,7 @@ function SignUpModalCtrl($scope, $uibModalInstance, account, type, callback) {
 
     $scope.ok = function (username, password) {
         if(type === 'register') {
-            account.signUp(username, password);
+            account.signUp(username, password).then(callback);
         }
         else if (type === 'login') {
             account.signIn(username, password).then(callback);

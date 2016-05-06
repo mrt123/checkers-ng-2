@@ -5,6 +5,7 @@ function Account($q) {
     this.signUp = signUp;
     this.signIn = signIn;
     this.signOut = signOut;
+    this.getUsername = getUsername;
 
     function signUp(username, password) {
         return hoodie.account.signUp(username, password)
@@ -22,6 +23,10 @@ function Account($q) {
         return hoodie.account.signOut()
             .done(signOutSuccess)
             .fail(SignOutFail);
+    }
+
+    function getUsername() {
+        return hoodie.account.username;
     }
 
     // PRIVATE:

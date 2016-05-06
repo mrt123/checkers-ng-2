@@ -1,48 +1,54 @@
 angular.module('app.AccountActionModalCtrl', [])
     .controller('AccountActionModalCtrl', AccountActionModalCtrl);
 
-function AccountActionModalCtrl($scope, $uibModalInstance, account, type, callback) {
+function AccountActionModalCtrl($scope, $uibModalInstance, account, type, config) {
 
+    $scope.ok = ok;
+    $scope.cancel = cancel;
+    $scope.text = getText();
 
-    var SIGN_UP_HEADING = 'Sign Up';
-    var SIGN_UP_MESSAGE = 'Sign up and keep yor games saved...';
-    var LOGIN_HEADING = 'Login';
-    var LOGIN_MESSAGE = 'Login to existing account';
+    function ok(username, password) {
+        config.action(username, password,
+            actionSuccess,
+            showError
+        );
+    }
 
-
-
-    $scope.heading = getHeading();
-    $scope.message = getMessage();
-
-    $scope.ok = function (username, password) {
-        if(type === 'register') {
-            account.signUp(username, password).then(callback);
-        }
-        else if (type === 'login') {
-            account.signIn(username, password).then(callback);
-        }
-        $uibModalInstance.close();
-    };
-
-    $scope.cancel = function () {
+    function cancel() {
         $uibModalInstance.dismiss('cancel');
-    };
+    }
 
-    function getHeading() {
-        if(type === 'register') {
-            return SIGN_UP_HEADING;
-        }
-        if(type === 'login') {
-            return LOGIN_HEADING;
+    function getRegisterText() {
+        return {
+            heading: 'Sign Up',
+            message: 'Sign up and keep yor games saved...',
+            buttonLabel: 'Sign Up Now'
         }
     }
 
-    function getMessage() {
-        if(type === 'register') {
-            return SIGN_UP_MESSAGE;
+    // PRIVATE METHODS
+
+    function actionSuccess() {
+        config.success.apply(this, arguments);
+        $uibModalInstance.close();
+    }
+
+    function getText() {
+        if (type === 'register') return getRegisterText();
+        if (type === 'login') return getLoginText();
+    }
+
+    function getLoginText() {
+        return {
+            heading: 'Login',
+            message: 'Login to existing account',
+            buttonLabel: 'Login'
         }
-        if(type === 'login') {
-            return LOGIN_MESSAGE;
-        }
+    }
+
+    function showError(error) {
+        $scope.$apply(function () {
+            $scope.error = error.message;
+        });
     }
 }

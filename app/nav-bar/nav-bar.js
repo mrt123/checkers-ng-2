@@ -10,17 +10,18 @@ function NavBarCtrl($uibModal, account, $scope) {
     vm.openSignUpModal = openSignUpModal;
     vm.openLogInModal = openLogInModal;
     vm.logout = logout;
+    vm.loginLabel = getLoginLabel();
 
     function getAccountLabel() {
         return account.getUsername() || ACCOUNT_DEFAULT_LABEL;
     }
 
     function openSignUpModal() {
-        $uibModal.open(getModalConfig('register'));
+        $uibModal.open(getModalConfig('register', account.signUp));
     }
 
     function openLogInModal() {
-        $uibModal.open(getModalConfig('login'));
+        $uibModal.open(getModalConfig('login', account.signIn));
     }
 
     function logout() {
@@ -29,9 +30,18 @@ function NavBarCtrl($uibModal, account, $scope) {
         });
     }
 
+    function getLoginLabel() {
+        if (account.getUsername()) {
+            return 'login to another account'
+        }
+        else {
+            return 'login';
+        }
+    }
+
     // PRIVATE METHODS
 
-    function getModalConfig(type) {
+    function getModalConfig(type, action) {
         return {
             templateUrl: 'account-action-modal/account-action-modal.html',
             controller: 'AccountActionModalCtrl',
@@ -40,8 +50,11 @@ function NavBarCtrl($uibModal, account, $scope) {
                 type: function () {
                     return type;
                 },
-                callback: function () {
-                    return updateAccountLabel
+                config: function () {
+                    return {
+                        action: action,
+                        success: updateAccountLabel
+                    }
                 }
             }
         }

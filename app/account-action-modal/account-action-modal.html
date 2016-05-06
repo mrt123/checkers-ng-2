@@ -1,16 +1,17 @@
 <div id="account-action-modal">
     <div class="modal-header">
         <button class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
-        <h3>{{heading}}</h3>
+        <h3>{{text.heading}}</h3>
     </div>
     <form>
         <div class="modal-body">
-            <p>{{message}}</p>
+            <p>{{text.message}}</p>
             <input type="text" placeholder="email" ng-model="sign.email">
             <input type="password" placeholder="password" ng-model="sign.password">
+            <p class="error">{{error}}</p>
         </div>
         <div class="modal-footer">
-            <input type="submit" value="Register Now" ng-click="ok(sign.email, sign.password)">
+            <input type="submit" value="{{text.buttonLabel}}" ng-click="ok(sign.email, sign.password)">
         </div>
     </form>
 </div>

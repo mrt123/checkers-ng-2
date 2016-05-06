@@ -7,19 +7,19 @@ function Account($q) {
     this.signOut = signOut;
     this.getUsername = getUsername;
 
-    function signUp(username, password) {
+    function signUp(username, password, signUpSuccess, signUpFail) {
         return hoodie.account.signUp(username, password)
             .done(signUpSuccess)
             .fail(signUpFail);
     }
 
-    function signIn(username, password) {
+    function signIn(username, password, signUpSuccess, signUpFail) {
         return hoodie.account.signIn(username, password)
-            .done(signInSuccess)
-            .fail(signIntFail);
+            .done(signUpSuccess)
+            .fail(signUpFail);
     }
 
-    function signOut() {
+    function signOut(signOutSuccess, SignOutFail) {
         return hoodie.account.signOut()
             .done(signOutSuccess)
             .fail(SignOutFail);
@@ -27,31 +27,5 @@ function Account($q) {
 
     function getUsername() {
         return hoodie.account.username;
-    }
-
-    // PRIVATE:
-
-    function signUpSuccess() {
-        console.log('sign up success')
-    }
-
-    function signUpFail(error) {
-        console.log('sign up fail' + error)
-    }
-
-    function signInSuccess() {
-        console.log('sign-in success')
-    }
-
-    function signIntFail(error) {
-        console.log('sign-in fail' + error)
-    }
-
-    function signOutSuccess() {
-        console.log('sign-out success')
-    }
-
-    function SignOutFail(error) {
-        console.log('sign-out fail' + error)
     }
 }

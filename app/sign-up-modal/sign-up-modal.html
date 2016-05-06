@@ -1,11 +1,11 @@
 <div id="sign-up">
     <div class="modal-header">
         <button class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
-        <h3>Sign Up</h3>
+        <h3>{{heading}}</h3>
     </div>
     <form>
         <div class="modal-body">
-            <p>Sign up and keep yor games saved...</p>
+            <p>{{message}}</p>
             <input type="text" placeholder="email" ng-model="sign.email">
             <input type="password" placeholder="password" ng-model="sign.password">
         </div>

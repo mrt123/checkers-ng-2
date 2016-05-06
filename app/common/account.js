@@ -7,19 +7,19 @@ function Account($q) {
     this.signOut = signOut;
 
     function signUp(username, password) {
-        hoodie.account.signUp(username, password)
+        return hoodie.account.signUp(username, password)
             .done(signUpSuccess)
             .fail(signUpFail);
     }
 
     function signIn(username, password) {
-        hoodie.account.signIn(username, password)
+        return hoodie.account.signIn(username, password)
             .done(signInSuccess)
             .fail(signIntFail);
     }
 
     function signOut() {
-        hoodie.account.signOut()
+        return hoodie.account.signOut()
             .done(signOutSuccess)
             .fail(SignOutFail);
     }

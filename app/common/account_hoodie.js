@@ -1,7 +1,5 @@
 var module = angular.module('account_hoodie', []);
-module.service('account_hoodie', Account);
-
-function Account($q) {
+module.service('account_hoodie', function ($q) {
     this.signUp = signUp;
     this.signIn = signIn;
     this.signOut = signOut;
@@ -9,23 +7,23 @@ function Account($q) {
 
     function signUp(username, password, signUpSuccess, signUpFail) {
         return hoodie.account.signUp(username, password)
-                .done(signUpSuccess)
-                .fail(signUpFail);
+            .done(signUpSuccess)
+            .fail(signUpFail);
     }
 
     function signIn(username, password, signUpSuccess, signUpFail) {
         return hoodie.account.signIn(username, password)
-                .done(signUpSuccess)
-                .fail(signUpFail);
+            .done(signUpSuccess)
+            .fail(signUpFail);
     }
 
     function signOut(signOutSuccess, SignOutFail) {
         return hoodie.account.signOut()
-                .done(signOutSuccess)
-                .fail(SignOutFail);
+            .done(signOutSuccess)
+            .fail(SignOutFail);
     }
 
     function getUsername() {
         return hoodie.account.username;
     }
-}
+});

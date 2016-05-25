@@ -1,5 +1,7 @@
 # CHECKERS BACKEND 
 (TODO: create separate repo checkers_backend)
+### Pre-requisites
+* Nodejs ( suggested v4.4.5)
 
 
 # with Parse

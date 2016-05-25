@@ -1,7 +1,5 @@
 var module = angular.module('account_parse', []);
-module.service('account_parse', Account);
-
-function Account($q) {
+module.service('account_parse', function($q) {
     this.signUp = signUp;
     this.signIn = signIn;
     this.signOut = signOut;
@@ -49,4 +47,4 @@ function Account($q) {
             return '';
         }
     }
-}
+});

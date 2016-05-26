@@ -1,7 +1,7 @@
 angular.module('app.AccountActionModalCtrl', [])
     .controller('AccountActionModalCtrl', AccountActionModalCtrl);
 
-function AccountActionModalCtrl($scope, $uibModalInstance, account, config) {
+function AccountActionModalCtrl($scope, $timeout, $uibModalInstance, account, config) {
 
     $scope.ok = ok;
     $scope.cancel = cancel;
@@ -47,7 +47,7 @@ function AccountActionModalCtrl($scope, $uibModalInstance, account, config) {
     }
 
     function showError(error) {
-        $scope.$apply(function () {
+        $timeout(function() {   // avoid existing digest
             $scope.error = error.message;
         });
     }

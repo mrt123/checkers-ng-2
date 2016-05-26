@@ -5,36 +5,31 @@ module.service('account_parse', function($q) {
     this.signOut = signOut;
     this.getUsername = getUsername;
 
-    function signUp(username, password, signUpSuccess, signUpFail) {
+    function signUp(username, password, success, signUpFail) {
         return Parse.User.signUp(username, password, null, {
-            success: signUpSuccess,
+            success: function(user){
+                success(user.getUsername());
+            },
             error: function(user, error) {
-
-                Object.prototype.getName = function() {
-                    var funcNameRegex = /function (.{1,})\(/;
-                    var results = (funcNameRegex).exec((this).constructor.toString());
-                    return (results && results.length > 1) ? results[1] : "";
-                };
-                console.log(error.message);
-                console.log(error);
-                console.log(error.getName());
-
-
-
                 signUpFail(error);
             }
         });
     }
 
-    function signIn(username, password, signUpSuccess, signUpFail) {
+    function signIn(username, password, success, fail) {
         return Parse.User.logIn(username, password, {
-            success: signUpSuccess.bind(undefined, username),
-            error: signUpFail
+            success: function(user){
+                success(user.getUsername());
+            },
+            error: function (user, error) {
+                fail(error);
+            }
         });
     }
 
     function signOut(signOutSuccess, SignOutFail) {
-        return Parse.User.logOut();
+        return Parse.User.logOut()
+            .then(signOutSuccess, SignOutFail);
     }
 
     function getUsername() {

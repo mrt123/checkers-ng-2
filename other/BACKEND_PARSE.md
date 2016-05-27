@@ -1,13 +1,11 @@
-# CHECKERS BACKEND 
+# CHECKERS BACKEND with Parse
+[parse-server](https://github.com/ParsePlatform/parse-server)
 (TODO: create separate repo checkers_backend)
+
 ### Pre-requisites
 * Nodejs ( suggested v4.4.5)
 
-
-# with Parse
-[parse-server](https://github.com/ParsePlatform/parse-server)
-
-## Running Parse Server locally
+## Install & run local server
 
 ```
 $ npm install -g parse-server mongodb-runner

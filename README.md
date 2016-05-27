@@ -1,7 +1,7 @@
 # checkers-ng-2
 ---
-**[Setup Backend with Parse](https://github.com/mrt123/checkers-ng-2/blob/master/other/BACKEND_PARSE.md)** **|**
-**[Setup Backend with Hoodie.js](https://github.com/mrt123/checkers-ng-2/blob/master/other/BACKEND_HOODIE.md)**
+**[Backend with Parse](https://github.com/mrt123/checkers-ng-2/blob/master/other/BACKEND_PARSE.md)** **|**
+**[Backend with Hoodie.js](https://github.com/mrt123/checkers-ng-2/blob/master/other/BACKEND_HOODIE.md)**
 
 ---
 

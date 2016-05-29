@@ -1,4 +1,4 @@
-var hoodie  = new Hoodie();
+//var hoodie  = new Hoodie();
 
 var app = angular.module('app', [
     'ui.bootstrap',

@@ -1,4 +1,9 @@
 <nav ng-controller="NavBarCtrl as nav">
+    FB_Status: {{nav.FBLoadStatus}} .....
+    FB_User: {{nav.FBUser}}   ....
+
+    <span ng-click="nav.loginWithFacebook()">FB LOGIN BUTTON</span>
+
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mobile-nav">

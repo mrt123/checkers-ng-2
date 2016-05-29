@@ -9,7 +9,29 @@
 </head>
 <body>
 <div ui-view></div>
-<script src="/_api/_files/hoodie.js"></script>
+
+<script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '968741769866882',
+            cookie: true,  // enable cookies to allow the server to access the session
+            xfbml: true,  // parse DOM to detect social plugins on this page
+            version: 'v2.5' // use graph api version 2.5
+        });
+
+        window.FacebookLoaded = true;
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+</script>
+<!--<script src="/_api/_files/hoodie.js"></script>-->
 <script src="http://www.parsecdn.com/js/parse-latest.js"></script>
 <script type="text/javascript">
     Parse.initialize("CHECKERS_2");

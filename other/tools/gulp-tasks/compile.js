@@ -53,7 +53,12 @@ gulp.task('compile-app.css', function () {
     return gulp.src(project.CSS_FILES)
         .pipe(sourceMaps.init())
         .pipe(less())
-        .pipe(cssLint())             // will report what less compile misses.
+        .pipe(cssLint({    // will report what less compile misses.
+                "qualified-headings": false,
+                "ids": false,
+                "box-sizing": false,
+                "box-model": false   // I don't need warnings for padding vs width/height
+            }))
         .pipe(cssLint.reporter())
         .pipe(concat('app.css'))
         .pipe(sourceMaps.write())

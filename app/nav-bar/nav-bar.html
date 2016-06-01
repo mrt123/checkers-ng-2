@@ -1,34 +1,51 @@
-<nav ng-controller="NavBarCtrl as nav">
-    FB_Status: {{nav.FBLoadStatus}} .....
-    FB_User: {{nav.FBUser}}   ....
+<!--<nav ng-controller="NavBarCtrl as nav">-->
+    <!--<div class="container-fluid">-->
+        <!--<div class="navbar-header">-->
+            <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mobile-nav">-->
+                <!--<span class="sr-only">Toggle navigation</span>-->
+                <!--<span class="icon-bar"></span>-->
+                <!--<span class="icon-bar"></span>-->
+                <!--<span class="icon-bar"></span>-->
+            <!--</button>-->
+            <!--<a class="navbar-brand" href="#">Checkers</a>-->
+        <!--</div>-->
+        <!--<div class="collapse navbar-collapse" id="mobile-nav">-->
+            <!--<ul class="nav navbar-nav">-->
+                <!--<li>-->
+                    <!--<span>FB_Status: {{nav.FBLoadStatus}} .....</span>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<span>FB_User: {{nav.FBUser}}   ....</span>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<button><span ng-click="nav.loginWithFacebook()">FB LOGIN BUTTON</span></button>-->
+                <!--</li>-->
+            <!--</ul>-->
+            <!--<ul class="nav navbar-nav navbar-right">-->
+                <!--<li class="dropdown">-->
+                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"-->
+                       <!--aria-expanded="false">-->
+                        <!--{{nav.accountLabel}}-->
+                        <!--<span class="caret"></span>-->
+                    <!--</a>-->
+                    <!--<ul class="dropdown-menu">-->
+                        <!--<li><a href ng-click="nav.openSignUpModal()">signUp</a></li>-->
+                        <!--<li><a href ng-click="nav.openLogInModal()">{{nav.loginLabel}}</a></li>-->
+                        <!--<li><a href ng-click="nav.logout()">log out</a></li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</nav>-->
 
-    <span ng-click="nav.loginWithFacebook()">FB LOGIN BUTTON</span>
 
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mobile-nav">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Checkers</a>
-        </div>
-        <div class="collapse navbar-collapse" id="mobile-nav">
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">
-                        {{nav.accountLabel}}
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href ng-click="nav.openSignUpModal()">signUp</a></li>
-                        <li><a href ng-click="nav.openLogInModal()">{{nav.loginLabel}}</a></li>
-                        <li><a href ng-click="nav.logout()">log out</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+<div class="ch-nav-bar" ng-controller="NavBarCtrl as nav">
+    <div class="account" ng-if="!nav.loggedIn">
+        <a ui-sref="sign-up">SignUp</a>           <!--ng-click="nav.openSignUpModal()"-->
+        <a href ng-click="nav.openLogInModal()">Login</a>
     </div>
-</nav>
+    <div class="account" ng-if="nav.loggedIn">
+        <span ng-if="nav.username">{{nav.username}}</span>
+    </div>
+</div>

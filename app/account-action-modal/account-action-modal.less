@@ -1,3 +1,4 @@
+@import  (reference)  "../common/common";
 #account-action-modal {
   background-color: #f2f2f2;
   padding: 10px;
@@ -13,6 +14,32 @@
   form {
 
     .modal-body {
+      .facebook-sign-up-button {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        padding: 10px 0 10px 40px;
+
+        background: #26599a;
+        font-weight: 400;
+        text-align: center;
+        cursor: pointer;
+        color: #FFF;
+        font-size: 14px;
+        border-radius: 3px;
+
+        i.facebook-icon {
+          .chIcon();
+          position: absolute;
+          top: 11px;
+          left: 16px;
+          font-size: 17px;
+          &:before {
+            content: "\f09a"
+          }
+        }
+      }
       input[type=text], input[type=password] {
         width: 100%;
         padding: 12px 20px;
@@ -22,7 +49,12 @@
         border-radius: 4px;
         box-sizing: border-box;
       }
-      p.error {
+      p {
+        text-align: center;
+        padding: 30px 0 10px 0;
+      }
+
+      .error {
         color: red;
       }
     }

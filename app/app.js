@@ -15,9 +15,15 @@ app.config([
                 templateUrl: 'user/user.html',
                 controller: 'UserCtrl'
             })
-            .state('index', {
-                url: '',
-                templateUrl: 'root/root.html'
+            .state('home', {
+                url: '/',
+                templateUrl: 'home/home.html',
+                controller: 'HomeCtrl'
+            })
+            .state('sign-up', {
+                url: '/sign-up',
+                templateUrl: 'sign-up/sign-up.html',
+                controller: 'SignUpCtrl'
             })
             .state('user.game', {
                 url: '/game',

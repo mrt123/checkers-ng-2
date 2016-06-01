@@ -1,0 +1,18 @@
+<div class="sign-up" ng-controller="SignUpCtrl">
+    <h1>Sign Up</h1>
+    <span class="facebook-sign-up-button" ng-click="loginWithFacebook()">
+        <i class="facebook-icon"></i>
+        Sign up with Facebook
+    </span>
+
+    <p>Or sign up with e-mail</p>
+
+    <form>
+        <input type="text" placeholder="E-mail" ng-model="email">
+        <input type="password" placeholder="Password" ng-model="password">
+
+        <p class="error" ng-if="error">{{error}}</p>
+
+        <input type="submit" value="Sign up" ng-click="signUp(email, password)">
+    </form>
+</div>

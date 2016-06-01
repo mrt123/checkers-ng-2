@@ -2,9 +2,10 @@ angular
     .module('app.NavBarCtrl', [])
     .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($uibModal, account, $scope, facebook, $interval) {
+function NavBarCtrl($uibModal, account, $scope, facebook) {
     var ACCOUNT_DEFAULT_LABEL = 'My Account';
     var vm = this;
+    vm.loggedIn = false;
 
     vm.accountLabel = getAccountLabel();
     vm.openSignUpModal = openSignUpModal;
@@ -12,8 +13,8 @@ function NavBarCtrl($uibModal, account, $scope, facebook, $interval) {
     vm.logout = logout;
     vm.loginLabel = getLoginLabel();
 
+    account.onSignUpSuccess(signUpSuccess);
 
-    this.loginWithFacebook = loginWithFacebook;
 
     facebook.checkLibStatus(function(status){
         vm.FBLoadStatus = status;
@@ -36,19 +37,6 @@ function NavBarCtrl($uibModal, account, $scope, facebook, $interval) {
         });
     });
 
-    function initFacebookUser() {
-        FB.api('/me', function (user) {
-            $scope.$apply(function () {
-                vm.FBUser = user.name;
-            });
-        });
-    }
-
-    function loginWithFacebook() {
-        FB.login(function(response){
-            debugger;
-        }, {scope: 'public_profile,email'});
-    }
 
     function getAccountLabel() {
         return account.getUsername() || ACCOUNT_DEFAULT_LABEL;
@@ -70,7 +58,7 @@ function NavBarCtrl($uibModal, account, $scope, facebook, $interval) {
 
     function getLoginLabel() {
         if (account.getUsername()) {
-            return 'login to another account'
+            return 'Login to another account'
         }
         else {
             return 'login';
@@ -96,9 +84,14 @@ function NavBarCtrl($uibModal, account, $scope, facebook, $interval) {
         }
     }
 
+    function signUpSuccess(val) {
+        vm.loggedIn = true;
+        updateAccountLabel(val);
+    }
+
     function updateAccountLabel(val) {
         $scope.$apply(function () {
-            vm.accountLabel = val;
+            vm.username = val;
             vm.loginLabel = getLoginLabel();
         });
     }

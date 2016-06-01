@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="app.css"/>
 </head>
 <body>
-<div ui-view></div>
+<ng-include src="'nav-bar/nav-bar.html'"></ng-include>
+<div class="view" ui-view></div>
+<ng-include src="'footer/footer.html'"></ng-include>
 
 <script>
     window.fbAsyncInit = function() {

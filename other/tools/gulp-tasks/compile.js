@@ -56,7 +56,9 @@ gulp.task('compile-app.css', function () {
         .pipe(cssLint({    // will report what less compile misses.
                 "qualified-headings": false,
                 "ids": false,
+                "bulletproof-font-face": false,
                 "box-sizing": false,
+                "duplicate-properties": false,
                 "box-model": false   // I don't need warnings for padding vs width/height
             }))
         .pipe(cssLint.reporter())

@@ -18,7 +18,7 @@ var Project = function (opt) {
     var BOWER_PATH = './bower_components';
     this.ASSETS = [
         APP_PATH + '/index.html',
-        BOWER_PATH + '/bootstrap/fonts*/**',
+        BOWER_PATH + '/font-awesome/fonts*/**',
         '../assets/**'
     ];
     this.VENDORS = [

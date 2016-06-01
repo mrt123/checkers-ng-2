@@ -1,5 +1,3 @@
-//var hoodie  = new Hoodie();
-
 var app = angular.module('app', [
     'ui.bootstrap',
     'templates',
@@ -11,12 +9,13 @@ app.config([
     function ($stateProvider) {
 
         $stateProvider
-            .state('user', {  // not materialised in url
-                templateUrl: 'user/user.html',
-                controller: 'UserCtrl'
+            .state('domain', {
+                url: '^',
+                templateUrl: 'home/home.html',
+                controller: 'HomeCtrl'
             })
             .state('home', {
-                url: '/',
+                url: '/home',
                 templateUrl: 'home/home.html',
                 controller: 'HomeCtrl'
             })

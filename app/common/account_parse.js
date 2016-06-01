@@ -2,6 +2,7 @@ var module = angular.module('account_parse', []);
 module.service('account_parse', function($q) {
     var self = this;
     
+    this.init = init;
     this.signUp = signUp;
     this.signIn = signIn;
     this.signOut = signOut;
@@ -9,6 +10,12 @@ module.service('account_parse', function($q) {
     
     this.onSignUpSuccess = onSignUpSuccess;
     this.signUpSuccessCallbacks = [];
+
+
+    function init() {
+        Parse.initialize("CHECKERS_2");
+        Parse.serverURL = 'http://localhost:1337/parse';
+    }
 
     function signUp(username, password, success, signUpFail) {
         return Parse.User.signUp(username, password, null, {

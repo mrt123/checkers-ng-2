@@ -17,7 +17,7 @@
         FB.init({
             appId: '968741769866882',
             cookie: true,  // enable cookies to allow the server to access the session
-            xfbml: true,  // parse DOM to detect social plugins on this page
+            xfbml: false,  // parse DOM to detect social plugins on this page
             version: 'v2.5' // use graph api version 2.5
         });
 
@@ -35,11 +35,6 @@
 </script>
 <!--<script src="/_api/_files/hoodie.js"></script>-->
 <script src="http://www.parsecdn.com/js/parse-latest.js"></script>
-<script type="text/javascript">
-    Parse.initialize("CHECKERS_2");
-    Parse.serverURL = 'http://localhost:1337/parse';
-</script>
-
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="lib/jquery.js"></script>
 <script src="lib/bootstrap.js"></script>

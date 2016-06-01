@@ -21,6 +21,15 @@ function NavBarCtrl($uibModal, account, $scope, facebook) {
     });
 
     facebook.onLoad(function(){
+        reactToFacebookStatus();
+    });
+
+    facebook.onLogin(function(){
+        reactToFacebookStatus();
+    });
+    
+    function reactToFacebookStatus() {
+        // TODO: relace with existing facebook.getUser.then(...)
         FB.getLoginStatus(function(response) {      console.log(response.status);
 
             if (response.status === 'connected') {
@@ -35,8 +44,20 @@ function NavBarCtrl($uibModal, account, $scope, facebook) {
 
             }
         });
-    });
+    }
 
+
+    function initFacebookUser() {
+        FB.api('/me', function (user) {   console.log(user)
+            $scope.$apply(function () {
+                // TODO:  check if user has regular account
+                // TODO:  create new account for him if necessary
+                // TODO:  set username etc in account
+                vm.loggedIn = true;
+                vm.username = user.name;
+            });
+        });
+    }
 
     function getAccountLabel() {
         return account.getUsername() || ACCOUNT_DEFAULT_LABEL;
@@ -52,7 +73,7 @@ function NavBarCtrl($uibModal, account, $scope, facebook) {
 
     function logout() {
         account.signOut().then(function () {
-            updateAccountLabel(ACCOUNT_DEFAULT_LABEL);
+            vm.loggedIn = false;
         });
     }
 

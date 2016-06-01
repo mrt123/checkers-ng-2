@@ -1,27 +1,31 @@
 var module = angular.module('facebook', []);
 module.service('facebook', function ($interval, $q, $timeout) {
     var self = this;
-    var MAX_LOAD_TIME_MS = 5000;
-    var INTERVAL_MS = 100;
+    var MAX_LIB_LOAD_TIME_MS = 5000;
+    var LIB_LOAD_CHECK_INTERVAL_MS = 100;
     var STATUS = {
         LOADING: 'loading',
         LOADED: 'loaded',
         FAILED: 'failed'
     };
 
-    this.libLoaded = false;
     this.libstatus = STATUS.LOADING;
-    this.loadedCallbacks = [];
 
     this.checkLibStatus = checkLibStatus;
+    this.login = login;
     this.getUser = getUser;
-    this.onLoad = onLoad;
+
+    this.onLoadCallbacks = [];
+    this.onLoad = addOnLoadCallback;
+
+    this.onLoginCallbacks = [];
+    this.onLogin = addOnLoginCallback;
 
     function checkLibStatus(callback) {
         var elapsedTime = 0;
 
         var update = $interval(function () {
-            elapsedTime = elapsedTime + INTERVAL_MS;
+            elapsedTime = elapsedTime + LIB_LOAD_CHECK_INTERVAL_MS;
 
             var loaded = window.FacebookLoaded === true;
 
@@ -30,15 +34,21 @@ module.service('facebook', function ($interval, $q, $timeout) {
             callback(self.libstatus);
 
             if (loaded) {
-                self.libLoaded = loaded;
-                executeLoadCallbacks();
+                executeCallbacks(self.onLoadCallbacks);
                 $interval.cancel(update);
             }
-        }, INTERVAL_MS, getLibCheckCount());
+        }, LIB_LOAD_CHECK_INTERVAL_MS, getLibCheckCount());
+    }
+    
+    function login(callback) {
+        FB.login(function (response) {
+            callback(response);
+            executeCallbacks(self.onLoginCallbacks);
+        }, {scope: 'public_profile,email'});
     }
 
     function getLibCheckCount() {
-        return parseInt(MAX_LOAD_TIME_MS / INTERVAL_MS)
+        return parseInt(MAX_LIB_LOAD_TIME_MS / LIB_LOAD_CHECK_INTERVAL_MS)
     }
 
     function getLibLoadStatus(loaded, elapsedTime) {
@@ -47,7 +57,7 @@ module.service('facebook', function ($interval, $q, $timeout) {
             return STATUS.LOADED;
         }
         else {
-            if (elapsedTime < MAX_LOAD_TIME_MS) {
+            if (elapsedTime < MAX_LIB_LOAD_TIME_MS) {
                 return STATUS.LOADING;
             }
             else {
@@ -66,13 +76,17 @@ module.service('facebook', function ($interval, $q, $timeout) {
         return deferred.promise;
     }
 
-    function executeLoadCallbacks() {
-        angular.forEach(self.loadedCallbacks, function(callback) {
-            callback();
-        })
+    function addOnLoadCallback(callback) {
+        self.onLoadCallbacks.push(callback);
     }
 
-    function onLoad(callback) {   // TODO: support multiple callbacks!
-        self.loadedCallbacks.push(callback);
+    function addOnLoginCallback(callback) {
+        self.onLoginCallbacks.push(callback);
+    }
+
+    function executeCallbacks(callbacks) {
+        angular.forEach(callbacks, function(callback) {
+            callback();
+        })
     }
 });

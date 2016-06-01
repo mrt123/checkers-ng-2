@@ -1,9 +1,16 @@
 var module = angular.module('account_hoodie', []);
 module.service('account_hoodie', function ($q) {
+    var hoodie;
+    
+    this.init = init;
     this.signUp = signUp;
     this.signIn = signIn;
     this.signOut = signOut;
     this.getUsername = getUsername;
+    
+    function init() {
+        hoodie  = new Hoodie();
+    }
 
     function signUp(username, password, signUpSuccess, signUpFail) {
         return hoodie.account.signUp(username, password)

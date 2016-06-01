@@ -6,7 +6,6 @@
   "private": true,
   "dependencies": {
     "angular-bootstrap": "*",
-    "angular-route": "*",
     "angularjs": "*",
     "bootstrap": "*",
     "font-awesome": "*",

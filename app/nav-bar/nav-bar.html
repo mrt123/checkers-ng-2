@@ -46,6 +46,7 @@
         <a href ng-click="nav.openLogInModal()">Login</a>
     </div>
     <div class="account" ng-if="nav.loggedIn">
-        <span ng-if="nav.username">{{nav.username}}</span>
+        <a ui-sref="account-overview" ng-if="nav.username">{{nav.username}}</a>
+        <a href ng-click="nav.logout()">LogOut</a>
     </div>
 </div>

@@ -1,5 +1,6 @@
 target/
 other/tools/node_modules
+npm-debug.log
 other/tools/bower_components
 .DS_Store   #macOS
 .idea/*

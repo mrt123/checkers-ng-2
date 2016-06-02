@@ -23,14 +23,9 @@ var Project = function (opt) {
     ];
     this.VENDORS = [
         BOWER_PATH + '/jquery/dist/jquery.js',
-        BOWER_PATH + '/bootstrap/dist/js/bootstrap.js',
-        BOWER_PATH + '/bootstrap/dist/css/bootstrap.css',
         BOWER_PATH + '/font-awesome/css/font-awesome.css',
         BOWER_PATH + '/angular/angular.js',
-        BOWER_PATH + '/angular-route/angular-route.js',
-        BOWER_PATH + '/ui-router/release/angular-ui-router.js',
-        BOWER_PATH + '/angular-bootstrap/ui-bootstrap.js',
-        BOWER_PATH + '/angular-bootstrap/ui-bootstrap-tpls.js'
+        BOWER_PATH + '/ui-router/release/angular-ui-router.js'
     ];
 };
 module.exports = Project;

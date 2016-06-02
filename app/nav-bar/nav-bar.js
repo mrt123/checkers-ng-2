@@ -2,7 +2,7 @@ angular
     .module('app.NavBarCtrl', [])
     .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($uibModal, account, $scope, facebook, $timeout) {
+function NavBarCtrl(account, $scope, facebook, $timeout) {
     var vm = this;
     vm.loggedIn = false;
     vm.logout = logout;

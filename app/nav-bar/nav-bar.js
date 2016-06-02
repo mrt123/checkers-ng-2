@@ -2,19 +2,13 @@ angular
     .module('app.NavBarCtrl', [])
     .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($uibModal, account, $scope, facebook) {
-    var ACCOUNT_DEFAULT_LABEL = 'My Account';
+function NavBarCtrl($uibModal, account, $scope, facebook, $timeout) {
     var vm = this;
     vm.loggedIn = false;
-
-    vm.accountLabel = getAccountLabel();
-    vm.openSignUpModal = openSignUpModal;
-    vm.openLogInModal = openLogInModal;
     vm.logout = logout;
-    vm.loginLabel = getLoginLabel();
 
     account.onSignUpSuccess(signUpSuccess);
-
+    account.onSignInSuccess(signUpSuccess);
 
     facebook.checkLibStatus(function(status){
         vm.FBLoadStatus = status;
@@ -27,7 +21,14 @@ function NavBarCtrl($uibModal, account, $scope, facebook) {
     facebook.onLogin(function(){
         reactToFacebookStatus();
     });
-    
+
+    function logout() {
+        account.signOut().then(function () { 
+            updateAccountScope(undefined, false);
+        });
+    }
+
+    // PRIVATE METHODS
     function reactToFacebookStatus() {
         // TODO: relace with existing facebook.getUser.then(...)
         FB.getLoginStatus(function(response) {      console.log(response.status);
@@ -45,8 +46,7 @@ function NavBarCtrl($uibModal, account, $scope, facebook) {
             }
         });
     }
-
-
+    
     function initFacebookUser() {
         FB.api('/me', function (user) {   console.log(user)
             $scope.$apply(function () {
@@ -58,92 +58,15 @@ function NavBarCtrl($uibModal, account, $scope, facebook) {
             });
         });
     }
-
-    function getAccountLabel() {
-        return account.getUsername() || ACCOUNT_DEFAULT_LABEL;
-    }
-
-    function openSignUpModal() {
-        $uibModal.open(getModalConfig('register', account.signUp));
-    }
-
-    function openLogInModal() {
-        $uibModal.open(getModalConfig('login', account.signIn));
-    }
-
-    function logout() {
-        account.signOut().then(function () {
-            vm.loggedIn = false;
-        });
-    }
-
-    function getLoginLabel() {
-        if (account.getUsername()) {
-            return 'Login to another account'
-        }
-        else {
-            return 'login';
-        }
-    }
-
-    // PRIVATE METHODS
-
-    function getModalConfig(type, action) {
-        return {
-            templateUrl: 'account-action-modal/account-action-modal.html',
-            controller: 'AccountActionModalCtrl',
-            size: 'sm',
-            resolve: {
-                config: function () {
-                    return {
-                        type: type,
-                        action: action,
-                        actionSuccess: updateAccountLabel
-                    }
-                }
-            }
-        }
-    }
-
+    
     function signUpSuccess(val) {
-        vm.loggedIn = true;
-        updateAccountLabel(val);
+        updateAccountScope(val, true);
     }
 
-    function updateAccountLabel(val) {
-        $scope.$apply(function () {
+    function updateAccountScope(val, logged) {
+        $timeout(function () { // avoid existing digest
             vm.username = val;
-            vm.loginLabel = getLoginLabel();
+            vm.loggedIn = logged;
         });
-    }
-
-
-    function updateFBStatus(response) {
-        console.log('statusChangeCallback');
-        console.log(response);
-        // The response object is returned with a status field that lets the
-        // app know the current login status of the person.
-        // Full docs on the response object can be found in the documentation
-        // for FB.getLoginStatus().
-        if (response.status === 'connected') {
-            // Logged into your app and Facebook.
-
-            FB.api('/me', function(response) {
-                console.log('Successful login for: ' + response.name);
-                document.getElementById('status').innerHTML =
-                    'Thanks for logging in, ' + response.name + '!';
-            });
-
-
-        } else if (response.status === 'not_authorized') {
-            // The person is logged into Facebook, but not your app.
-            document.getElementById('status').innerHTML = 'Please log ' +
-            'into this app.';
-        } else {
-            // The person is not logged into Facebook, so we're not sure if
-            // they are logged into this app or not.
-            document.getElementById('status').innerHTML = 'Please log ' +
-            'into Facebook.';
-        }
     }
 }

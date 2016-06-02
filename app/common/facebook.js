@@ -47,6 +47,26 @@ module.service('facebook', function ($interval, $q, $timeout) {
         }, {scope: 'public_profile,email'});
     }
 
+    function getUser() {
+        var deferred = $q.defer();
+
+        FB.api('/me', function (user) {
+            deferred.resolve(user);
+        });
+
+        return deferred.promise;
+    }
+
+    function addOnLoadCallback(callback) {
+        self.onLoadCallbacks.push(callback);
+    }
+
+    function addOnLoginCallback(callback) {
+        self.onLoginCallbacks.push(callback);
+    }
+    
+    // PRIVATE METHODS
+
     function getLibCheckCount() {
         return parseInt(MAX_LIB_LOAD_TIME_MS / LIB_LOAD_CHECK_INTERVAL_MS)
     }
@@ -64,24 +84,6 @@ module.service('facebook', function ($interval, $q, $timeout) {
                 return STATUS.FAILED;
             }
         }
-    }
-
-    function getUser() {
-        var deferred = $q.defer();
-
-        FB.api('/me', function (user) {
-            deferred.resolve(user);
-        });
-
-        return deferred.promise;
-    }
-
-    function addOnLoadCallback(callback) {
-        self.onLoadCallbacks.push(callback);
-    }
-
-    function addOnLoginCallback(callback) {
-        self.onLoginCallbacks.push(callback);
     }
 
     function executeCallbacks(callbacks) {

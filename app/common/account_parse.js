@@ -11,6 +11,9 @@ module.service('account_parse', function($q) {
     this.onSignUpSuccess = onSignUpSuccess;
     this.signUpSuccessCallbacks = [];
 
+    this.onSignInSuccess = onSignInSuccess;
+    this.signInSuccessCallbacks = [];
+
 
     function init() {
         Parse.initialize("CHECKERS_2");
@@ -23,7 +26,9 @@ module.service('account_parse', function($q) {
                 if (angular.isFunction(success)) {
                     success(user.getUsername());
                 }
-                executeSignUpSuccessCallbacks(user.getUsername());
+                executeCallbacks(self.signUpSuccessCallbacks, [user.getUsername()]);
+                
+                //executeSignUpSuccessCallbacks(user.getUsername());
             },
             error: function(user, error) {
                 if (angular.isFunction(signUpFail)) {
@@ -36,7 +41,10 @@ module.service('account_parse', function($q) {
     function signIn(username, password, success, fail) {
         return Parse.User.logIn(username, password, {
             success: function(user){
-                success(user.getUsername());
+                if (angular.isFunction(success)) {
+                    success(user.getUsername());
+                }
+                executeCallbacks(self.signInSuccessCallbacks, [user.getUsername()]);
             },
             error: function (user, error) {
                 fail(error);
@@ -63,10 +71,14 @@ module.service('account_parse', function($q) {
     function onSignUpSuccess(callback) {
         self.signUpSuccessCallbacks.push(callback);
     }
-
-    function executeSignUpSuccessCallbacks(username) {   // TODO: move to abstract account
-        angular.forEach(self.signUpSuccessCallbacks, function(callback) {
-            callback(username); 
+    
+    function onSignInSuccess(callback) {
+        self.signInSuccessCallbacks.push(callback);
+    }
+    
+    function executeCallbacks(callbacks, args) {
+        angular.forEach(callbacks, function(callback) {
+            callback.apply(undefined, args);
         })
     }
 });

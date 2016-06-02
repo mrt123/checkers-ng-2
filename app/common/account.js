@@ -10,4 +10,5 @@ function Account(accountProvider) {
     this.getUsername = accountProvider.getUsername;
 
     this.onSignUpSuccess = accountProvider.onSignUpSuccess;
+    this.onSignInSuccess = accountProvider.onSignInSuccess;
 }

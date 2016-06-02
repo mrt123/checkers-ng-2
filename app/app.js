@@ -24,6 +24,11 @@ app.config([
                 templateUrl: 'sign-up/sign-up.html',
                 controller: 'SignUpCtrl'
             })
+            .state('login', {
+                url: '/login',
+                templateUrl: 'login/login.html',
+                controller: 'LoginCtrl'
+            })
             .state('user.game', {
                 url: '/game',
                 views: {

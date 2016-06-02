@@ -1,0 +1,14 @@
+<div class="ch_log_in" ng-controller="LoginCtrl">
+    <h1>Log In</h1>
+    <span class="facebook-sign-up-button" ng-click="loginWithFacebook()">
+        <i class="facebook-icon"></i>
+        Log in with Facebook
+    </span>
+    <p>Or log in with e-mail</p>
+    <form>
+        <input type="text" placeholder="E-mail" ng-model="email">
+        <input type="password" placeholder="Password" ng-model="password">
+        <p class="error" ng-if="error">{{error}}</p>
+        <input type="submit" value="Log in" ng-click="login(email, password)">
+    </form>
+</div>

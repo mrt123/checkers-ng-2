@@ -1,13 +1,14 @@
-var Project = function (opt) {
+var Project = function () {
     this.BUILD_PATH = '../../target';
     var APP_PATH = '../../app';
     this.JS_SUB_MODULES = [
         APP_PATH + '/**/*.js'
     ];
-    this.JS_FILES =
-        ['_devAPI.js']
+    this.JS_FILES = []
             .concat(this.JS_SUB_MODULES)
             .concat([APP_PATH + '/app.js']);
+    
+    this.DEV_FILES = ['_devAPI.js'];
 
     this.CSS_FILES = [APP_PATH + '/**/*.less'];
     this.TEMPLATES = [

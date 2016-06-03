@@ -6,11 +6,11 @@ var gulp = require('gulp'),
     del = require('del'),
     less = require('gulp-less'),
     cssLint = require('gulp-csslint'),
-    merge = require('merge-stream'),
     runSequence = require('run-sequence'),
     sourceMaps = require('gulp-sourcemaps'),
     streamqueue = require('streamqueue'),
-    templateCache = require('gulp-angular-templatecache');
+    templateCache = require('gulp-angular-templatecache'),
+    wrap = require("gulp-wrap");
 
 var Project = require('./Project');
 var project = new Project();
@@ -33,10 +33,14 @@ gulp.task('compile-app.js', function () {
             }));
 
     var jsStream = gulp.src(project.JS_FILES)
+        .pipe(wrap('(function(){\n"use strict";\n<%= contents %>\n})();'))
         .pipe(sourceMaps.init());
+    
+    var devStream = gulp.src(project.DEV_FILES);
 
     var queue = streamqueue(
         { objectMode: true },
+        devStream,
         jsStream,
         subModulesStream
     );

@@ -1,5 +1,5 @@
 var module = angular.module('account', []);
-module.service('account', ['account_parse', Account]);
+module.service('account', ['parseAccountProvider', Account]);
 
 function Account(accountProvider) {
     accountProvider.init();

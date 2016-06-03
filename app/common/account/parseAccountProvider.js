@@ -1,5 +1,5 @@
-var module = angular.module('account_parse', []);
-module.service('account_parse', function($q) {
+var module = angular.module('parseAccountProvider', []);
+module.service('parseAccountProvider', function(AbstractAccount) {
     var self = this;
     
     this.init = init;

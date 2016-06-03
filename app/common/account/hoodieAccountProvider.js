@@ -1,5 +1,5 @@
-var module = angular.module('account_hoodie', []);
-module.service('account_hoodie', function ($q) {
+var module = angular.module('hoodieAccountProvider', []);
+module.service('hoodieAccountProvider', function ($q) {
     var hoodie;
     
     this.init = init;

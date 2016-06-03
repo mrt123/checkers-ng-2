@@ -1,5 +1,8 @@
-var module = angular.module('facebook', []);
-module.service('facebook', function ($interval, $q, $timeout) {
+angular
+    .module('facebook', [])
+    .service('facebook', facebook);
+
+function facebook($interval, $q, $timeout) {
     var self = this;
     var MAX_LIB_LOAD_TIME_MS = 5000;
     var LIB_LOAD_CHECK_INTERVAL_MS = 100;
@@ -39,7 +42,7 @@ module.service('facebook', function ($interval, $q, $timeout) {
             }
         }, LIB_LOAD_CHECK_INTERVAL_MS, getLibCheckCount());
     }
-    
+
     function login(callback) {
         FB.login(function (response) {
             callback(response);
@@ -64,7 +67,7 @@ module.service('facebook', function ($interval, $q, $timeout) {
     function addOnLoginCallback(callback) {
         self.onLoginCallbacks.push(callback);
     }
-    
+
     // PRIVATE METHODS
 
     function getLibCheckCount() {
@@ -91,4 +94,4 @@ module.service('facebook', function ($interval, $q, $timeout) {
             callback();
         })
     }
-});
+}

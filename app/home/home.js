@@ -1,6 +1,8 @@
 angular
     .module('app.HomeCtrl', [])
-    .controller('HomeCtrl', function () {
+    .controller('HomeCtrl', HomeCtrl);
 
-    });
+function HomeCtrl() {
+
+}
 

@@ -1,6 +1,9 @@
-var module = angular.module('AbstractAccount', []);
-module.factory('apiToken', ['AbstractAccount', function apiTokenFactory(clientId) {
-    
+angular
+    .module('AbstractAccount', [])
+    .factory('AbstractAccount', AbstractAccount);
+
+function AbstractAccount() {
+
     var AbstractFactory = function () {
         this.signUpSuccessCallbacks = [];
         this.logInSuccessCallbacks = [];
@@ -13,12 +16,12 @@ module.factory('apiToken', ['AbstractAccount', function apiTokenFactory(clientId
     AbstractFactory.prototype.addOnLoginCallback = function (callback) {
         this.logInSuccessCallbacks.push(callback);
     };
-    
+
     AbstractFactory.prototype.executeCallbacks = function (callbacks, args) {
-        angular.forEach(callbacks, function(callback) {
+        angular.forEach(callbacks, function (callback) {
             callback.apply(undefined, args);
         });
     };
-    
+
     return AbstractFactory;
-}]);
+}

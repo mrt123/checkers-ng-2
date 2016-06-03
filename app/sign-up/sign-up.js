@@ -1,28 +1,29 @@
 angular
     .module('app.SignUpCtrl', [])
-    .controller('SignUpCtrl', function ($scope, account, $timeout, $state, facebook) {
+    .controller('SignUpCtrl', SignUpCtrl);
 
-        $scope.signUp = signUp;
-        $scope.loginWithFacebook = loginWithFacebook;        
+function SignUpCtrl($scope, account, $timeout, $state, facebook) {
 
-        function signUp(email, password) {
-            account.signUp(email, password, loginSuccess, showError);
-        }
+    $scope.signUp = signUp;
+    $scope.loginWithFacebook = loginWithFacebook;
 
-        function loginWithFacebook() {
-            facebook.login(function (response) {
-                loginSuccess();
-            });
-        }
-        
-        function loginSuccess() {
-            $state.go('home');
-        }
+    function signUp(email, password) {
+        account.signUp(email, password, loginSuccess, showError);
+    }
 
-        function showError(error) {
-            $timeout(function () {   // avoid existing digest
-                $scope.error = error.message;
-            });
-        }
-    });
+    function loginWithFacebook() {
+        facebook.login(function (response) {
+            loginSuccess();
+        });
+    }
 
+    function loginSuccess() {
+        $state.go('home');
+    }
+
+    function showError(error) {
+        $timeout(function () {   // avoid existing digest
+            $scope.error = error.message;
+        });
+    }
+}

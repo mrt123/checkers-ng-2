@@ -1,5 +1,6 @@
-var module = angular.module('account', []);
-module.service('account', ['parseAccountProvider', Account]);
+angular
+    .module('account', [])
+    .service('account', ['parseAccountVendor', Account]);
 
 function Account(accountProvider) {
     accountProvider.init();

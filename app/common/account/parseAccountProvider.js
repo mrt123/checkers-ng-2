@@ -1,13 +1,16 @@
-var module = angular.module('parseAccountProvider', []);
-module.service('parseAccountProvider', function(AbstractAccount) {
+angular
+    .module('parseAccountVendor', [])
+    .service('parseAccountVendor', parseAccountVendor);
+
+function parseAccountVendor(AbstractAccount) {
     var self = this;
-    
+
     this.init = init;
     this.signUp = signUp;
     this.signIn = signIn;
     this.signOut = signOut;
     this.getUsername = getUsername;
-    
+
     this.onSignUpSuccess = onSignUpSuccess;
     this.signUpSuccessCallbacks = [];
 
@@ -22,15 +25,15 @@ module.service('parseAccountProvider', function(AbstractAccount) {
 
     function signUp(username, password, success, signUpFail) {
         return Parse.User.signUp(username, password, null, {
-            success: function(user){
+            success: function (user) {
                 if (angular.isFunction(success)) {
                     success(user.getUsername());
                 }
                 executeCallbacks(self.signUpSuccessCallbacks, [user.getUsername()]);
-                
+
                 //executeSignUpSuccessCallbacks(user.getUsername());
             },
-            error: function(user, error) {
+            error: function (user, error) {
                 if (angular.isFunction(signUpFail)) {
                     signUpFail(error);
                 }
@@ -40,7 +43,7 @@ module.service('parseAccountProvider', function(AbstractAccount) {
 
     function signIn(username, password, success, fail) {
         return Parse.User.logIn(username, password, {
-            success: function(user){
+            success: function (user) {
                 if (angular.isFunction(success)) {
                     success(user.getUsername());
                 }
@@ -60,7 +63,7 @@ module.service('parseAccountProvider', function(AbstractAccount) {
     function getUsername() {
         var currentUser = Parse.User.current();
 
-        if(currentUser !== null) {
+        if (currentUser !== null) {
             return currentUser.getUsername();
         }
         else {
@@ -71,14 +74,14 @@ module.service('parseAccountProvider', function(AbstractAccount) {
     function onSignUpSuccess(callback) {
         self.signUpSuccessCallbacks.push(callback);
     }
-    
+
     function onSignInSuccess(callback) {
         self.signInSuccessCallbacks.push(callback);
     }
-    
+
     function executeCallbacks(callbacks, args) {
-        angular.forEach(callbacks, function(callback) {
+        angular.forEach(callbacks, function (callback) {
             callback.apply(undefined, args);
         })
     }
-});
+}

@@ -1,15 +1,18 @@
-var module = angular.module('hoodieAccountProvider', []);
-module.service('hoodieAccountProvider', function ($q) {
+angular
+    .module('hoodieAccountVendor', [])
+    .service('hoodieAccountVendor', hoodieAccountVendor);
+
+function hoodieAccountVendor($q) {
     var hoodie;
-    
+
     this.init = init;
     this.signUp = signUp;
     this.signIn = signIn;
     this.signOut = signOut;
     this.getUsername = getUsername;
-    
+
     function init() {
-        hoodie  = new Hoodie();
+        hoodie = new Hoodie();
     }
 
     function signUp(username, password, signUpSuccess, signUpFail) {
@@ -33,4 +36,4 @@ module.service('hoodieAccountProvider', function ($q) {
     function getUsername() {
         return hoodie.account.username;
     }
-});
+}

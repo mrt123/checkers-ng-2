@@ -1,6 +1,8 @@
 angular
     .module('app.AccountOverViewCtrl', [])
-    .controller('AccountOverViewCtrl', function ($scope) {
+    .controller('AccountOverViewCtrl', AccountOverViewCtrl);
 
-    });
+function AccountOverViewCtrl($scope) {
+
+}
 

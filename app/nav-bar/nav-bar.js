@@ -7,20 +7,7 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     vm.loggedIn = false;
     vm.logout = logout;
 
-    account.onSignUpSuccess(signUpSuccess);
-    account.onSignInSuccess(signUpSuccess);
-
-    facebook.checkLibStatus(function(status){
-        vm.FBLoadStatus = status;
-    });
-
-    facebook.onLoad(function(){
-        reactToFacebookStatus();
-    });
-
-    facebook.onLogin(function(){
-        reactToFacebookStatus();
-    });
+    activate();
 
     function logout() {
         account.signOut().then(function () { 
@@ -29,6 +16,23 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     }
 
     // PRIVATE METHODS
+    function activate() {
+        facebook.checkLibStatus(function(status){
+            vm.FBLoadStatus = status;
+        });
+
+        facebook.onLoad(function(){
+            reactToFacebookStatus();
+        });
+
+        facebook.onLogin(function(){
+            reactToFacebookStatus();
+        });
+
+        account.onSignUpSuccess(signUpSuccess);
+        account.onSignInSuccess(signUpSuccess);
+    }
+    
     function reactToFacebookStatus() {
         // TODO: relace with existing facebook.getUser.then(...)
         FB.getLoginStatus(function(response) {      console.log(response.status);

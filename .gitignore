@@ -5,3 +5,4 @@ other/tools/bower_components
 .DS_Store   #macOS
 .idea/*
 !idea/runConfigurations
+logs/

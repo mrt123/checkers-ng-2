@@ -17,6 +17,20 @@ var project = new Project();
 
 var BUILD_PATH = project.BUILD_PATH;
 
+gulp.task('compile', function (callback) {
+    runSequence(
+        'compile-clean',
+        [
+            'compile-app.js',
+            'compile-app.css',
+            'compile-assets',
+            'compile-vendors',
+            'compile-templates'
+        ],
+        callback
+    );
+});
+
 gulp.task('compile-clean', function () {
     var deletePath = BUILD_PATH + '/**/*';
     return del([deletePath], {force: true});
@@ -90,18 +104,4 @@ gulp.task('compile-assets', function () {
 gulp.task('compile-vendors', function () {
     return gulp.src(project.VENDORS)
         .pipe(gulp.dest(BUILD_PATH + '/lib'));
-});
-
-gulp.task('compile', function (callback) {
-    runSequence(
-        'compile-clean',
-        [
-            'compile-app.js',
-            'compile-app.css',
-            'compile-assets',
-            'compile-vendors',
-            'compile-templates'
-        ],
-        callback
-    );
 });

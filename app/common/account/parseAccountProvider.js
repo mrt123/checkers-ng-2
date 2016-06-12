@@ -5,8 +5,6 @@ angular
 function parseAccountVendor($q, AbstractAccount) {
     var self = this;
 
-    this.deferredSignUp = $q.defer();
-
     this.init = init;
     this.signUp = signUp;
     this.signIn = signIn;

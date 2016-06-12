@@ -23,3 +23,9 @@ $ bower install
 $ gulper
 ```
 
+or if you're on windows7 [gulp doesn't run on Win7](https://github.com/anatoo/gulper/issues/2):
+
+```
+$ gulp
+```
+

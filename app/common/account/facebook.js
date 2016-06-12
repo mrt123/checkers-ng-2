@@ -17,6 +17,7 @@ function facebook($interval, $q, $timeout) {
     this.checkLibStatus = checkLibStatus;
     this.getLoginStatus = getLoginStatus;
     this.login = login;
+    this.logOut = logOut;
     this.getUser = getUser;
 
     this.onLoadCallbacks = [];
@@ -24,6 +25,9 @@ function facebook($interval, $q, $timeout) {
 
     this.onLoginCallbacks = [];
     this.onLogin = addOnLoginCallback;
+
+    this.onLogOutCallbacks = [];
+    this.onLogOut = addOnLogOutCallback;
 
     function checkLibStatus(callback) {
         var elapsedTime = 0;
@@ -49,6 +53,13 @@ function facebook($interval, $q, $timeout) {
             callback(response);
             executeCallbacks(self.onLoginCallbacks);
         }, {scope: 'public_profile,email'});
+    }
+
+    function logOut(callback) {
+        FB.logout(function(response) {
+            callback(response);
+            executeCallbacks(self.onLogOutCallbacks);
+        });
     }
 
     function getUser() {
@@ -77,6 +88,10 @@ function facebook($interval, $q, $timeout) {
 
     function addOnLoginCallback(callback) {
         self.onLoginCallbacks.push(callback);
+    }
+
+    function addOnLogOutCallback(callback) {
+        self.onLogOutCallbacks.push(callback);
     }
 
     // PRIVATE METHODS

@@ -8,7 +8,7 @@ function Account(accountVendor, facebookVendor) {
     
     this.signUp = accountVendor.signUp;
     this.signIn = accountVendor.signIn;
-    this.signOut = accountVendor.signOut;
+    this.signOut = signOut;
     this.getUser = accountVendor.getUser;
     this.getUsername = accountVendor.getUsername;
 
@@ -18,6 +18,12 @@ function Account(accountVendor, facebookVendor) {
     function activate() {
         facebookVendor.onLoad(reactToFacebookStatus);
         facebookVendor.onLogin(reactToFacebookStatus);
+    }
+    
+    function signOut(callback) {
+        accountVendor.signOut(function() {
+            facebookVendor.logOut(callback);
+        });
     }
 
     function reactToFacebookStatus() {

@@ -10,7 +10,7 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     activate();
 
     function logout() {
-        account.signOut().then(function () { 
+        account.signOut(function () {
             updateAccountScope({}, false);
         });
     }

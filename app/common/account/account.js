@@ -8,6 +8,7 @@ function Account(accountProvider) {
     this.signUp = accountProvider.signUp;
     this.signIn = accountProvider.signIn;
     this.signOut = accountProvider.signOut;
+    this.getUser = accountProvider.getUser;
     this.getUsername = accountProvider.getUsername;
 
     this.onSignUpSuccess = accountProvider.onSignUpSuccess;

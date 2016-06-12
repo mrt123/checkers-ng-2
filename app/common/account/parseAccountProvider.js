@@ -2,13 +2,16 @@ angular
     .module('parseAccountVendor', [])
     .service('parseAccountVendor', parseAccountVendor);
 
-function parseAccountVendor(AbstractAccount) {
+function parseAccountVendor($q, AbstractAccount) {
     var self = this;
+
+    this.deferredSignUp = $q.defer();
 
     this.init = init;
     this.signUp = signUp;
     this.signIn = signIn;
     this.signOut = signOut;
+    this.getUser = getUser;
     this.getUsername = getUsername;
 
     this.onSignUpSuccess = onSignUpSuccess;
@@ -23,34 +26,44 @@ function parseAccountVendor(AbstractAccount) {
         Parse.serverURL = 'http://localhost:1337/parse';
     }
 
-    function signUp(username, password, success, signUpFail) {
-        return Parse.User.signUp(username, password, null, {
-            success: function (user) {
-                if (angular.isFunction(success)) {
-                    success(user.getUsername());
+    function signUp(username, password, playerName, callbacks) {
+        callbacks = callbacks || {};
+        var success = callbacks.success;
+        var fail = callbacks.fail;
+        
+        return Parse.User.signUp(username, password, { playerName: playerName}, {
+            success: function (vendorUser) {
+                var user = generateUser(vendorUser);
+                
+                if (success) {
+                    success(user);
                 }
-                executeCallbacks(self.signUpSuccessCallbacks, [user.getUsername()]);
-
-                //executeSignUpSuccessCallbacks(user.getUsername());
+                executeCallbacks(self.signUpSuccessCallbacks, [user]);
             },
-            error: function (user, error) {
-                if (angular.isFunction(signUpFail)) {
-                    signUpFail(error);
+            error: function (vendorUser, error) {
+                if (fail) {
+                    fail(generateUser(vendorUser), error);
                 }
             }
         });
     }
 
-    function signIn(username, password, success, fail) {
+    function signIn(username, password, callbacks) {
+        callbacks = callbacks || {};
+        var success = callbacks.success;
+        var fail = callbacks.fail;
+        
         return Parse.User.logIn(username, password, {
-            success: function (user) {
+            success: function (vendorUser) {
+                var user = generateUser(vendorUser);
+                
                 if (angular.isFunction(success)) {
-                    success(user.getUsername());
+                    success(user);
                 }
-                executeCallbacks(self.signInSuccessCallbacks, [user.getUsername()]);
+                executeCallbacks(self.signInSuccessCallbacks, [user]);
             },
-            error: function (user, error) {
-                fail(error);
+            error: function (vendorUser, error) {
+                fail(generateUser(vendorUser), error);
             }
         });
     }
@@ -59,9 +72,13 @@ function parseAccountVendor(AbstractAccount) {
         return Parse.User.logOut()
             .then(signOutSuccess, SignOutFail);
     }
+    
+    function getUser() {
+        return generateUser(Parse.User.current());
+    }
 
     function getUsername() {
-        var currentUser = Parse.User.current();
+        var currentUser = Parse.User.current()();
 
         if (currentUser !== null) {
             return currentUser.getUsername();
@@ -83,5 +100,12 @@ function parseAccountVendor(AbstractAccount) {
         angular.forEach(callbacks, function (callback) {
             callback.apply(undefined, args);
         })
+    }
+    
+    function generateUser(vendorUser) {
+        return {
+            email: vendorUser.getUsername(),
+            playerName: vendorUser.get('playerName')
+        }
     }
 }

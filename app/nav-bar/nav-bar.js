@@ -2,7 +2,7 @@ angular
     .module('app.NavBarCtrl', [])
     .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl(account, $scope, facebook, $timeout) {
+function NavBarCtrl(account, $scope, facebook, $timeout, $log) {
     var vm = this;
     vm.loggedIn = false;
     vm.logout = logout;
@@ -11,65 +11,54 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
 
     function logout() {
         account.signOut().then(function () { 
-            updateAccountScope(undefined, false);
+            updateAccountScope({}, false);
         });
     }
 
     // PRIVATE METHODS
     function activate() {
-        facebook.checkLibStatus(function(status){
-            vm.FBLoadStatus = status;
-        });
+        facebook.checkLibStatus(reactToFacebookLoadStatus);
+        facebook.onLoad(reactToFacebookLoad);
+        account.onSignUpSuccess(reactToUserPresence);
+        account.onSignInSuccess(reactToUserPresence);
+    }
 
-        facebook.onLoad(function(){
-            reactToFacebookStatus();
-        });
-
-        facebook.onLogin(function(){
-            reactToFacebookStatus();
-        });
-
-        account.onSignUpSuccess(signUpSuccess);
-        account.onSignInSuccess(signUpSuccess);
+    function reactToFacebookLoadStatus(status){
+        vm.FBLoadStatus = status;
     }
     
-    function reactToFacebookStatus() {
-        // TODO: relace with existing facebook.getUser.then(...)
-        FB.getLoginStatus(function(response) {      console.log(response.status);
-
-            if (response.status === 'connected') {
-                initFacebookUser();
-
-            } else if (response.status === 'not_authorized') {
-                // The person is logged into Facebook, but not your app.
-
-            } else {
-                // The person is not logged into Facebook, so we're not sure if
-                // they are logged into this app or not.
-
-            }
-        });
+    function reactToFacebookLoad() {
+        facebook.getLoginStatus(reactToFacebookStatus);
     }
     
-    function initFacebookUser() {
-        FB.api('/me', function (user) {   console.log(user)
-            $scope.$apply(function () {
-                // TODO:  check if user has regular account
-                // TODO:  create new account for him if necessary
-                // TODO:  set username etc in account
-                vm.loggedIn = true;
-                vm.username = user.name;
-            });
-        });
-    }
-    
-    function signUpSuccess(val) {
-        updateAccountScope(val, true);
+    function reactToFacebookStatus(status) { 
+        if(status === 'connected') {
+            reactToFacebookConnected();
+        }
     }
 
-    function updateAccountScope(val, logged) {
+    function reactToFacebookConnected() {
+        facebook.getUser().then(signFacebookUserIntoAccount);
+    }
+    
+    function signFacebookUserIntoAccount(facebookUser) {
+        account.signIn(facebookUser.email, facebookUser.id, {
+            success: undefined, 
+            fail: createAccountForFacebookUser.bind(undefined, facebookUser)
+        });
+    }
+
+    function createAccountForFacebookUser(facebookUser) {
+        account.signUp(facebookUser.email, facebookUser.id, facebookUser.name);
+    }
+    
+    function reactToUserPresence(user) {
+        updateAccountScope(user, true);
+    }
+
+    function updateAccountScope(user, logged) {
         $timeout(function () { // avoid existing digest
-            vm.username = val;
+            vm.username = user.playerName;
             vm.loggedIn = logged;
         });
     }

@@ -15,6 +15,7 @@ function facebook($interval, $q, $timeout) {
     this.libstatus = STATUS.LOADING;
 
     this.checkLibStatus = checkLibStatus;
+    this.getLoginStatus = getLoginStatus;
     this.login = login;
     this.getUser = getUser;
 
@@ -53,11 +54,21 @@ function facebook($interval, $q, $timeout) {
     function getUser() {
         var deferred = $q.defer();
 
-        FB.api('/me', function (user) {
-            deferred.resolve(user);
-        });
+        FB.api('/me', {fields: ['email', 'name']}, function (response) {
+            if (!response || response.error) {
+                deferred.reject(response);
 
+            } else {
+                deferred.resolve(response);
+            }
+        });
         return deferred.promise;
+    }
+    
+    function getLoginStatus(callback) {
+        FB.getLoginStatus(function(response) {
+            callback(response.status)
+        },true);
     }
 
     function addOnLoadCallback(callback) {

@@ -2,7 +2,7 @@ angular
     .module('app.NavBarCtrl', [])
     .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl(account, $scope, facebook, $timeout, $log) {
+function NavBarCtrl(account, $scope, facebook, $timeout) {
     var vm = this;
     vm.loggedIn = false;
     vm.logout = logout;
@@ -17,39 +17,13 @@ function NavBarCtrl(account, $scope, facebook, $timeout, $log) {
 
     // PRIVATE METHODS
     function activate() {
-        facebook.checkLibStatus(reactToFacebookLoadStatus);
-        facebook.onLoad(reactToFacebookLoad);
+        facebook.checkLibStatus(reactToFacebookLibLoadStatus);
         account.onSignUpSuccess(reactToUserPresence);
         account.onSignInSuccess(reactToUserPresence);
     }
 
-    function reactToFacebookLoadStatus(status){
+    function reactToFacebookLibLoadStatus(status){
         vm.FBLoadStatus = status;
-    }
-    
-    function reactToFacebookLoad() {
-        facebook.getLoginStatus(reactToFacebookStatus);
-    }
-    
-    function reactToFacebookStatus(status) { 
-        if(status === 'connected') {
-            reactToFacebookConnected();
-        }
-    }
-
-    function reactToFacebookConnected() {
-        facebook.getUser().then(signFacebookUserIntoAccount);
-    }
-    
-    function signFacebookUserIntoAccount(facebookUser) {
-        account.signIn(facebookUser.email, facebookUser.id, {
-            success: undefined, 
-            fail: createAccountForFacebookUser.bind(undefined, facebookUser)
-        });
-    }
-
-    function createAccountForFacebookUser(facebookUser) {
-        account.signUp(facebookUser.email, facebookUser.id, facebookUser.name);
     }
     
     function reactToUserPresence(user) {

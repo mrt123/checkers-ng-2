@@ -3,21 +3,19 @@ angular
     .service('parseAccountVendor', parseAccountVendor);
 
 function parseAccountVendor($q, AbstractAccount) {
-    var self = this;
+    var self = Object.create(AbstractAccount);
 
-    this.init = init;
-    this.signUp = signUp;
-    this.signIn = signIn;
-    this.signOut = signOut;
-    this.getUser = getUser;
-    this.getUsername = getUsername;
+    self.init = init;
+    self.signUp = signUp;
+    self.signIn = signIn;
+    self.signOut = signOut;
+    self.getUser = getUser;
+    self.getUsername = getUsername;
 
-    this.onSignUpSuccess = onSignUpSuccess;
-    this.signUpSuccessCallbacks = [];
-
-    this.onSignInSuccess = onSignInSuccess;
-    this.signInSuccessCallbacks = [];
-
+    self.onSignUpSuccess = self.addOnSignUpCallback;
+    self.onSignInSuccess = self.addOnLoginCallback;
+    
+    return self;
 
     function init() {
         Parse.initialize("CHECKERS_2");
@@ -36,7 +34,7 @@ function parseAccountVendor($q, AbstractAccount) {
                 if (success) {
                     success(user);
                 }
-                executeCallbacks(self.signUpSuccessCallbacks, [user]);
+                self.executeSignUpSuccessCallbacks([user]);
             },
             error: function (vendorUser, error) {
                 if (fail) {
@@ -58,7 +56,7 @@ function parseAccountVendor($q, AbstractAccount) {
                 if (angular.isFunction(success)) {
                     success(user);
                 }
-                executeCallbacks(self.signInSuccessCallbacks, [user]);
+                self.executeLoginSuccessCallbacks([user]);
             },
             error: function (vendorUser, error) {
                 fail(generateUser(vendorUser), error);
@@ -86,20 +84,6 @@ function parseAccountVendor($q, AbstractAccount) {
         }
     }
 
-    function onSignUpSuccess(callback) {
-        self.signUpSuccessCallbacks.push(callback);
-    }
-
-    function onSignInSuccess(callback) {
-        self.signInSuccessCallbacks.push(callback);
-    }
-
-    function executeCallbacks(callbacks, args) {
-        angular.forEach(callbacks, function (callback) {
-            callback.apply(undefined, args);
-        })
-    }
-    
     function generateUser(vendorUser) {
         return {
             email: vendorUser.getUsername(),

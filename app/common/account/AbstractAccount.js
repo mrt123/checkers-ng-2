@@ -4,24 +4,35 @@ angular
 
 function AbstractAccount() {
 
-    var AbstractFactory = function () {
-        this.signUpSuccessCallbacks = [];
-        this.logInSuccessCallbacks = [];
+    var signUpSuccessCallbacks = [];
+    var logInSuccessCallbacks = [];
+
+    return {
+        addOnSignUpCallback: addOnSignUpCallback,
+        addOnLoginCallback: addOnLoginCallback,
+        executeSignUpSuccessCallbacks: executeSignUpSuccessCallbacks,
+        executeLoginSuccessCallbacks: executeLoginSuccessCallbacks
     };
 
-    AbstractFactory.prototype.addOnSignUpCallback = function (callback) {
-        this.signUpSuccessCallbacks.push(callback);
-    };
+    function addOnSignUpCallback(callback) {
+        signUpSuccessCallbacks.push(callback);
+    }
 
-    AbstractFactory.prototype.addOnLoginCallback = function (callback) {
-        this.logInSuccessCallbacks.push(callback);
-    };
+    function addOnLoginCallback(callback) {
+        logInSuccessCallbacks.push(callback);
+    }
 
-    AbstractFactory.prototype.executeCallbacks = function (callbacks, args) {
+    function executeSignUpSuccessCallbacks(args) {
+        executeCallbacks(signUpSuccessCallbacks, args);
+    }
+
+    function executeLoginSuccessCallbacks(args) {
+        executeCallbacks(logInSuccessCallbacks, args);
+    }
+
+    function executeCallbacks(callbacks, args) {
         angular.forEach(callbacks, function (callback) {
             callback.apply(undefined, args);
         });
-    };
-
-    return AbstractFactory;
+    }
 }

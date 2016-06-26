@@ -54,9 +54,9 @@ gulp.task('compile-app.js', function () {
 
     var queue = streamqueue(
         { objectMode: true },
-        devStream,
         jsStream,
-        subModulesStream
+        subModulesStream,
+        devStream
     );
 
     return queue

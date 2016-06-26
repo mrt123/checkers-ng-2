@@ -3,7 +3,7 @@ angular
     .service('parseAccountVendor', parseAccountVendor);
 
 function parseAccountVendor($q, AbstractAccount) {
-    var self = Object.create(AbstractAccount);
+    var self = new AbstractAccount('parse');
 
     self.init = init;
     self.signUp = signUp;

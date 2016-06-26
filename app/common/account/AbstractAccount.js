@@ -3,31 +3,35 @@ angular
     .factory('AbstractAccount', AbstractAccount);
 
 function AbstractAccount() {
-
-    var signUpSuccessCallbacks = [];
-    var logInSuccessCallbacks = [];
-
-    return {
-        addOnSignUpCallback: addOnSignUpCallback,
-        addOnLoginCallback: addOnLoginCallback,
-        executeSignUpSuccessCallbacks: executeSignUpSuccessCallbacks,
-        executeLoginSuccessCallbacks: executeLoginSuccessCallbacks
-    };
+    
+    return function() {
+        
+        function Constructor(name) {
+            this.name = name;
+            this.signUpSuccessCallbacks = [];
+            this.logInSuccessCallbacks = [];
+            this.addOnSignUpCallback = addOnSignUpCallback;
+            this.addOnLoginCallback = addOnLoginCallback;
+            this.executeSignUpSuccessCallbacks = executeSignUpSuccessCallbacks;
+            this.executeLoginSuccessCallbacks = executeLoginSuccessCallbacks;
+        }
+        return Constructor;
+    }();
 
     function addOnSignUpCallback(callback) {
-        signUpSuccessCallbacks.push(callback);
+        this.signUpSuccessCallbacks.push(callback);
     }
-
+    
     function addOnLoginCallback(callback) {
-        logInSuccessCallbacks.push(callback);
+        this.logInSuccessCallbacks.push(callback);
     }
 
     function executeSignUpSuccessCallbacks(args) {
-        executeCallbacks(signUpSuccessCallbacks, args);
+        executeCallbacks(this.signUpSuccessCallbacks, args);
     }
 
     function executeLoginSuccessCallbacks(args) {
-        executeCallbacks(logInSuccessCallbacks, args);
+        executeCallbacks(this.logInSuccessCallbacks, args);
     }
 
     function executeCallbacks(callbacks, args) {

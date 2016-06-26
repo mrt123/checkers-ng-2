@@ -12,8 +12,8 @@ function Account(accountVendor, facebookVendor) {
     this.getUser = accountVendor.getUser;
     this.getUsername = accountVendor.getUsername;
 
-    this.onSignUpSuccess = accountVendor.onSignUpSuccess;
-    this.onSignInSuccess = accountVendor.onSignInSuccess;
+    this.onSignUpSuccess = accountVendor.onSignUpSuccess.bind(accountVendor);
+    this.onSignInSuccess = accountVendor.onSignInSuccess.bind(accountVendor);
 
     function activate() {
         facebookVendor.onLoad(reactToFacebookStatus);

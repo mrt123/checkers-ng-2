@@ -2,8 +2,8 @@ angular
     .module('facebook', [])
     .service('facebook', facebook);
 
-function facebook($interval, $q, $timeout) {
-    var self = this;
+function facebook($interval, $q, AbstractAccount) {
+    var self = new AbstractAccount('facebook');
     var MAX_LIB_LOAD_TIME_MS = 5000;
     var LIB_LOAD_CHECK_INTERVAL_MS = 100;
     var STATUS = {
@@ -12,22 +12,22 @@ function facebook($interval, $q, $timeout) {
         FAILED: 'failed'
     };
 
-    this.libstatus = STATUS.LOADING;
+    self.libstatus = STATUS.LOADING;
 
-    this.checkLibStatus = checkLibStatus;
-    this.getLoginStatus = getLoginStatus;
-    this.login = login;
-    this.logOut = logOut;
-    this.getUser = getUser;
+    self.checkLibStatus = checkLibStatus;
+    self.getLoginStatus = getLoginStatus;
+    self.login = login;
+    self.logOut = logOut;
+    self.getUser = getUser;
 
-    this.onLoadCallbacks = [];
-    this.onLoad = addOnLoadCallback;
+    self.onLoadCallbacks = [];
+    self.onLoad = addOnLoadCallback;
+    self.onLogin = self.addOnLoginCallback;
 
-    this.onLoginCallbacks = [];
-    this.onLogin = addOnLoginCallback;
-
-    this.onLogOutCallbacks = [];
-    this.onLogOut = addOnLogOutCallback;
+    self.onLogOutCallbacks = [];
+    self.onLogOut = addOnLogOutCallback;
+    
+    return self;
 
     function checkLibStatus(callback) {
         var elapsedTime = 0;
@@ -51,7 +51,7 @@ function facebook($interval, $q, $timeout) {
     function login(callback) {
         FB.login(function (response) {
             callback(response);
-            executeCallbacks(self.onLoginCallbacks);
+            self.executeLoginSuccessCallbacks([]);
         }, {scope: 'public_profile,email'});
     }
 
@@ -84,10 +84,6 @@ function facebook($interval, $q, $timeout) {
 
     function addOnLoadCallback(callback) {
         self.onLoadCallbacks.push(callback);
-    }
-
-    function addOnLoginCallback(callback) {
-        self.onLoginCallbacks.push(callback);
     }
 
     function addOnLogOutCallback(callback) {

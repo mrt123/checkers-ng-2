@@ -29,3 +29,8 @@ or if you're on windows7 [gulp doesn't run on Win7](https://github.com/anatoo/gu
 $ gulp
 ```
 
+## Test:
+
+```
+$ npm install -g karma-cli  
+```

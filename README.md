@@ -32,5 +32,6 @@ $ gulp
 ## Test:
 
 ```
-$ npm install -g karma-cli  
+$ npm install -g karma-cli
+$  karma start
 ```

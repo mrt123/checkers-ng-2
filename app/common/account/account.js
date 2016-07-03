@@ -1,5 +1,5 @@
 angular
-    .module('account', [])
+    .module('account', ['parseAccountVendor', 'facebook'])
     .service('account', ['parseAccountVendor', 'facebook', Account]);
 
 function Account(accountVendor, facebookVendor) {

@@ -1,5 +1,5 @@
 angular
-    .module('parseAccountVendor', [])
+    .module('parseAccountVendor', ['AbstractAccount'])
     .service('parseAccountVendor', parseAccountVendor);
 
 function parseAccountVendor($q, AbstractAccount) {

@@ -1,5 +1,5 @@
 angular
-    .module('facebook', [])
+    .module('facebook', ['AbstractAccount'])
     .service('facebook', facebook);
 
 function facebook($interval, $q, AbstractAccount) {

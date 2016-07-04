@@ -10,7 +10,7 @@
         "jquery": "*",
         "less": "*",
         "parse": "1.8.5",
-        "ui-router": "*",
+        "ui-router": "*"
     },
     "devDependencies": {
         "sinon-1.17.3": "http://sinonjs.org/releases/sinon-1.17.3.js"

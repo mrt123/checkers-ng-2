@@ -1,34 +1,34 @@
 var Project = function () {
     this.BUILD_PATH = '../../target';
     
-    var APP_PATH = '../../app';
+    this.APP_PATH = '../../app';
     
     this.JS_SUB_MODULES = [
-        APP_PATH + '/**/*.js',
-        '!' + APP_PATH + '/**/*.spec.js'
+        this.APP_PATH + '/**/*.js',
+        '!' + this.APP_PATH + '/**/*.spec.js'
     ];
     
     this.TEST_FILES = [
-        APP_PATH + '/**/*.spec.js'
+        this.APP_PATH + '/**/*.spec.js'
     ];
     
     this.JS_FILES = []
             .concat(this.JS_SUB_MODULES)
-            .concat([APP_PATH + '/app.js']);
+            .concat([this.APP_PATH + '/app.js']);
     
     this.DEV_FILES = ['_devAPI.js'];
 
-    this.CSS_FILES = [APP_PATH + '/**/*.less'];
+    this.CSS_FILES = [this.APP_PATH + '/**/*.less'];
     
     this.TEMPLATES = [
-        APP_PATH + '/**/*.html',
-        APP_PATH + '/common*/**/*.html'
+        this.APP_PATH + '/**/*.html',
+        this.APP_PATH + '/common*/**/*.html'
     ];
 
     this.BOWER_PATH = './bower_components';
     
     this.ASSETS = [
-        APP_PATH + '/index.html',
+        this.APP_PATH + '/index.html',
         this.BOWER_PATH + '/font-awesome/fonts*/**',
         '../assets/**'
     ];

@@ -20,6 +20,7 @@ module.exports = function (config) {
             .concat(project.BUILD_PATH + '/lib/angular-ui-router.js')
             .concat(project.BUILD_PATH + '/templates.js')
             .concat(project.BUILD_PATH + '/app.js')
+            .concat(project.APP_PATH + '/testApi.js')
             .concat('./bower_components/sinon-1.17.3/index.js')
             .concat(project.TEST_FILES),
         exclude: [],

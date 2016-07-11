@@ -2,6 +2,7 @@ target/
 other/tools/node_modules
 npm-debug.log
 other/tools/bower_components
+/other/tools/coverage/
 .DS_Store   #macOS
 .idea/*
 !idea/runConfigurations

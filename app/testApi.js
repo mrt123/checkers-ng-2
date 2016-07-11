@@ -3,7 +3,8 @@ var testApi = {
 
         var account = {
             execSingUpCallback: undefined,
-            execSignInCallback: undefined
+            execSignInCallback: undefined,
+            signInOptions: undefined
         };
         
         $provide.value('account', {
@@ -12,6 +13,9 @@ var testApi = {
             },
             onSignInSuccess: function (callback) {
                 account.execSignInCallback = callback;
+            },
+            signIn: function (username, pasword, opts) {
+                account.signInOptions = opts;
             },
             signOut: function (callback) {
                 callback();

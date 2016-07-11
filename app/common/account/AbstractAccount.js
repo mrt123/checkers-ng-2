@@ -26,8 +26,8 @@ function AbstractAccount() {
         this.executeCallbacks(this.logInSuccessCallbacks, args);
     };
 
-    Constructor.prototype.executeCallbacks = function(callbacks, args) {
-        angular.forEach(callbacks, function (callback) {
+    Constructor.prototype.executeCallbacks = function(callbacks, args) {  
+        angular.forEach(callbacks, function (callback) {   console.log('zzz', callback, args)
             callback.apply(undefined, args);
         });
     };

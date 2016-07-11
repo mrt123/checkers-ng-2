@@ -24,7 +24,7 @@ module.exports = function (config) {
             .concat(project.BUILD_PATH + '/lib/angular.js')
             
             // SOURCES
-            .concat(project.APP_PATH + '/*/!(*.spec).js')
+            .concat(project.APP_PATH + '/**/!(*.spec).js')
 
             // TEST LIBS
             .concat('./node_modules/angular-mocks/angular-mocks.js')
@@ -42,7 +42,7 @@ module.exports = function (config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             // source files, that you wanna generate coverage for
-            '../../app/*/!(*.spec).js' : ['coverage']
+            '../../app/**/!(*.spec).js' : ['coverage']
         },
 
 

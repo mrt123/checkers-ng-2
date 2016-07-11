@@ -22,7 +22,7 @@ describe('NavBarCtrl : ', function () {
 
     describe('vm.logout()', function () {
         
-        it('Sets vm.logout to false on vm.logout().', inject(function ($timeout) {
+        it('Sets vm.loggedIn to false on vm.logout().', inject(function ($timeout) {
             
             //ARRANGE
             controller.loggedIn = true;

@@ -1,7 +1,7 @@
 module.exports = function (config) {
     var Project = require('./gulp-tasks/Project');
     var project = new Project();
-    
+    console.log(project.LIB_BUILD_PATH + '/*.js');
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -10,31 +10,19 @@ module.exports = function (config) {
 
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['jasmine'],
-        
 
-        // https://karma-runner.github.io/1.0/config/configuration-file.html
+
         files: []
-            
-            // INTEGRATION LIBS
-            //.concat(project.BUILD_PATH + '/lib/parse.js')
-            //.concat(project.BUILD_PATH + '/lib/jquery.js')
-            //.concat(project.BUILD_PATH + '/lib/angular-ui-router.js')
-            
-            // LIBS
+            .concat(project.BUILD_PATH + '/lib/parse.js')
+            .concat(project.BUILD_PATH + '/lib/jquery.js')
             .concat(project.BUILD_PATH + '/lib/angular.js')
-            
-            // SOURCES
-            .concat(project.APP_PATH + '/**/!(*.spec).js')
-
-            // TEST LIBS
             .concat('./node_modules/angular-mocks/angular-mocks.js')
-            .concat('./bower_components/sinon-1.17.3/index.js')
-
-            // TEST SRC
+            .concat(project.BUILD_PATH + '/lib/angular-ui-router.js')
+            .concat(project.BUILD_PATH + '/templates.js')
+            .concat(project.BUILD_PATH + '/app.js')
             .concat(project.APP_PATH + '/testApi.js')
+            .concat('./bower_components/sinon-1.17.3/index.js')
             .concat(project.TEST_FILES),
-
-            
         exclude: [],
 
 
@@ -49,7 +37,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: [ 'coverage'],
+        reporters: [ 'dots', 'coverage'],
 
 
         // web server port

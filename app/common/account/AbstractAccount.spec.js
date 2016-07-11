@@ -1,4 +1,4 @@
-fdescribe('AbstractAccount : ', function () {
+describe('AbstractAccount : ', function () {
 
     beforeEach(module('AbstractAccount'));
     
@@ -34,19 +34,8 @@ fdescribe('AbstractAccount : ', function () {
         it("executes sign up callbacks", inject(function (AbstractAccount) {
             // ARRANGE
             var accountUnderTest = new AbstractAccount('testedAccount');
-            expect(accountUnderTest.logInSuccessCallbacks, []);
-
-            var callback1 = function() {
-                console.log('xxxxx', JSON.stringify(arguments));
-            };
-            
-            
-            
             var callback1 = sinon.spy();
             var callback2 = sinon.spy();
-            var stubbedFunction = sinon.stub({
-                someCallback: function() {}
-            });
 
             accountUnderTest.addOnSignUpCallback(callback1);
             accountUnderTest.addOnSignUpCallback(callback2);
@@ -56,10 +45,26 @@ fdescribe('AbstractAccount : ', function () {
 
             // ASSERT
             expect(callback1.calledWith({ 0: 1, 1: 2, 2: 3 }));
-            //expect(callback2.calledWith).toEqual([1,2,3]);
+            expect(callback2.calledWith({ 0: 1, 1: 2, 2: 3 }));
         }));
     });
 
+    describe("executeLoginSuccessCallbacks", function () {
+        it("executes login callbacks", inject(function (AbstractAccount) {
+            // ARRANGE
+            var accountUnderTest = new AbstractAccount('testedAccount');
+            var callback1 = sinon.spy();
+            var callback2 = sinon.spy();
 
+            accountUnderTest.addOnLoginCallback(callback1);
+            accountUnderTest.addOnLoginCallback(callback2);
 
+            // ACT
+            accountUnderTest.executeLoginSuccessCallbacks([1,2,3]);
+
+            // ASSERT
+            expect(callback1.calledWith({ 0: 1, 1: 2, 2: 3 }));
+            expect(callback2.calledWith({ 0: 1, 1: 2, 2: 3 }));
+        }));
+    });
 }); 

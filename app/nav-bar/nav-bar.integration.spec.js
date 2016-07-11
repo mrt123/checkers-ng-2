@@ -1,4 +1,4 @@
-describe('NavBarCtrl : ', function () {
+xdescribe('NavBarCtrl : ', function () {  // TODO : remove this skipped test
     beforeEach(module('app'));
 
     var controller;

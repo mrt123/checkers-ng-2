@@ -5,6 +5,7 @@ describe('account : ', function () {
 
     beforeEach(module('account',
         function ($provide) {
+
             $provide.value('facebook', {
                 onLoad: function (callback) {
                     execFacebookLoad = callback;
@@ -28,18 +29,24 @@ describe('account : ', function () {
             });
 
             $provide.value('parseAccountVendor', {
-                init: function () { },
-                signUp: function () { },
-                getUser: function () { },
-                getUsername: function () { },
-                onSignUpSuccess: function () { },
-                onSignInSuccess: function () { }
+                init: function () {
+                },
+                signUp: function () {
+                },
+                getUser: function () {
+                },
+                getUsername: function () {
+                },
+                onSignUpSuccess: function () {
+                },
+                onSignInSuccess: function () {
+                }
             });
         }
     ));
 
     describe('activate()', function () {
-        
+
         describe('facebook onLoad', function () {
 
             it('Sign-in facebook user into native account when facebook user is logged.', inject(function (account, parseAccountVendor) {
@@ -55,7 +62,7 @@ describe('account : ', function () {
                 execFacebookLoad();
 
                 // ASSERT
-                expect(accountSignIn.getCall(0).args).toEqual([ 'mmm@zz.com', 123, singInOptions ]);
+                expect(accountSignIn.getCall(0).args).toEqual(['mmm@zz.com', 123, singInOptions]);
             }));
 
             it('Sign-up facebook user for a native account when facebook user is logged, but has no native account.', inject(function (account, parseAccountVendor) {
@@ -70,11 +77,11 @@ describe('account : ', function () {
                 execFacebookLoad();
 
                 // ASSERT
-                expect(accountSignUp.getCall(0).args).toEqual([ 'mmm@zz.com', 123, undefined ]);
+                expect(accountSignUp.getCall(0).args).toEqual(['mmm@zz.com', 123, undefined]);
             }));
 
         });
-        
+
         describe('facebook onLogin', function () {
 
             it('Sign-in facebook user into native account when facebook user is logged.', inject(function (account, parseAccountVendor) {
@@ -90,7 +97,7 @@ describe('account : ', function () {
                 execFacebookLogin();
 
                 // ASSERT
-                expect(accountSignIn.getCall(0).args).toEqual([ 'mmm@zz.com', 123, singInOptions ]);
+                expect(accountSignIn.getCall(0).args).toEqual(['mmm@zz.com', 123, singInOptions]);
             }));
 
             it('Sign-up facebook user for a native account when facebook user is logged, but has no native account.', inject(function (account, parseAccountVendor) {
@@ -105,27 +112,28 @@ describe('account : ', function () {
                 execFacebookLogin();
 
                 // ASSERT
-                expect(accountSignUp.getCall(0).args).toEqual([ 'mmm@zz.com', 123, undefined ]);
+                expect(accountSignUp.getCall(0).args).toEqual(['mmm@zz.com', 123, undefined]);
             }));
         });
-        
+
         describe('signOut()', function () {
 
             it('LogOut facebook user and native user.', inject(function (account, parseAccountVendor, facebook) {
-            
+
                 //ARRANGE
                 parseAccountVendor.signOut = function (callback) {
                     callback();
                 };
                 var accountLogOut = sinon.spy(parseAccountVendor, 'signOut');
-                
-                facebook.logOut = function() {};
+
+                facebook.logOut = function () {
+                };
                 var facebookLogOut = sinon.spy(facebook, 'logOut');
-                
-            
+
+
                 // ACT
                 account.signOut();
-            
+
                 // ASSERT
                 expect(facebookLogOut.calledOnce).toEqual(true);
                 expect(accountLogOut.calledOnce).toEqual(true);

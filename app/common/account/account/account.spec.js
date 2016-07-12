@@ -1,6 +1,7 @@
-fdescribe('account : ', function () {
+describe('account : ', function () {
 
     var execFacebookLoad;
+    var execFacebookLogin;
 
     beforeEach(module('account',
         function ($provide) {
@@ -9,7 +10,7 @@ fdescribe('account : ', function () {
                     execFacebookLoad = callback;
                 },
                 onLogin: function (callback) {
-
+                    execFacebookLogin = callback;
                 },
                 getLoginStatus: function (callback) {
                     callback('connected');
@@ -29,7 +30,6 @@ fdescribe('account : ', function () {
             $provide.value('parseAccountVendor', {
                 init: function () { },
                 signUp: function () { },
-                signIn: function () { },
                 getUser: function () { },
                 getUsername: function () { },
                 onSignUpSuccess: function () { },
@@ -39,19 +39,74 @@ fdescribe('account : ', function () {
     ));
 
     describe('activate()', function () {
+        
+        describe('facebook onLoad', function () {
 
-        it('Reacts to Facebook library load status.', inject(function (account, parseAccountVendor) {
+            it('Sign-in facebook user into native account when facebook user is logged.', inject(function (account, parseAccountVendor) {
 
+                //ARRANGE
+                var singInOptions = null;
+                parseAccountVendor.signIn = function (email, id, opts) {
+                    singInOptions = opts;
+                };
+                var accountSignIn = sinon.spy(parseAccountVendor, 'signIn');
 
-            //ARRANGE
-            var accountVendorStub = sinon.stub(parseAccountVendor);
-            
-            // ACT
-            execFacebookLoad('loaded');
-            
-            // ASSERT
-            expect(accountVendorStub.signIn.args[0][0]).toEqual('mmm@zz.com');
-            expect(accountVendorStub.signIn.args[0][1]).toEqual(123);
-        }));
+                // ACT
+                execFacebookLoad();
+
+                // ASSERT
+                expect(accountSignIn.getCall(0).args).toEqual([ 'mmm@zz.com', 123, singInOptions ]);
+            }));
+
+            it('Sign-up facebook user for a native account when facebook user is logged, but has no native account.', inject(function (account, parseAccountVendor) {
+
+                //ARRANGE
+                parseAccountVendor.signIn = function (email, id, opts) {
+                    opts.fail();
+                };
+                var accountSignUp = sinon.stub(parseAccountVendor, 'signUp');
+
+                // ACT
+                execFacebookLoad();
+
+                // ASSERT
+                expect(accountSignUp.getCall(0).args).toEqual([ 'mmm@zz.com', 123, undefined ]);
+            }));
+
+        });
+        
+        describe('facebook onLogin', function () {
+
+            it('Sign-in facebook user into native account when facebook user is logged.', inject(function (account, parseAccountVendor) {
+
+                //ARRANGE
+                var singInOptions = null;
+                parseAccountVendor.signIn = function (email, id, opts) {
+                    singInOptions = opts;
+                };
+                var accountSignIn = sinon.spy(parseAccountVendor, 'signIn');
+
+                // ACT
+                execFacebookLogin();
+
+                // ASSERT
+                expect(accountSignIn.getCall(0).args).toEqual([ 'mmm@zz.com', 123, singInOptions ]);
+            }));
+
+            it('Sign-up facebook user for a native account when facebook user is logged, but has no native account.', inject(function (account, parseAccountVendor) {
+
+                //ARRANGE
+                parseAccountVendor.signIn = function (email, id, opts) {
+                    opts.fail();
+                };
+                var accountSignUp = sinon.stub(parseAccountVendor, 'signUp');
+
+                // ACT
+                execFacebookLogin();
+
+                // ASSERT
+                expect(accountSignUp.getCall(0).args).toEqual([ 'mmm@zz.com', 123, undefined ]);
+            }));
+        });
     });
 }); 

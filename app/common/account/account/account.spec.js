@@ -108,5 +108,28 @@ describe('account : ', function () {
                 expect(accountSignUp.getCall(0).args).toEqual([ 'mmm@zz.com', 123, undefined ]);
             }));
         });
+        
+        describe('signOut()', function () {
+
+            it('LogOut facebook user and native user.', inject(function (account, parseAccountVendor, facebook) {
+            
+                //ARRANGE
+                parseAccountVendor.signOut = function (callback) {
+                    callback();
+                };
+                var accountLogOut = sinon.spy(parseAccountVendor, 'signOut');
+                
+                facebook.logOut = function() {};
+                var facebookLogOut = sinon.spy(facebook, 'logOut');
+                
+            
+                // ACT
+                account.signOut();
+            
+                // ASSERT
+                expect(facebookLogOut.calledOnce).toEqual(true);
+                expect(accountLogOut.calledOnce).toEqual(true);
+            }));
+        });
     });
 }); 

@@ -37,14 +37,12 @@ function facebook($interval, $q, AbstractAccount) {
 
             var loaded = window.FacebookLoaded === true;
 
-            console.log(111, loaded);
-
             self.libstatus = getLibLoadStatus(loaded, elapsedTime);
             console.log('checking FB lib status: ' + self.libstatus);
             callback(self.libstatus);
 
             if (loaded) {
-                executeCallbacks(self.onLoadCallbacks);
+                self.executeCallbacks(self.onLoadCallbacks);
                 $interval.cancel(update);
             }
         }, LIB_LOAD_CHECK_INTERVAL_MS, getLibCheckCount());
@@ -60,7 +58,7 @@ function facebook($interval, $q, AbstractAccount) {
     function logOut(callback) {
         FB.logout(function(response) {
             callback(response);
-            executeCallbacks(self.onLogOutCallbacks);
+            self.executeCallbacks(self.onLogOutCallbacks);
         });
     }
 
@@ -111,11 +109,5 @@ function facebook($interval, $q, AbstractAccount) {
                 return STATUS.FAILED;
             }
         }
-    }
-
-    function executeCallbacks(callbacks) {
-        angular.forEach(callbacks, function(callback) {
-            callback();
-        })
     }
 }

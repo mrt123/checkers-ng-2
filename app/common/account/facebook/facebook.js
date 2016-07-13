@@ -29,13 +29,15 @@ function facebook($interval, $q, AbstractAccount) {
     
     return self;
 
-    function checkLibStatus(callback) {
+    function checkLibStatus(callback) { 
         var elapsedTime = 0;
 
         var update = $interval(function () {
             elapsedTime = elapsedTime + LIB_LOAD_CHECK_INTERVAL_MS;
 
             var loaded = window.FacebookLoaded === true;
+
+            console.log(111, loaded);
 
             self.libstatus = getLibLoadStatus(loaded, elapsedTime);
             console.log('checking FB lib status: ' + self.libstatus);

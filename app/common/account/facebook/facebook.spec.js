@@ -70,7 +70,7 @@ describe('facebook : ', function () {
             }));
     });
 
-    fdescribe('login()', function () {
+    describe('login()', function () {
 
         it('executes LoginSuccessCallbacks and callback argument upon successful FB login.', inject(function (facebook, $window) {
 
@@ -107,6 +107,109 @@ describe('facebook : ', function () {
 
                 // ASSERT
                 expect(FBLogin.callCount).toEqual(1);
+            })
+        );
+    });
+
+    describe('logout()', function () {
+
+        it('executes onLogOutCallbacks and callback argument upon successful FB logout.', inject(function (facebook, $window) {
+
+                //ARRANGE
+                var executeCallbacks = sinon.stub(facebook, 'executeCallbacks');
+                $window.FB = {
+                    logout: function (callback) {
+                        callback('facebook response');
+                    }
+                };
+                var callback = sinon.spy();
+                
+
+                // ACT
+                facebook.logOut(callback);
+
+                // ASSERT
+                expect(executeCallbacks.callCount).toEqual(1);
+                expect(executeCallbacks.getCall(0).args).toEqual([facebook.onLogOutCallbacks]);
+                expect(callback.getCall(0).args).toEqual(['facebook response']);
+            })
+        );
+    });
+
+    describe('getUser()', function () {
+
+        it('returns and resolves promise when FB.api() is successful.', inject(function (facebook, $window, $rootScope) {
+
+                //ARRANGE
+                $window.FB = {
+                    api: function (arg1, arg2, callback) {
+                        callback({ mickyMouse: 1 });
+                    }
+                };
+
+                // ACT
+                var result = facebook.getUser();
+                $rootScope.$apply();
+
+                // ASSERT
+                expect(result.$$state.value).toEqual({ mickyMouse: 1 }); 
+            })
+        );
+
+        it('returns and rejects promise when FB.api() return error.', inject(function (facebook, $window, $rootScope) {
+
+                //ARRANGE
+                $window.FB = {
+                    api: function (arg1, arg2, callback) {
+                        callback({ error: 1 });
+                    }
+                };
+
+                // ACT
+                var result = facebook.getUser();
+                $rootScope.$apply();
+
+                // ASSERT
+                expect(result.$$state.status).toEqual(2);
+            })
+        );
+
+        it('returns and rejects promise when FB.api() return no response.', inject(function (facebook, $window, $rootScope) {
+
+                //ARRANGE
+                $window.FB = {
+                    api: function (arg1, arg2, callback) {
+                        callback();
+                    }
+                };
+
+                // ACT
+                var result = facebook.getUser();
+                $rootScope.$apply();
+
+                // ASSERT
+                expect(result.$$state.status).toEqual(2);
+            })
+        );
+    });
+
+    describe('getLoginStatus()', function () {
+        
+        it('returns and rejects promise when FB.api() return no response.', inject(function (facebook, $window) {
+
+                //ARRANGE
+                $window.FB = {
+                    getLoginStatus: function (callback) {
+                        callback({ status: 33 });
+                    }
+                };
+                var functionSpy = sinon.spy();
+
+                // ACT
+                facebook.getLoginStatus(functionSpy);
+
+                // ASSERT
+                expect(functionSpy.getCall(0).args).toEqual([33]);
             })
         );
     });

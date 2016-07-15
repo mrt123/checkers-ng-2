@@ -6,7 +6,7 @@ function AbstractAccount() {
 
     function Constructor(name) {
         this.name = name;
-        this.signUpSuccessCallbacks = [];
+        this.signUpSuccessCallbacks = []; // TODO: replace with registerCallbacks : { success: [], failure: [] }, to improve verbosity of API
         this.logInSuccessCallbacks = [];
     }
 

@@ -1,4 +1,4 @@
-describe('parseAccountVendor : ', function () {
+fdescribe('parseAccountVendor : ', function () {
 
     beforeEach(module('parseAccountVendor',
         function ($provide) {
@@ -37,7 +37,7 @@ describe('parseAccountVendor : ', function () {
 
     describe('signUp()', function () {
 
-        fit('runs success arg function, and executes signUp success callbacks.', inject(function (parseAccountVendor, $window) {
+        it('runs success arg function, and executes signUp success callbacks.', inject(function (parseAccountVendor, $window) {
 
                 //ARRANGE
                 parseAccountVendor.getUsername = function () {
@@ -55,14 +55,6 @@ describe('parseAccountVendor : ', function () {
                                     return 'playerName';
                                 }
                             });
-                        },
-                        current: function () {
-                            return {
-                                getUsername: function () {
-                                },
-                                get: function () {
-                                }
-                            }
                         }
                     }
                 };
@@ -85,6 +77,89 @@ describe('parseAccountVendor : ', function () {
                     email: "xxx@zz.com",
                     playerName: 'playerName'
                 }]]);
+            })
+        );
+    });
+
+    describe('signIn()', function () {
+
+        it('runs success arg function, and executes signIn success callbacks.', inject(function (parseAccountVendor, $window) {
+
+                //ARRANGE
+                parseAccountVendor.getUsername = function () {
+                };
+                $window.Parse = {
+                    User: {
+                        logIn: function (username, password, opts) {
+                            opts.success({
+                                email: "xxx@zz.com",
+                                playerName: 'playerName',
+                                getUsername: function () {
+                                    return "xxx@zz.com";
+                                },
+                                get: function () {
+                                    return 'playerName';
+                                }
+                            });
+                        }
+                    }
+                };
+                var callback = sinon.spy();
+                parseAccountVendor.executeLoginSuccessCallbacks = sinon.spy(parseAccountVendor.executeLoginSuccessCallbacks);
+
+                // ACT
+                parseAccountVendor.signIn('username', 'password', {
+                    success: callback
+                });
+
+                // ASSERT
+                expect(callback.calledOnce).toEqual(true);
+                expect(callback.getCall(0).args).toEqual([{
+                    email: "xxx@zz.com",
+                    playerName: 'playerName'
+                }]);
+                expect(parseAccountVendor.executeLoginSuccessCallbacks.calledOnce).toEqual(true);
+                expect(parseAccountVendor.executeLoginSuccessCallbacks.getCall(0).args).toEqual([[{
+                    email: "xxx@zz.com",
+                    playerName: 'playerName'
+                }]]);
+            })
+        );
+    });
+
+    describe('getUser()', function () {
+
+        it('returns Parse user.', inject(function (parseAccountVendor, $window) {
+
+                //ARRANGE
+                $window.Parse = {
+                    initialize: sinon.spy(),
+                    User: {
+                        current: function () {
+                            return {
+                                email: "xxx@zz.com",
+                                playerName: 'playerName',
+                                getUsername: function () {
+                                    return "xxx@zz.com";
+                                },
+                                get: function () {
+                                    return 'playerName';
+                                }
+                            }
+                        }
+                    }
+                };
+
+
+                // ACT
+                var result = parseAccountVendor.getUser();
+
+                // ASSERT
+                expect(result).toEqual(
+                    {
+                        email: "xxx@zz.com",
+                        playerName: 'playerName'
+                    });
             })
         );
     });

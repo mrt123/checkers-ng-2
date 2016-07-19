@@ -1,4 +1,4 @@
-fdescribe('parseAccountVendor : ', function () {
+describe('parseAccountVendor : ', function () {
 
     beforeEach(module('parseAccountVendor',
         function ($provide) {
@@ -123,6 +123,35 @@ fdescribe('parseAccountVendor : ', function () {
                     email: "xxx@zz.com",
                     playerName: 'playerName'
                 }]]);
+            })
+        );
+    });
+
+    describe('signOut()', function () {
+
+        it('calls success argument upon successful logout.', inject(function (parseAccountVendor, $window) {
+
+                //ARRANGE
+                $window.Parse = {
+                    initialize: sinon.spy(),
+                    User: {
+                        logOut: function () {
+                            return {
+                                then : function(success) {
+                                    success();
+                                }
+                            }
+                        }
+                    }
+                };
+                var success = sinon.spy();
+
+                
+                // ACT
+                parseAccountVendor.signOut(success);
+
+                // ASSERT
+                expect(success.calledOnce).toEqual(true);
             })
         );
     });

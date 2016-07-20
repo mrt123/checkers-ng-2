@@ -20,8 +20,7 @@ function facebook($interval, $q, AbstractAccount) {
     self.logOut = logOut;
     self.getUser = getUser;
 
-    self.onLoadCallbacks = [];
-    self.onLoad = addOnLoadCallback;
+    self.deferredLibLoad = $q.defer();
     self.onLogin = self.addOnLoginCallback;
 
     self.onLogOutCallbacks = [];
@@ -29,7 +28,7 @@ function facebook($interval, $q, AbstractAccount) {
     
     return self;
 
-    function checkLibStatus(callback) { 
+    function checkLibStatus() { 
         var elapsedTime = 0;
 
         var update = $interval(function () {
@@ -39,10 +38,9 @@ function facebook($interval, $q, AbstractAccount) {
 
             self.libstatus = getLibLoadStatus(loaded, elapsedTime);
             console.log('checking FB lib status: ' + self.libstatus);
-            callback(self.libstatus);
 
             if (loaded) {
-                self.executeCallbacks(self.onLoadCallbacks);
+                self.deferredLibLoad.resolve(self.libstatus);
                 $interval.cancel(update);
             }
         }, LIB_LOAD_CHECK_INTERVAL_MS, getLibCheckCount());
@@ -80,10 +78,6 @@ function facebook($interval, $q, AbstractAccount) {
         FB.getLoginStatus(function(response) {
             callback(response.status)
         },true);
-    }
-
-    function addOnLoadCallback(callback) {
-        self.onLoadCallbacks.push(callback);
     }
 
     function addOnLogOutCallback(callback) {

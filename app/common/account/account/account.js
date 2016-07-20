@@ -5,7 +5,7 @@ angular
 function Account(accountVendor, facebookVendor) {
     accountVendor.init();
     activate();
-    
+
     this.signUp = accountVendor.signUp;
     this.signIn = accountVendor.signIn;
     this.signOut = signOut;
@@ -16,19 +16,19 @@ function Account(accountVendor, facebookVendor) {
     this.deferredLogin = accountVendor.deferredLogin;
 
     function activate() {
-        facebookVendor.onLoad(reactToFacebookStatus);
-        facebookVendor.onLogin(reactToFacebookStatus);
+        facebookVendor.deferredLibLoad.promise.then(checkFacebookLoginStatus);
+        facebookVendor.onLogin(checkFacebookLoginStatus);
     }
-    
+
     function signOut(callback) {
-        accountVendor.signOut(function() {
+        accountVendor.signOut(function () {
             facebookVendor.logOut(callback);
         });
     }
 
-    function reactToFacebookStatus() {
-        facebookVendor.getLoginStatus(function(status) {
-            if(status === 'connected') {
+    function checkFacebookLoginStatus() {
+        facebookVendor.getLoginStatus(function (status) {
+            if (status === 'connected') {
                 reactToFacebookConnected();
             }
         });
@@ -39,10 +39,9 @@ function Account(accountVendor, facebookVendor) {
     }
 
     function signFacebookUserIntoAccount(facebookUser) {
-        accountVendor.signIn(facebookUser.email, facebookUser.id, {
-            success: undefined,
-            fail: createAccountForFacebookUser.bind(undefined, facebookUser)
-        });
+        accountVendor.signIn(facebookUser.email, facebookUser.id).then(
+            undefined,
+            createAccountForFacebookUser.bind(undefined, facebookUser));
     }
 
     function createAccountForFacebookUser(facebookUser) {

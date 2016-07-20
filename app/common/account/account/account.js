@@ -17,7 +17,7 @@ function Account(accountVendor, facebookVendor) {
 
     function activate() {
         facebookVendor.deferredLibLoad.promise.then(checkFacebookLoginStatus);
-        facebookVendor.onLogin(checkFacebookLoginStatus);
+        facebookVendor.deferredLogin.promise.then(checkFacebookLoginStatus);
     }
 
     function signOut(callback) {

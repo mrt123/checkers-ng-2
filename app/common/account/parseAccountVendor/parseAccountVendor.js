@@ -41,7 +41,7 @@ function parseAccountVendor($q, AbstractAccount) {
                 .then(function (vendorUser) {
                     var user = generateUser(vendorUser);
                     resolve(user);
-                    self.deferredLogin.resolve(user);
+                    self.deferredLogin.promise.resolve(user);
                 },
                 reject
             );

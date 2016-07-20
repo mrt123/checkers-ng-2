@@ -21,7 +21,7 @@ function facebook($interval, $q, AbstractAccount) {
     self.getUser = getUser;
 
     self.deferredLibLoad = $q.defer();
-    self.onLogin = self.addOnLoginCallback;
+    self.deferredLogin = $q.defer();
 
     self.onLogOutCallbacks = [];
     self.onLogOut = addOnLogOutCallback;
@@ -46,11 +46,13 @@ function facebook($interval, $q, AbstractAccount) {
         }, LIB_LOAD_CHECK_INTERVAL_MS, getLibCheckCount());
     }
 
-    function login(callback) {
-        FB.login(function (response) {
-            callback(response);
-            self.executeLoginSuccessCallbacks([]);
-        }, {scope: 'public_profile,email'});
+    function login() {   console.log(222, 'login');
+        return $q(function(resolve, reject) {   console.log(333, 'login');
+            FB.login(function (response) {   console.log(4444, 'ready to resolve');
+                resolve(response);
+                self.deferredLogin.resolve(response);
+            }, {scope: 'public_profile,email'});
+        });
     }
 
     function logOut(callback) {

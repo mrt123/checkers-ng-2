@@ -13,9 +13,7 @@ function SignUpCtrl($scope, account, $timeout, $state, facebook) {
     }
 
     function loginWithFacebook() {
-        facebook.login(function (response) {
-            signUpSuccess();
-        });
+        facebook.login().then(signUpSuccess);
     }
 
     function signUpSuccess() {

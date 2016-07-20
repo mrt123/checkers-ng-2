@@ -35,43 +35,20 @@ describe('parseAccountVendor : ', function () {
         );
     });
 
-    describe('signUp()', function () {
+    describe('register()', function () {
 
-        it('runs success arg function, and executes signUp success callbacks.', inject(function (parseAccountVendor, $window) {
+        it('executes signUp success callbacks.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
 
                 //ARRANGE
-                parseAccountVendor.getUsername = function () {
-                };
-                $window.Parse = {
-                    User: {
-                        signUp: function (username, password, user, opts) {
-                            opts.success({
-                                email: "xxx@zz.com",
-                                playerName: 'playerName',
-                                getUsername: function () {
-                                    return "xxx@zz.com";
-                                },
-                                get: function () {
-                                    return 'playerName';
-                                }
-                            });
-                        }
-                    }
-                };
-                var callback = sinon.spy();
+                mockVendorRegister($window, $q);
                 parseAccountVendor.executeSignUpSuccessCallbacks = sinon.spy(parseAccountVendor.executeSignUpSuccessCallbacks);
 
                 // ACT
-                parseAccountVendor.signUp('username', 'password', 'playerName', {
-                    success: callback
-                });
+                parseAccountVendor.signUp('username', 'password', 'playerName');
+                $rootScope.$apply();
+                
 
                 // ASSERT
-                expect(callback.calledOnce).toEqual(true);
-                expect(callback.getCall(0).args).toEqual([{
-                    email: "xxx@zz.com",
-                    playerName: 'playerName'
-                }]);
                 expect(parseAccountVendor.executeSignUpSuccessCallbacks.calledOnce).toEqual(true);
                 expect(parseAccountVendor.executeSignUpSuccessCallbacks.getCall(0).args).toEqual([[{
                     email: "xxx@zz.com",
@@ -81,7 +58,7 @@ describe('parseAccountVendor : ', function () {
         );
     });
 
-    describe('signIn()', function () {
+    describe('login()', function () {
 
         it('executes signIn success callbacks.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
 
@@ -193,6 +170,25 @@ describe('parseAccountVendor : ', function () {
         $window.Parse = {
             User: {
                 logIn: function () {
+                    return $q(function(resolve) {
+                        resolve({
+                            getUsername: function () {
+                                return "xxx@zz.com";
+                            },
+                            get: function () {
+                                return 'playerName';
+                            }
+                        });
+                    });
+                }
+            }
+        };
+    }
+    
+    function mockVendorRegister($window, $q) {
+        $window.Parse = {
+            User: {
+                signUp: function () {
                     return $q(function(resolve) {
                         resolve({
                             getUsername: function () {

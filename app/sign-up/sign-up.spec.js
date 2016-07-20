@@ -1,4 +1,4 @@
-describe('LoginCtrl : ', function () {
+describe('SignUpCtrl : ', function () {
 
     var controller;
     var execFacebookLogin;
@@ -28,15 +28,15 @@ describe('LoginCtrl : ', function () {
     });
     
     describe('scope.signUp', function () {
-
+ 
         it('Reacts to successful login.', inject(function ($state) {
-
+ 
             //ARRANGE
             var stateStub = sinon.stub($state);
 
             // ACT
-            $scope.signUp('email', 'password');
-            mockAccount.signUpOptions.success();
+            $scope.signUp('email', 'password', 'playerName');
+            mockAccount.register.resolve();
 
             // ASSERT
             expect(stateStub.go.calledWith('home')).toEqual(true);
@@ -44,11 +44,9 @@ describe('LoginCtrl : ', function () {
 
         it('Reacts to failed login.', inject(function ($state, $timeout) {
 
-            //ARRANGE
-
             // ACT
             $scope.signUp('xxx', 'xxx');
-            mockAccount.signUpOptions.fail({}, {
+            mockAccount.register.reject({
                 message: 'account failed to sign up'
             });
 

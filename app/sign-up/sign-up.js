@@ -8,10 +8,8 @@ function SignUpCtrl($scope, account, $timeout, $state, facebook) {
     $scope.loginWithFacebook = loginWithFacebook;
 
     function signUp(email, password, playerName) {
-        account.signUp(email, password, playerName, {
-            success: signUpSuccess,
-            fail: showError
-        });
+        account.signUp(email, password, playerName)
+            .then(signUpSuccess, showError);
     }
 
     function loginWithFacebook() {
@@ -24,7 +22,7 @@ function SignUpCtrl($scope, account, $timeout, $state, facebook) {
         $state.go('home');
     }
 
-    function showError(user, error) {
+    function showError(error) {
         $timeout(function () {   // avoid existing digest
             $scope.error = error.message;
         });

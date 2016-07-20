@@ -55,8 +55,8 @@ describe('LoginCtrl : ', function () {
             // ACT
             $scope.login('email', 'password');
             mockAccount.login.resolve();
-            
-
+             
+ 
             // ASSERT
             expect(stateStub.go.calledWith('home')).toEqual(true);
         }));

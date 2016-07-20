@@ -4,6 +4,7 @@ var testApi = {
         var account = {
             execSingUpCallback: undefined,
             login: {},
+            register: {},
             signUpOptions: undefined
         };
 
@@ -24,8 +25,15 @@ var testApi = {
                     }
                 };
             },
-            signUp: function (username, pasword, playerName, opts) {
-                account.signUpOptions = opts;
+            signUp: function (username, pasword, playerName) {
+                return {
+                    then: function (resolve, reject) {
+                        account.register = {
+                            resolve: resolve,
+                            reject: reject
+                        }
+                    }
+                };
             },
             signOut: function (callback) {
                 callback();

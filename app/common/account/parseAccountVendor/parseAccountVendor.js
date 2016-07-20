@@ -22,25 +22,16 @@ function parseAccountVendor($q, AbstractAccount) {
         Parse.serverURL = 'http://localhost:1337/parse';
     }
 
-    function signUp(username, password, playerName, callbacks) {
-        callbacks = callbacks || {};
-        var success = callbacks.success;
-        var fail = callbacks.fail;
-
-        return Parse.User.signUp(username, password, {playerName: playerName}, {
-            success: function (vendorUser) {
-                var user = generateUser(vendorUser);
-
-                if (success) {
-                    success(user);
-                }
-                self.executeSignUpSuccessCallbacks([user]);
-            },
-            error: function (vendorUser, error) {
-                if (fail) {
-                    fail(generateUser(vendorUser), error);
-                }
-            }
+    function signUp(username, password, playerName) {
+        return $q(function (resolve, reject) {
+            Parse.User.signUp(username, password, {playerName: playerName})
+                .then(function (vendorUser) {
+                    var user = generateUser(vendorUser);
+                    resolve(user);
+                    self.executeSignUpSuccessCallbacks([user]);
+                },
+                reject
+            );
         });
     }
 

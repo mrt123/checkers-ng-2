@@ -1,15 +1,14 @@
 var testApi = {
-    mockAccount: function ($provide, $q) {
+    mockAccount: function ($provide) {
 
         var account = {
             execSingUpCallback: undefined,
             execSignInCallback: undefined,
             signInOptions: undefined,
-            signInSuccess: undefined,
-            signInFail: undefined,
+            login: {},
             signUpOptions: undefined
         };
-        
+
         $provide.value('account', {
             onSignUpSuccess: function (callback) {
                 account.execSingUpCallback = callback;
@@ -18,9 +17,14 @@ var testApi = {
                 account.execSignInCallback = callback;
             },
             signIn: function (username, pasword) {
-                return $q(function(resolve) {
-                    resolve({});
-                });
+                return {
+                    then: function (resolve, reject) {
+                        account.login = {
+                            resolve: resolve,
+                            reject: reject
+                        }
+                    }
+                };
             },
             signUp: function (username, pasword, playerName, opts) {
                 account.signUpOptions = opts;
@@ -29,7 +33,7 @@ var testApi = {
                 callback();
             }
         });
-        
+
         return account;
     }
 };

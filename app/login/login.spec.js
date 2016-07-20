@@ -8,10 +8,8 @@ describe('LoginCtrl : ', function () {
 
     beforeEach(module('app.LoginCtrl', function ($provide) {
 
-        inject(function($q){
-            mockAccount = testApi.mockAccount($provide, $q);
-        });
-        
+        mockAccount = testApi.mockAccount($provide);
+
         $provide.value('facebook', {
             login: function (callback) {
                 execFacebookLogin = callback;
@@ -44,19 +42,20 @@ describe('LoginCtrl : ', function () {
             // ASSERT
             expect(stateStub.go.calledWith('home')).toEqual(true);
         }));
-    });  
-    
-    
+    });
+
+
     describe('scope.login', function () {
 
-        fit('Reacts to successful login.', inject(function ($state, $q, $rootScope) {
+        it('Reacts to successful login.', inject(function ($state, $q, $rootScope) {
 
             //ARRANGE
             var stateStub = sinon.stub($state);
 
             // ACT
             $scope.login('email', 'password');
-            $rootScope.$apply();
+            mockAccount.login.resolve();
+            
 
             // ASSERT
             expect(stateStub.go.calledWith('home')).toEqual(true);
@@ -64,15 +63,13 @@ describe('LoginCtrl : ', function () {
 
         it('Reacts to failed login.', inject(function ($state, $timeout) {
 
-            //ARRANGE
-
             // ACT
-            $scope.login('xxx', 'xxx');
-            mockAccount.signInOptions.fail({}, {
+            $scope.login();
+            mockAccount.login.reject({
                 message: 'account failed to login'
             });
-
             $timeout.flush();
+            
 
             // ASSERT
             expect($scope.error).toEqual('account failed to login');

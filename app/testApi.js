@@ -3,8 +3,6 @@ var testApi = {
 
         var account = {
             execSingUpCallback: undefined,
-            execSignInCallback: undefined,
-            signInOptions: undefined,
             login: {},
             signUpOptions: undefined
         };

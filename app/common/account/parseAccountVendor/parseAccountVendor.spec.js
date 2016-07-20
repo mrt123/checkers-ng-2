@@ -123,6 +123,35 @@ describe('parseAccountVendor : ', function () {
         );
     });
 
+    describe('signOut()', function () {
+
+        it('calls success argument upon successful logout.', inject(function (parseAccountVendor, $window) {
+
+                //ARRANGE
+                $window.Parse = {
+                    initialize: sinon.spy(),
+                    User: {
+                        logOut: function () {
+                            return {
+                                then : function(success) {
+                                    success();
+                                }
+                            }
+                        }
+                    }
+                };
+                var success = sinon.spy();
+
+                
+                // ACT
+                parseAccountVendor.signOut(success);
+
+                // ASSERT
+                expect(success.calledOnce).toEqual(true);
+            })
+        );
+    });
+
     describe('getUser()', function () {
 
         it('returns Parse user.', inject(function (parseAccountVendor, $window) {

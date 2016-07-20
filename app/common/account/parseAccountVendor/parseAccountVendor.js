@@ -12,8 +12,8 @@ function parseAccountVendor($q, AbstractAccount) {
     self.getUser = getUser;
     self.getUsername = getUsername;
 
-    self.onSignUpSuccess = self.addOnSignUpCallback;
-    self.onSignInSuccess = self.addOnLoginCallback;
+    self.deferredRegister = $q.defer();
+    self.deferredLogin = $q.defer();
     
     return self;
 
@@ -28,7 +28,7 @@ function parseAccountVendor($q, AbstractAccount) {
                 .then(function (vendorUser) {
                     var user = generateUser(vendorUser);
                     resolve(user);
-                    self.executeSignUpSuccessCallbacks([user]);
+                    self.deferredRegister.resolve(user);
                 },
                 reject
             );
@@ -41,7 +41,7 @@ function parseAccountVendor($q, AbstractAccount) {
                 .then(function (vendorUser) {
                     var user = generateUser(vendorUser);
                     resolve(user);
-                    self.executeLoginSuccessCallbacks([user]);
+                    self.deferredLogin.resolve(user);
                 },
                 reject
             );

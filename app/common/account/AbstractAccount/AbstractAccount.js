@@ -18,10 +18,6 @@ function AbstractAccount() {
         this.logInSuccessCallbacks.push(callback);
     };
 
-    Constructor.prototype.executeSignUpSuccessCallbacks = function(args) {
-        this.executeCallbacks(this.signUpSuccessCallbacks, args);
-    };
-
     Constructor.prototype.executeLoginSuccessCallbacks = function(args) {
         this.executeCallbacks(this.logInSuccessCallbacks, args);
     };

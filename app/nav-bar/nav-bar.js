@@ -20,8 +20,8 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     // PRIVATE METHODS
     function activate() {
         facebook.checkLibStatus(reactToFacebookLibLoadStatus);
-        account.onSignUpSuccess(reactToUserPresence);
-        account.onSignInSuccess(reactToUserPresence);
+        account.deferredRegister.promise.then(reactToUserPresence);
+        account.deferredLogin.promise.then(reactToUserPresence);
     }
 
     function reactToFacebookLibLoadStatus(status){

@@ -1,10 +1,12 @@
 var testApi = {
-    mockAccount: function ($provide) {
+    mockAccount: function ($provide, $q) {
 
         var account = {
             execSingUpCallback: undefined,
             execSignInCallback: undefined,
             signInOptions: undefined,
+            signInSuccess: undefined,
+            signInFail: undefined,
             signUpOptions: undefined
         };
         
@@ -15,8 +17,10 @@ var testApi = {
             onSignInSuccess: function (callback) {
                 account.execSignInCallback = callback;
             },
-            signIn: function (username, pasword, opts) {
-                account.signInOptions = opts;
+            signIn: function (username, pasword) {
+                return $q(function(resolve) {
+                    resolve({});
+                });
             },
             signUp: function (username, pasword, playerName, opts) {
                 account.signUpOptions = opts;

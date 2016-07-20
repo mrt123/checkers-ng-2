@@ -14,17 +14,15 @@ function LoginCtrl($scope, account, $timeout, $state, facebook) {
     }
 
     function login(email, password) {
-        account.signIn(email, password, {
-            success: loginSuccess, 
-            fail: showError
-        });
+        account.signIn(email, password)
+            .then(loginSuccess, showError);
     }
 
     function loginSuccess() {
         $state.go('home');
     }
 
-    function showError(user, error) {
+    function showError(error) {
         $timeout(function () {   // avoid existing digest
             $scope.error = error.message;
         });

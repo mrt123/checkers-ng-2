@@ -1,4 +1,4 @@
-fdescribe('parseAccountVendor : ', function () {
+describe('parseAccountVendor : ', function () {
 
     beforeEach(module('parseAccountVendor',
         function ($provide) {
@@ -83,46 +83,42 @@ fdescribe('parseAccountVendor : ', function () {
 
     describe('signIn()', function () {
 
-        it('runs success arg function, and executes signIn success callbacks.', inject(function (parseAccountVendor, $window) {
+        it('executes signIn success callbacks.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
 
-                //ARRANGE
-                parseAccountVendor.getUsername = function () {
-                };
-                $window.Parse = {
-                    User: {
-                        logIn: function (username, password, opts) {
-                            opts.success({
-                                email: "xxx@zz.com",
-                                playerName: 'playerName',
-                                getUsername: function () {
-                                    return "xxx@zz.com";
-                                },
-                                get: function () {
-                                    return 'playerName';
-                                }
-                            });
-                        }
-                    }
-                };
-                var callback = sinon.spy();
+                mockVendorUserLogin($window, $q);
                 parseAccountVendor.executeLoginSuccessCallbacks = sinon.spy(parseAccountVendor.executeLoginSuccessCallbacks);
 
                 // ACT
-                parseAccountVendor.signIn('username', 'password', {
-                    success: callback
-                });
+                parseAccountVendor.signIn('username', 'password');
+                $rootScope.$apply();
+                
 
                 // ASSERT
-                expect(callback.calledOnce).toEqual(true);
-                expect(callback.getCall(0).args).toEqual([{
-                    email: "xxx@zz.com",
-                    playerName: 'playerName'
-                }]);
                 expect(parseAccountVendor.executeLoginSuccessCallbacks.calledOnce).toEqual(true);
                 expect(parseAccountVendor.executeLoginSuccessCallbacks.getCall(0).args).toEqual([[{
                     email: "xxx@zz.com",
                     playerName: 'playerName'
                 }]]);
+            })
+        );
+
+        it('returns user', inject(function (parseAccountVendor, $window, $q, $rootScope) {
+
+                //ARRANGE
+                mockVendorUserLogin($window, $q);
+
+                // ACT
+                var resultPromise = parseAccountVendor.signIn('username', 'password');
+                var resolvedValue = undefined;
+                resultPromise.then(function(value) { resolvedValue = value; });
+                $rootScope.$apply();
+                
+                
+                // ASSERT
+                expect(resolvedValue).toEqual({
+                    email: "xxx@zz.com",
+                    playerName: 'playerName'
+                });
             })
         );
     });
@@ -163,4 +159,23 @@ fdescribe('parseAccountVendor : ', function () {
             })
         );
     });
+    
+    function mockVendorUserLogin($window, $q) {
+        $window.Parse = {
+            User: {
+                logIn: function () {
+                    return $q(function(resolve) {
+                        resolve({
+                            getUsername: function () {
+                                return "xxx@zz.com";
+                            },
+                            get: function () {
+                                return 'playerName';
+                            }
+                        });
+                    });
+                }
+            }
+        };
+    }
 }); 

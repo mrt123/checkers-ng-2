@@ -7,8 +7,11 @@ describe('LoginCtrl : ', function () {
 
 
     beforeEach(module('app.LoginCtrl', function ($provide) {
-        mockAccount = testApi.mockAccount($provide);
 
+        inject(function($q){
+            mockAccount = testApi.mockAccount($provide, $q);
+        });
+        
         $provide.value('facebook', {
             login: function (callback) {
                 execFacebookLogin = callback;
@@ -46,14 +49,14 @@ describe('LoginCtrl : ', function () {
     
     describe('scope.login', function () {
 
-        it('Reacts to successful login.', inject(function ($state) {
+        fit('Reacts to successful login.', inject(function ($state, $q, $rootScope) {
 
             //ARRANGE
             var stateStub = sinon.stub($state);
 
             // ACT
             $scope.login('email', 'password');
-            mockAccount.signInOptions.success();
+            $rootScope.$apply();
 
             // ASSERT
             expect(stateStub.go.calledWith('home')).toEqual(true);

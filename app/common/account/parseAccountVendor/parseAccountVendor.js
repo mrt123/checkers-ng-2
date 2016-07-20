@@ -26,11 +26,11 @@ function parseAccountVendor($q, AbstractAccount) {
         callbacks = callbacks || {};
         var success = callbacks.success;
         var fail = callbacks.fail;
-        
-        return Parse.User.signUp(username, password, { playerName: playerName}, {
+
+        return Parse.User.signUp(username, password, {playerName: playerName}, {
             success: function (vendorUser) {
                 var user = generateUser(vendorUser);
-                
+
                 if (success) {
                     success(user);
                 }
@@ -44,23 +44,16 @@ function parseAccountVendor($q, AbstractAccount) {
         });
     }
 
-    function signIn(username, password, callbacks) {
-        callbacks = callbacks || {};
-        var success = callbacks.success;
-        var fail = callbacks.fail;
-        
-        return Parse.User.logIn(username, password, {
-            success: function (vendorUser) {
-                var user = generateUser(vendorUser);
-                
-                if (angular.isFunction(success)) {
-                    success(user);
-                }
-                self.executeLoginSuccessCallbacks([user]);
-            },
-            error: function (vendorUser, error) {
-                fail(generateUser(vendorUser), error);
-            }
+    function signIn(username, password) {
+        return $q(function (resolve, reject) {
+            Parse.User.logIn(username, password)
+                .then(function (vendorUser) {
+                    var user = generateUser(vendorUser);
+                    resolve(user);
+                    self.executeLoginSuccessCallbacks([user]);
+                },
+                reject
+            );
         });
     }
 
@@ -68,7 +61,7 @@ function parseAccountVendor($q, AbstractAccount) {
         return Parse.User.logOut()
             .then(signOutSuccess, SignOutFail);
     }
-    
+
     function getUser() {
         return generateUser(Parse.User.current());
     }

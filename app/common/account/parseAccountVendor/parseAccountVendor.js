@@ -1,9 +1,9 @@
 angular
-    .module('parseAccountVendor', ['AbstractAccount'])
+    .module('parseAccountVendor', [])
     .service('parseAccountVendor', parseAccountVendor);
 
-function parseAccountVendor($q, AbstractAccount) {
-    var self = new AbstractAccount('parse');
+function parseAccountVendor($q) {
+    var self = {};
 
     self.init = init;
     self.signUp = signUp;

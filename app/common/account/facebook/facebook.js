@@ -1,9 +1,9 @@
 angular
-    .module('facebook', ['AbstractAccount'])
+    .module('facebook', [])
     .service('facebook', facebook);
 
-function facebook($interval, $q, AbstractAccount) {
-    var self = new AbstractAccount('facebook');
+function facebook($interval, $q) {
+    var self = {};
     var MAX_LIB_LOAD_TIME_MS = 5000;
     var LIB_LOAD_CHECK_INTERVAL_MS = 100;
     var STATUS = {

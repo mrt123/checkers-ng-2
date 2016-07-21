@@ -1,10 +1,19 @@
 <div class="ch-nav-bar" ng-controller="NavBarCtrl as nav">
-    <div class="account" ng-if="!nav.loggedIn">
-        <a ui-sref="sign-up">SignUp</a>
-        <a ui-sref="login">Log In</a>
+    
+    <div class="account" ng-if="nav.showAccountMenu">
+        <div ng-if="!nav.loggedIn">
+            <a ui-sref="sign-up">SignUp</a>
+            <a ui-sref="login">Log In</a>
+        </div>
+        <div ng-if="nav.loggedIn">
+            <a ui-sref="account-overview" ng-if="nav.username">{{nav.username}}</a>
+            <a href ng-click="nav.logout()">LogOut</a>
+        </div>
     </div>
-    <div class="account" ng-if="nav.loggedIn">
-        <a ui-sref="account-overview" ng-if="nav.username">{{nav.username}}</a>
-        <a href ng-click="nav.logout()">LogOut</a>
+    
+    <div class="account" ng-if="nav.showLibIsLoading">
+        <div>
+            ...
+        </div>
     </div>
 </div>

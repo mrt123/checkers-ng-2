@@ -10,8 +10,6 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     activate();
 
     function logout() {
-        // TODO : put progress icon after click!
-        
         account.signOut().then(function() {
             updateAccountScope({}, false);
         });
@@ -25,9 +23,10 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
         facebook.deferredLibLoad.promise.then(undefined, undefined, updateFBLoadStatus);
         facebook.checkLibStatus();
     }
-
-    function updateFBLoadStatus(status){
-        vm.FBLoadStatus = status;
+ 
+    function updateFBLoadStatus(status){  // TODO: case when FB loaded but still checking if FB user logged 
+        vm.showAccountMenu = status === 'loaded';
+        vm.showLibIsLoading = status !== 'loaded';
     }
     
     function reactToUserPresence(user) {

@@ -9,24 +9,23 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
 
     activate();
 
-    function logout() {
-        account.signOut().then(function() {
-            updateAccountScope({}, false);
-        });
-    }
-
-    // PRIVATE METHODS
     function activate() {
-        account.deferredRegister.promise.then(undefined, undefined, reactToUserPresence);
-        account.deferredLogin.promise.then(undefined, undefined, reactToUserPresence);
-
-        facebook.deferredLibLoad.promise.then(undefined, undefined, updateFBLoadStatus);
-        facebook.checkLibStatus();
+        facebook.libStatus.promise.then(undefined, undefined, setFacebookLoadStatus);
+        //facebook.user.promise.then(undefined, undefined, setFacebookUserStatus);
+        account.user.promise.then(undefined, undefined, reactToUserPresence);
     }
- 
-    function updateFBLoadStatus(status){  // TODO: case when FB loaded but still checking if FB user logged 
-        vm.showAccountMenu = status === 'loaded';
-        vm.showLibIsLoading = status !== 'loaded';
+
+    function setFacebookLoadStatus(status) {
+        $scope.facebookLoadStatus = status;
+    }
+
+    function setFacebookUserStatus(status) {
+        $scope.facebookUserStatus = status;
+
+        if(status !== 'connected') {
+            vm.FBStatus = 'facebook user: ' + status;
+            vm.showAccountMenu = true;
+        }
     }
     
     function reactToUserPresence(user) {
@@ -37,6 +36,12 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
         $timeout(function () { // avoid existing digest
             vm.username = user.playerName;
             vm.loggedIn = logged;
+        });
+    }
+
+    function logout() {
+        account.signOut().then(function() {
+            updateAccountScope({}, false);
         });
     }
 }

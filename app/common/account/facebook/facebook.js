@@ -2,7 +2,7 @@ angular
     .module('facebook', [])
     .service('facebook', facebook);
 
-function facebook($interval, $q) {
+function facebook($interval, $q, $window) {
     var self = {};
     var MAX_LIB_LOAD_TIME_MS = 5000;
     var LIB_LOAD_CHECK_INTERVAL_MS = 100;
@@ -12,33 +12,33 @@ function facebook($interval, $q) {
         FAILED: 'failed'
     };
 
-    self.libstatus = STATUS.LOADING;
-
     self.checkLibStatus = checkLibStatus;
-    self.getLoginStatus = getLoginStatus;
     self.login = login;
     self.logOut = logOut;
-    self.getUser = getUser;
+    self.getUser = tryGetUser;
 
-    self.deferredLibLoad = $q.defer();
-    self.deferredLogin = $q.defer();
-    self.deferredLogout = $q.defer();  
+    self.libStatus = $q.defer();
+    self.user = $q.defer();
+    
+    activate();
 
     return self;
+    
+    function activate() {
+        self.libStatus.notify(STATUS.LOADING);
+        checkLibStatus();
+    }
 
     function checkLibStatus() {
         var elapsedTime = 0;
 
         var update = $interval(function () {
             elapsedTime = elapsedTime + LIB_LOAD_CHECK_INTERVAL_MS;
-            var loaded = window.FacebookLoaded === true;
 
-            self.libstatus = getLibLoadStatus(loaded, elapsedTime);
-            console.log('checking FB lib status: ' + self.libstatus);
+            var status = getLibLoadStatus($window.FacebookLoaded, elapsedTime);
+            self.libStatus.notify(status);
 
-            self.deferredLibLoad.notify(self.libstatus);
-
-            if (loaded) {
+            if ($window.FacebookLoaded) {
                 $interval.cancel(update);
             }
         }, LIB_LOAD_CHECK_INTERVAL_MS, getLibCheckCount());
@@ -48,7 +48,7 @@ function facebook($interval, $q) {
         return $q(function (resolve, reject) {
             FB.login(function (response) {
                 resolve(response);
-                self.deferredLogin.notify(response);
+                self.user.notify(response);
             }, {scope: 'public_profile,email'});
         });
     }
@@ -57,34 +57,41 @@ function facebook($interval, $q) {
         return $q(function (resolve, reject) {
             FB.logout(function (response) {
                 resolve(response);
-                self.deferredLogout.notify(response);
+                self.user.notify(response);
             });
         });
     }
 
-    function getUser() {
-        var deferred = $q.defer();
-
-        FB.api('/me', {fields: ['email', 'name']}, function (response) {
-            if (!response || response.error) {
-                deferred.reject(response);
-
-            } else {
-                deferred.resolve(response);
+    function tryGetUser() {
+        getAccessToken().then(function(response) {
+            if(response.status === 'connected') {
+                getUser();
+            }
+            else {
+                self.user.notify(undefined);
             }
         });
-        return deferred.promise;
+        
+    }
+    
+    function getUser() {
+        FB.api('/me', {fields: ['email', 'name']}, function (response) {
+            if (!response || response.error) {
+                self.user.notify(response);
+
+            } else {
+                self.user.notify(response);
+            }
+        });
     }
 
-    function getLoginStatus() {
+    function getAccessToken() {
         return $q(function (resolve, reject) {
             FB.getLoginStatus(function (response) {
                 resolve(response.status)
             }, true);
         });
     }
-
-    // PRIVATE METHODS
 
     function getLibCheckCount() {
         return parseInt(MAX_LIB_LOAD_TIME_MS / LIB_LOAD_CHECK_INTERVAL_MS)

@@ -12,12 +12,11 @@ function Account(accountVendor, facebookVendor, $q) {
     this.getUser = accountVendor.getUser;
     this.getUsername = accountVendor.getUsername;
 
-    this.deferredRegister = accountVendor.deferredRegister;
-    this.deferredLogin = accountVendor.deferredLogin;
+    this.user = accountVendor.user;
 
     function activate() {
-        facebookVendor.deferredLibLoad.promise.then(undefined, undefined, checkFacebookLoginStatus);
-        facebookVendor.deferredLogin.promise.then(undefined, undefined, checkFacebookLoginStatus);
+        facebookVendor.libStatus.promise.then(undefined, undefined, onLibStatusChange);
+        facebookVendor.user.promise.then(undefined, undefined, onFacebookUserChange);
     }
 
     function signOut() {
@@ -35,21 +34,18 @@ function Account(accountVendor, facebookVendor, $q) {
         return deferred.promise;
     }
 
-    function checkFacebookLoginStatus() {
-        facebookVendor.getLoginStatus().then(function (status) {
-            if (status === 'connected') {
-                reactToFacebookConnected();
-            }
-        });
+    function onLibStatusChange(libStatus) {
+        if (libStatus === 'loaded') {
+            facebookVendor.getUser();
+        }
     }
 
-    function reactToFacebookConnected() {
-        facebookVendor.getUser().then(signFacebookUserIntoAccount);
-    }
-
-    function signFacebookUserIntoAccount(facebookUser) {
+    function onFacebookUserChange(facebookUser) {
+        
+        
+        
         accountVendor.signIn(facebookUser.email, facebookUser.id).then(
-            accountVendor.deferredLogin.notify,
+            undefined,
             createAccountForFacebookUser.bind(undefined, facebookUser));
     }
 

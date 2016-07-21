@@ -12,8 +12,7 @@ function parseAccountVendor($q) {
     self.getUser = getUser;
     self.getUsername = getUsername;
 
-    self.deferredRegister = $q.defer();
-    self.deferredLogin = $q.defer();
+    self.user = $q.defer();
 
     return self;
 
@@ -28,7 +27,7 @@ function parseAccountVendor($q) {
                 .then(function (vendorUser) {
                     var user = generateUser(vendorUser);
                     resolve(user);
-                    self.deferredRegister.notify(user);
+                    self.user.notify(user);
                 },
                 reject
             );
@@ -41,7 +40,7 @@ function parseAccountVendor($q) {
                 .then(function (vendorUser) {
                     var user = generateUser(vendorUser);
                     resolve(user);
-                    self.deferredLogin.notify(user);
+                    self.user.notify(user);
                 },
                 reject
             );

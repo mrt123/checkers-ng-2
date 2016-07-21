@@ -1,8 +1,8 @@
 angular
     .module('account', ['parseAccountVendor', 'facebook'])
-    .service('account', ['parseAccountVendor', 'facebook', Account]);
+    .service('account', ['parseAccountVendor', 'facebook', '$q', Account]);
 
-function Account(accountVendor, facebookVendor) {
+function Account(accountVendor, facebookVendor, $q) {
     accountVendor.init();
     activate();
 
@@ -20,14 +20,23 @@ function Account(accountVendor, facebookVendor) {
         facebookVendor.deferredLogin.promise.then(undefined, undefined, checkFacebookLoginStatus);
     }
 
-    function signOut(callback) { 
-        accountVendor.signOut(function () {
-            facebookVendor.logOut(callback);
+    function signOut() {
+        var deferred = $q.defer();
+
+        accountVendor.signOut().then(function () {
+
+            if (facebookVendor.getLoginStatus === 'connected') {
+                facebookVendor.logOut().then(deferred.resolve);
+            }
+            else {
+                deferred.resolve();
+            }
         });
+        return deferred.promise;
     }
 
     function checkFacebookLoginStatus() {
-        facebookVendor.getLoginStatus(function (status) {
+        facebookVendor.getLoginStatus().then(function (status) {
             if (status === 'connected') {
                 reactToFacebookConnected();
             }
@@ -38,7 +47,7 @@ function Account(accountVendor, facebookVendor) {
         facebookVendor.getUser().then(signFacebookUserIntoAccount);
     }
 
-    function signFacebookUserIntoAccount(facebookUser) {  
+    function signFacebookUserIntoAccount(facebookUser) {
         accountVendor.signIn(facebookUser.email, facebookUser.id).then(
             accountVendor.deferredLogin.notify,
             createAccountForFacebookUser.bind(undefined, facebookUser));

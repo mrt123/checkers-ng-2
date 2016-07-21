@@ -12,7 +12,7 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     function logout() {
         // TODO : put progress icon after click!
         
-        account.signOut(function () {
+        account.signOut().then(function() {
             updateAccountScope({}, false);
         });
     }

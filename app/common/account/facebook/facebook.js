@@ -22,13 +22,11 @@ function facebook($interval, $q, AbstractAccount) {
 
     self.deferredLibLoad = $q.defer();
     self.deferredLogin = $q.defer();
+    self.deferredLogout = $q.defer();  
 
-    self.onLogOutCallbacks = [];
-    self.onLogOut = addOnLogOutCallback;
-    
     return self;
 
-    function checkLibStatus() { 
+    function checkLibStatus() {
         var elapsedTime = 0;
 
         var update = $interval(function () {
@@ -37,9 +35,9 @@ function facebook($interval, $q, AbstractAccount) {
 
             self.libstatus = getLibLoadStatus(loaded, elapsedTime);
             console.log('checking FB lib status: ' + self.libstatus);
-            
+
             self.deferredLibLoad.notify(self.libstatus);
-            
+
             if (loaded) {
                 $interval.cancel(update);
             }
@@ -47,7 +45,7 @@ function facebook($interval, $q, AbstractAccount) {
     }
 
     function login() {
-        return $q(function(resolve, reject) {
+        return $q(function (resolve, reject) {
             FB.login(function (response) {
                 resolve(response);
                 self.deferredLogin.notify(response);
@@ -55,10 +53,12 @@ function facebook($interval, $q, AbstractAccount) {
         });
     }
 
-    function logOut(callback) {
-        FB.logout(function(response) {
-            callback(response);
-            self.executeCallbacks(self.onLogOutCallbacks);
+    function logOut() {
+        return $q(function (resolve, reject) {
+            FB.logout(function (response) {
+                resolve(response);
+                self.deferredLogout.notify(response);
+            });
         });
     }
 
@@ -75,15 +75,13 @@ function facebook($interval, $q, AbstractAccount) {
         });
         return deferred.promise;
     }
-    
-    function getLoginStatus(callback) {
-        FB.getLoginStatus(function(response) {
-            callback(response.status)
-        },true);
-    }
 
-    function addOnLogOutCallback(callback) {
-        self.onLogOutCallbacks.push(callback);
+    function getLoginStatus() {
+        return $q(function (resolve, reject) {
+            FB.getLoginStatus(function (response) {
+                resolve(response.status)
+            }, true);
+        });
     }
 
     // PRIVATE METHODS

@@ -14,7 +14,7 @@ function parseAccountVendor($q, AbstractAccount) {
 
     self.deferredRegister = $q.defer();
     self.deferredLogin = $q.defer();
-    
+
     return self;
 
     function init() {
@@ -48,9 +48,8 @@ function parseAccountVendor($q, AbstractAccount) {
         });
     }
 
-    function signOut(signOutSuccess, SignOutFail) {
-        return Parse.User.logOut()
-            .then(signOutSuccess, SignOutFail);
+    function signOut() {
+        return Parse.User.logOut();
     }
 
     function getUser() {

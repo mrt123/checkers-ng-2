@@ -28,7 +28,7 @@ function parseAccountVendor($q, AbstractAccount) {
                 .then(function (vendorUser) {
                     var user = generateUser(vendorUser);
                     resolve(user);
-                    self.deferredRegister.resolve(user);
+                    self.deferredRegister.notify(user);
                 },
                 reject
             );
@@ -41,7 +41,7 @@ function parseAccountVendor($q, AbstractAccount) {
                 .then(function (vendorUser) {
                     var user = generateUser(vendorUser);
                     resolve(user);
-                    self.deferredLogin.promise.resolve(user);
+                    self.deferredLogin.notify(user);
                 },
                 reject
             );

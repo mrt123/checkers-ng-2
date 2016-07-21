@@ -16,11 +16,11 @@ function Account(accountVendor, facebookVendor) {
     this.deferredLogin = accountVendor.deferredLogin;
 
     function activate() {
-        facebookVendor.deferredLibLoad.promise.then(checkFacebookLoginStatus);
-        facebookVendor.deferredLogin.promise.then(checkFacebookLoginStatus);
+        facebookVendor.deferredLibLoad.promise.then(undefined, undefined, checkFacebookLoginStatus);
+        facebookVendor.deferredLogin.promise.then(undefined, undefined, checkFacebookLoginStatus);
     }
 
-    function signOut(callback) {
+    function signOut(callback) { 
         accountVendor.signOut(function () {
             facebookVendor.logOut(callback);
         });
@@ -38,9 +38,9 @@ function Account(accountVendor, facebookVendor) {
         facebookVendor.getUser().then(signFacebookUserIntoAccount);
     }
 
-    function signFacebookUserIntoAccount(facebookUser) {
+    function signFacebookUserIntoAccount(facebookUser) {  
         accountVendor.signIn(facebookUser.email, facebookUser.id).then(
-            undefined,
+            accountVendor.deferredLogin.notify,
             createAccountForFacebookUser.bind(undefined, facebookUser));
     }
 

@@ -33,24 +33,24 @@ function facebook($interval, $q, AbstractAccount) {
 
         var update = $interval(function () {
             elapsedTime = elapsedTime + LIB_LOAD_CHECK_INTERVAL_MS;
-
             var loaded = window.FacebookLoaded === true;
 
             self.libstatus = getLibLoadStatus(loaded, elapsedTime);
             console.log('checking FB lib status: ' + self.libstatus);
-
+            
+            self.deferredLibLoad.notify(self.libstatus);
+            
             if (loaded) {
-                self.deferredLibLoad.resolve(self.libstatus);
                 $interval.cancel(update);
             }
         }, LIB_LOAD_CHECK_INTERVAL_MS, getLibCheckCount());
     }
 
-    function login() {   console.log(222, 'login');
-        return $q(function(resolve, reject) {   console.log(333, 'login');
-            FB.login(function (response) {   console.log(4444, 'ready to resolve');
+    function login() {
+        return $q(function(resolve, reject) {
+            FB.login(function (response) {
                 resolve(response);
-                self.deferredLogin.resolve(response);
+                self.deferredLogin.notify(response);
             }, {scope: 'public_profile,email'});
         });
     }

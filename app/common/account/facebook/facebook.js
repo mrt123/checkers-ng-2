@@ -12,12 +12,12 @@ function facebook($interval, $q, $window) {
         FAILED: 'failed'
     };
 
-    self.checkLibStatus = checkLibStatus;
     self.login = login;
     self.logOut = logOut;
-    self.getUser = tryGetUser;
+    self.tryGetUser = tryGetUser;
 
     self.libStatus = $q.defer();
+    self.authToken = $q.defer();
     self.user = $q.defer();
     
     activate();
@@ -48,7 +48,8 @@ function facebook($interval, $q, $window) {
         return $q(function (resolve, reject) {
             FB.login(function (response) {
                 resolve(response);
-                self.user.notify(response);
+                self.authToken.notify(response);
+                getUser();
             }, {scope: 'public_profile,email'});
         });
     }
@@ -63,12 +64,12 @@ function facebook($interval, $q, $window) {
     }
 
     function tryGetUser() {
-        getAccessToken().then(function(response) {
-            if(response.status === 'connected') {
+        getAuthToken().then(function(token) {
+            if(token.status === 'connected') {
                 getUser();
             }
             else {
-                self.user.notify(undefined);
+                self.user.notify();
             }
         });
         
@@ -79,16 +80,17 @@ function facebook($interval, $q, $window) {
             if (!response || response.error) {
                 self.user.notify(response);
 
-            } else {
+            } else {   
                 self.user.notify(response);
             }
         });
     }
 
-    function getAccessToken() {
+    function getAuthToken() {
         return $q(function (resolve, reject) {
             FB.getLoginStatus(function (response) {
-                resolve(response.status)
+                resolve(response);
+                self.authToken.notify(response);
             }, true);
         });
     }

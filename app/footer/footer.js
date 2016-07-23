@@ -5,14 +5,14 @@ angular
 function FooterCtrl($scope, account, facebook) {
 
     $scope.facebookLoadStatus = 'loading';
-    $scope.facebookUserStatus = 'not logged';
-    $scope.accountStatus = 'not logged';
+    $scope.facebookAuthStatus = 'undefined';
+    $scope.playerName = 'undefined';
 
     activate();
 
     function activate() {
         facebook.libStatus.promise.then(undefined, undefined, setFacebookLoadStatus);
-        facebook.user.promise.then(undefined, undefined, setFacebookUserStatus);
+        facebook.authToken.promise.then(undefined, undefined, setFacebookAuthStatus);
         account.user.promise.then(undefined, undefined, setAccountStatus);
     }
 
@@ -20,12 +20,14 @@ function FooterCtrl($scope, account, facebook) {
         $scope.facebookLoadStatus = status;
     }
 
-    function setFacebookUserStatus(status) {
-        $scope.facebookUserStatus = status;
+    function setFacebookAuthStatus(token) {
+        $scope.facebookAuthStatus = '[' + token.status +']';
     }
 
-    function setAccountStatus(status) {
-        $scope.accountStatus = status;
+    function setAccountStatus(user) {
+        if(user) {
+            $scope.playerName = user.playerName;
+        }
     }
 }
 

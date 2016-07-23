@@ -1,6 +1,6 @@
 <div class="ch-nav-bar" ng-controller="NavBarCtrl as nav">
     
-    <div class="account" ng-if="nav.showAccountMenu">
+    <div class="rightMenu" ng-if="nav.showAccount">
         <div ng-if="!nav.loggedIn">
             <a ui-sref="sign-up">SignUp</a>
             <a ui-sref="login">Log In</a>
@@ -11,9 +11,12 @@
         </div>
     </div>
     
-    <div class="account" ng-if="!nav.showAccountMenu">
-        <div>
-            ...............{{nav.FBStatus}}
+    <div class="rightMenu">
+        <div class="loadingBar" ng-if="nav.showLoadingBar">
+            ....loading account provider...
+        </div>
+        <div class="error" ng-if="nav.showError">
+            account provider failed
         </div>
     </div>
 </div>

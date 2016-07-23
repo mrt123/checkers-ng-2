@@ -3,7 +3,8 @@ angular
     .service('account', ['parseAccountVendor', 'facebook', '$q', Account]);
 
 function Account(accountVendor, facebookVendor, $q) {
-    accountVendor.init();
+    var self = this;
+    
     activate();
 
     this.signUp = accountVendor.signUp;
@@ -15,6 +16,7 @@ function Account(accountVendor, facebookVendor, $q) {
     this.user = accountVendor.user;
 
     function activate() {
+        accountVendor.init();
         facebookVendor.libStatus.promise.then(undefined, undefined, onLibStatusChange);
         facebookVendor.user.promise.then(undefined, undefined, onFacebookUserChange);
     }
@@ -36,17 +38,21 @@ function Account(accountVendor, facebookVendor, $q) {
 
     function onLibStatusChange(libStatus) {
         if (libStatus === 'loaded') {
-            facebookVendor.getUser();
+            facebookVendor.tryGetUser();
         }
     }
 
     function onFacebookUserChange(facebookUser) {
+        if(facebookUser) {
+            accountVendor.signIn(facebookUser.email, facebookUser.id).then(
+                undefined,
+                createAccountForFacebookUser.bind(undefined, facebookUser));
+        }
+        else {
+            self.user.notify();
+        }
         
-        
-        
-        accountVendor.signIn(facebookUser.email, facebookUser.id).then(
-            undefined,
-            createAccountForFacebookUser.bind(undefined, facebookUser));
+
     }
 
     function createAccountForFacebookUser(facebookUser) {

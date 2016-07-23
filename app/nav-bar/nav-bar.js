@@ -4,32 +4,30 @@ angular
 
 function NavBarCtrl(account, $scope, facebook, $timeout) {
     var vm = this;
+    vm.showLoadingBar = true;
     vm.loggedIn = false;
     vm.logout = logout;
 
     activate();
 
     function activate() {
-        facebook.libStatus.promise.then(undefined, undefined, setFacebookLoadStatus);
-        //facebook.user.promise.then(undefined, undefined, setFacebookUserStatus);
-        account.user.promise.then(undefined, undefined, reactToUserPresence);
+        facebook.libStatus.promise.then(undefined, undefined, reactToFacebookLoad);
+        account.user.promise.then(undefined, undefined, onUserInfo);
     }
-
-    function setFacebookLoadStatus(status) {
-        $scope.facebookLoadStatus = status;
-    }
-
-    function setFacebookUserStatus(status) {
-        $scope.facebookUserStatus = status;
-
-        if(status !== 'connected') {
-            vm.FBStatus = 'facebook user: ' + status;
-            vm.showAccountMenu = true;
+    
+    function reactToFacebookLoad(libStatus) {
+        if(libStatus === 'failed') {
+            vm.showLoadingBar = false;
+            vm.showError = true;
         }
     }
     
-    function reactToUserPresence(user) {
-        updateAccountScope(user, true);
+    function onUserInfo(user) {
+        vm.showLoadingBar = false;
+        vm.showAccount = true;
+        if(user) {
+            updateAccountScope(user, true);
+        }
     }
 
     function updateAccountScope(user, logged) {

@@ -15,15 +15,16 @@ function facebook($interval, $q, $window) {
     self.login = login;
     self.logOut = logOut;
     self.tryGetUser = tryGetUser;
+    self.getAuthToken = getAuthToken;
 
     self.libStatus = $q.defer();
     self.authToken = $q.defer();
     self.user = $q.defer();
-    
+
     activate();
 
     return self;
-    
+
     function activate() {
         self.libStatus.notify(STATUS.LOADING);
         checkLibStatus();
@@ -56,31 +57,37 @@ function facebook($interval, $q, $window) {
 
     function logOut() {
         return $q(function (resolve, reject) {
-            FB.logout(function (response) {
-                resolve(response);
-                self.user.notify(response);
-            });
+            try {
+                FB.logout(function (response) {
+                    resolve(response);
+                    self.user.notify();
+                    self.authToken.notify(response);
+                });
+            }
+            catch (e) {
+                reject();
+            }
         });
     }
 
     function tryGetUser() {
-        getAuthToken().then(function(token) {
-            if(token.status === 'connected') {
+        getAuthToken().then(function (token) {
+            if (token.status === 'connected') {
                 getUser();
             }
             else {
                 self.user.notify();
             }
         });
-        
+
     }
-    
+
     function getUser() {
         FB.api('/me', {fields: ['email', 'name']}, function (response) {
             if (!response || response.error) {
                 self.user.notify(response);
 
-            } else {   
+            } else {
                 self.user.notify(response);
             }
         });

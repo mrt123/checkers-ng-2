@@ -4,7 +4,7 @@ angular
 
 function Account(accountVendor, facebookVendor, $q) {
     var self = this;
-    
+
     activate();
 
     this.signUp = accountVendor.signUp;
@@ -22,18 +22,8 @@ function Account(accountVendor, facebookVendor, $q) {
     }
 
     function signOut() {
-        var deferred = $q.defer();
-
-        accountVendor.signOut().then(function () {
-
-            if (facebookVendor.getLoginStatus === 'connected') {
-                facebookVendor.logOut().then(deferred.resolve);
-            }
-            else {
-                deferred.resolve();
-            }
-        });
-        return deferred.promise;
+        return accountVendor.signOut()
+            .then(facebookVendor.logOut);
     }
 
     function onLibStatusChange(libStatus) {
@@ -43,7 +33,7 @@ function Account(accountVendor, facebookVendor, $q) {
     }
 
     function onFacebookUserChange(facebookUser) {
-        if(facebookUser) {
+        if (facebookUser) {
             accountVendor.signIn(facebookUser.email, facebookUser.id).then(
                 undefined,
                 createAccountForFacebookUser.bind(undefined, facebookUser));
@@ -51,8 +41,6 @@ function Account(accountVendor, facebookVendor, $q) {
         else {
             self.user.notify();
         }
-        
-
     }
 
     function createAccountForFacebookUser(facebookUser) {

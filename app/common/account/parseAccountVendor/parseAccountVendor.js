@@ -48,7 +48,12 @@ function parseAccountVendor($q) {
     }
 
     function signOut() {
-        return Parse.User.logOut();
+        return $q(function (resolve, reject) {
+            Parse.User.logOut().then(function () {
+                resolve();
+                self.user.notify();
+            });
+        });
     }
 
     function getUser() {

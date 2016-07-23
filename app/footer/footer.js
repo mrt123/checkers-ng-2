@@ -28,6 +28,9 @@ function FooterCtrl($scope, account, facebook) {
         if(user) {
             $scope.playerName = user.playerName;
         }
+        else {
+            $scope.playerName = 'undefined';
+        }
     }
 }
 

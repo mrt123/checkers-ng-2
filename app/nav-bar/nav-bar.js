@@ -26,14 +26,17 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
         vm.showLoadingBar = false;
         vm.showAccount = true;
         if(user) {
+            vm.loggedIn = true;
             updateAccountScope(user, true);
+        }
+        else {
+            vm.loggedIn = false;
         }
     }
 
-    function updateAccountScope(user, logged) {
+    function updateAccountScope(user) {
         $timeout(function () { // avoid existing digest
             vm.username = user.playerName;
-            vm.loggedIn = logged;
         });
     }
 

@@ -1,3 +1,4 @@
+@import  (reference)  "../common/common";
 .ch-nav-bar {
   top: 0;
   position: fixed;
@@ -21,6 +22,13 @@
     }
     .loadingBar {
       padding: 5px 16px;
+      i {
+        .chIcon();
+        animation: ch-spin 2s infinite linear;
+        &:before {
+          content: "\f013";
+        }
+      }
     }
     .error {
       padding: 5px 16px;

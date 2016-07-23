@@ -12,7 +12,7 @@ div {
 }
 
 // chIcons property value is required to be used in this stylesheet to provoke font download
-.chIcon {
+.chIcon() {
   display: inline-block;
   font: normal normal normal 14px/1 chIcons;
   font-size: inherit;
@@ -20,3 +20,14 @@ div {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+@keyframes ch-spin {
+   0% {
+     -webkit-transform: rotate(0deg);
+     transform: rotate(0deg);
+   }
+   100% {
+     -webkit-transform: rotate(359deg);
+     transform: rotate(359deg);
+   }
+ }

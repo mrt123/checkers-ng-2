@@ -4,7 +4,7 @@ angular
 
 function facebook($interval, $q, $window) {
     var self = {};
-    var MAX_LIB_LOAD_TIME_MS = 5000;
+    self.MAX_LIB_LOAD_TIME_MS = 5000;
     var LIB_LOAD_CHECK_INTERVAL_MS = 100;
     var STATUS = {
         LOADING: 'loading',
@@ -14,8 +14,7 @@ function facebook($interval, $q, $window) {
 
     self.login = login;
     self.logOut = logOut;
-    self.tryGetUser = tryGetUser;
-    self.getAuthToken = getAuthToken;
+    self.tryFetchUserData = tryFetchUserData;
 
     self.libStatus = $q.defer();
     self.authToken = $q.defer();
@@ -46,17 +45,20 @@ function facebook($interval, $q, $window) {
     }
 
     function login() {
+        return _loginFlow().then(_fetchUserData);
+    }
+
+    function _loginFlow() {
         return $q(function (resolve, reject) {
-            FB.login(function (response) {
-                resolve(response);
-                self.authToken.notify(response);
-                getUser();
+            FB.login(function (token) {
+                resolve(token);
+                self.authToken.notify(token);
             }, {scope: 'public_profile,email'});
         });
     }
 
     function logOut() {
-        return $q(function (resolve, reject) {
+        $q(function (resolve, reject) {
             try {
                 FB.logout(function (response) {
                     resolve(response);
@@ -70,30 +72,27 @@ function facebook($interval, $q, $window) {
         });
     }
 
-    function tryGetUser() {
-        getAuthToken().then(function (token) {
+    function tryFetchUserData() {
+        _getAuthToken().then(function (token) {
             if (token.status === 'connected') {
-                getUser();
+                _fetchUserData();
             }
             else {
                 self.user.notify();
             }
         });
-
     }
 
-    function getUser() {
-        FB.api('/me', {fields: ['email', 'name']}, function (response) {
-            if (!response || response.error) {
+    function _fetchUserData() {
+        return $q(function (resolve, reject) {
+            FB.api('/me', {fields: ['email', 'name']}, function (response) {
+                resolve(response);
                 self.user.notify(response);
-
-            } else {
-                self.user.notify(response);
-            }
+            });
         });
     }
 
-    function getAuthToken() {
+    function _getAuthToken() {
         return $q(function (resolve, reject) {
             FB.getLoginStatus(function (response) {
                 resolve(response);
@@ -103,7 +102,7 @@ function facebook($interval, $q, $window) {
     }
 
     function getLibCheckCount() {
-        return parseInt(MAX_LIB_LOAD_TIME_MS / LIB_LOAD_CHECK_INTERVAL_MS)
+        return parseInt(self.MAX_LIB_LOAD_TIME_MS / LIB_LOAD_CHECK_INTERVAL_MS)
     }
 
     function getLibLoadStatus(loaded, elapsedTime) {
@@ -112,7 +111,7 @@ function facebook($interval, $q, $window) {
             return STATUS.LOADED;
         }
         else {
-            if (elapsedTime < MAX_LIB_LOAD_TIME_MS) {
+            if (elapsedTime < self.MAX_LIB_LOAD_TIME_MS) {
                 return STATUS.LOADING;
             }
             else {

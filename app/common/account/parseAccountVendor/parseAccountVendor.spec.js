@@ -1,20 +1,6 @@
 describe('parseAccountVendor : ', function () {
 
-    beforeEach(module('parseAccountVendor',
-        function ($provide) {
-
-            $provide.value('AbstractAccount', function () {
-                return {
-                    executeCallbacks: function () {
-                    },
-                    executeLoginSuccessCallbacks: function () {
-                    },
-                    executeSignUpSuccessCallbacks: function () {
-                    }
-                }
-            });
-        }
-    ));
+    beforeEach(module('parseAccountVendor'));
 
     describe('init()', function () {
 
@@ -37,170 +23,178 @@ describe('parseAccountVendor : ', function () {
 
     describe('register()', function () {
 
-        it('executes signUp success callbacks.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
+        it('returns vendor user, and notifies user promise when Parse.singUp is successful.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
 
-                //ARRANGE
-                mockVendorRegister($window, $q);
-                parseAccountVendor.executeSignUpSuccessCallbacks = sinon.spy(parseAccountVendor.executeSignUpSuccessCallbacks);
+            //ARRANGE
+            $window.Parse = {
+                User: {
+                    signUp: function (username, password, opts) {
+                        return $q(function (resolve) {
+                            resolve({
+                                getUsername: function () {
+                                    return username;
+                                },
+                                get: function () {
+                                    return opts.playerName;
+                                }
+                            });
+                        });
+                    }
+                }
+            };
 
-                // ACT
-                parseAccountVendor.signUp('username', 'password', 'playerName');
-                $rootScope.$apply();
-                
+            var notifyUser = sinon.spy();
+            parseAccountVendor.user.promise.then(undefined, undefined, notifyUser);
+            var result = undefined;
 
-                // ASSERT
-                expect(parseAccountVendor.executeSignUpSuccessCallbacks.calledOnce).toEqual(true);
-                expect(parseAccountVendor.executeSignUpSuccessCallbacks.getCall(0).args).toEqual([[{
-                    email: "xxx@zz.com",
-                    playerName: 'playerName'
-                }]]);
-            })
-        );
+            // ACT
+            parseAccountVendor.signUp('xxx@zz.com', 'password', 'playerName').then(function (r) {
+                result = r;
+            });
+            $rootScope.$apply();
+
+
+            // ASSERT
+            expect(result).toEqual({
+                email: "xxx@zz.com",
+                playerName: 'playerName'
+            });
+            expect(notifyUser.getCall(0).args).toEqual([{
+                email: "xxx@zz.com",
+                playerName: 'playerName'
+            }]);
+        }));
+
+        it('rejects vendor user promise, and do NOT notify user promise when Parse singUp ha failed.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
+
+            //ARRANGE
+            $window.Parse = {
+                User: {
+                    signUp: function () {
+                        return $q(function (resolve, reject) {
+                            reject();
+                        });
+                    }
+                }
+            };
+
+            var notifyUser = sinon.spy();
+            parseAccountVendor.user.promise.then(undefined, undefined, notifyUser);
+            var result = undefined;
+
+            // ACT
+            parseAccountVendor.signUp('xxx@zz.com', 'password', 'playerName').then(function (r) {
+                result = r;
+            });
+            $rootScope.$apply();
+
+
+            // ASSERT
+            expect(result).toEqual(undefined);
+            expect(notifyUser.getCall(0)).toEqual(null);
+        }));
     });
 
     describe('login()', function () {
 
-        it('executes signIn success callbacks.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
+        it('returns vendor user, and notifies user promise when Parse.logIn is successful.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
 
-                mockVendorUserLogin($window, $q);
-                parseAccountVendor.executeLoginSuccessCallbacks = sinon.spy(parseAccountVendor.executeLoginSuccessCallbacks);
-
-                // ACT
-                parseAccountVendor.signIn('username', 'password');
-                $rootScope.$apply();
-                
-
-                // ASSERT
-                expect(parseAccountVendor.executeLoginSuccessCallbacks.calledOnce).toEqual(true);
-                expect(parseAccountVendor.executeLoginSuccessCallbacks.getCall(0).args).toEqual([[{
-                    email: "xxx@zz.com",
-                    playerName: 'playerName'
-                }]]);
-            })
-        );
-
-        it('returns user', inject(function (parseAccountVendor, $window, $q, $rootScope) {
-
-                //ARRANGE
-                mockVendorUserLogin($window, $q);
-
-                // ACT
-                var resultPromise = parseAccountVendor.signIn('username', 'password');
-                var resolvedValue = undefined;
-                resultPromise.then(function(value) { resolvedValue = value; });
-                $rootScope.$apply();
-                
-                
-                // ASSERT
-                expect(resolvedValue).toEqual({
-                    email: "xxx@zz.com",
-                    playerName: 'playerName'
-                });
-            })
-        );
-    });
-
-    describe('signOut()', function () {
-
-        it('calls success argument upon successful logout.', inject(function (parseAccountVendor, $window) {
-
-                //ARRANGE
-                $window.Parse = {
-                    initialize: sinon.spy(),
-                    User: {
-                        logOut: function () {
-                            return {
-                                then : function(success) {
-                                    success();
-                                }
-                            }
-                        }
-                    }
-                };
-                var success = sinon.spy();
-
-                
-                // ACT
-                parseAccountVendor.signOut(success);
-
-                // ASSERT
-                expect(success.calledOnce).toEqual(true);
-            })
-        );
-    });
-
-    describe('getUser()', function () {
-
-        it('returns Parse user.', inject(function (parseAccountVendor, $window) {
-
-                //ARRANGE
-                $window.Parse = {
-                    initialize: sinon.spy(),
-                    User: {
-                        current: function () {
-                            return {
-                                email: "xxx@zz.com",
-                                playerName: 'playerName',
+            $window.Parse = {
+                User: {
+                    logIn: function (username, password) {
+                        return $q(function (resolve) {
+                            resolve({
                                 getUsername: function () {
-                                    return "xxx@zz.com";
+                                    return username;
                                 },
                                 get: function () {
                                     return 'playerName';
                                 }
-                            }
-                        }
+                            });
+                        });
                     }
-                };
+                }
+            };
+            var notifyUser = sinon.spy();
+            parseAccountVendor.user.promise.then(undefined, undefined, notifyUser);
+            var result = undefined;
+
+            // ACT
+            parseAccountVendor.signIn('xxx@zz.com', 'password').then(function (r) {
+                result = r;
+            });
+            $rootScope.$apply();
 
 
-                // ACT
-                var result = parseAccountVendor.getUser();
+            // ASSERT
+            expect(result).toEqual({
+                email: "xxx@zz.com",
+                playerName: 'playerName'
+            });
+            expect(notifyUser.getCall(0).args).toEqual([{
+                email: "xxx@zz.com",
+                playerName: 'playerName'
+            }]);
+        }));
 
-                // ASSERT
-                expect(result).toEqual(
-                    {
-                        email: "xxx@zz.com",
-                        playerName: 'playerName'
-                    });
-            })
-        );
+        it('rejects vendor user promise, and do NOT notify user promise when Parse singUp ha failed.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
+
+            //ARRANGE
+            $window.Parse = {
+                User: {
+                    logIn: function () {
+                        return $q(function (resolve, reject) {
+                            reject();
+                        });
+                    }
+                }
+            };
+
+            var notifyUser = sinon.spy();
+            parseAccountVendor.user.promise.then(undefined, undefined, notifyUser);
+            var result = undefined;
+
+            // ACT
+            parseAccountVendor.signIn('xxx@zz.com', 'password').then(function (r) {
+                result = r;
+            });
+            $rootScope.$apply();
+
+
+            // ASSERT
+            expect(result).toEqual(undefined);
+            expect(notifyUser.getCall(0)).toEqual(null);
+        }));
     });
-    
-    function mockVendorUserLogin($window, $q) {
-        $window.Parse = {
-            User: {
-                logIn: function () {
-                    return $q(function(resolve) {
-                        resolve({
-                            getUsername: function () {
-                                return "xxx@zz.com";
-                            },
-                            get: function () {
-                                return 'playerName';
-                            }
+
+    describe('signOut()', function () {
+        
+        it('returns empty promise, and notifies user promise.', inject(function (parseAccountVendor, $window, $q, $rootScope) {
+
+            $window.Parse = {
+                User: {
+                    logOut: function (username, password) {
+                        return $q(function (resolve, reject) {
+                            resolve();
                         });
-                    });
+                    }
                 }
-            }
-        };
-    }
-    
-    function mockVendorRegister($window, $q) {
-        $window.Parse = {
-            User: {
-                signUp: function () {
-                    return $q(function(resolve) {
-                        resolve({
-                            getUsername: function () {
-                                return "xxx@zz.com";
-                            },
-                            get: function () {
-                                return 'playerName';
-                            }
-                        });
-                    });
-                }
-            }
-        };
-    }
+            };
+            var notifyUser = sinon.spy();
+            parseAccountVendor.user.promise.then(notifyUser);
+            var result = undefined;
+
+            // ACT
+            parseAccountVendor.signOut().then(function (r) {
+                result = r;
+            });
+            $rootScope.$apply();
+
+
+            // ASSERT
+            expect(result).toEqual(undefined);
+            expect(notifyUser.getCall(0)).toEqual(null);
+        }));
+
+    });
 }); 

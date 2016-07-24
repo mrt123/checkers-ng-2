@@ -9,8 +9,6 @@ function parseAccountVendor($q) {
     self.signUp = signUp;
     self.signIn = signIn;
     self.signOut = signOut;
-    self.getUser = getUser;
-    self.getUsername = getUsername;
 
     self.user = $q.defer();
 
@@ -54,21 +52,6 @@ function parseAccountVendor($q) {
                 self.user.notify();
             });
         });
-    }
-
-    function getUser() {
-        return generateUser(Parse.User.current());
-    }
-
-    function getUsername() {
-        var currentUser = Parse.User.current()();
-
-        if (currentUser !== null) {
-            return currentUser.getUsername();
-        }
-        else {
-            return '';
-        }
     }
 
     function generateUser(vendorUser) {

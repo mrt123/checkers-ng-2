@@ -10,8 +10,6 @@ function Account(accountVendor, facebookVendor, $q) {
     this.signUp = accountVendor.signUp;
     this.signIn = accountVendor.signIn;
     this.signOut = signOut;
-    this.getUser = accountVendor.getUser;
-    this.getUsername = accountVendor.getUsername;
 
     this.user = accountVendor.user;
 
@@ -28,7 +26,7 @@ function Account(accountVendor, facebookVendor, $q) {
 
     function onLibStatusChange(libStatus) {
         if (libStatus === 'loaded') {
-            facebookVendor.tryGetUser();
+            facebookVendor.tryFetchUserData();
         }
     }
 

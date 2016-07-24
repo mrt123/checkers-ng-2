@@ -1,216 +1,233 @@
 describe('facebook : ', function () {
 
-    beforeEach(module('facebook',
-        function ($provide) {
-
-            $provide.value('AbstractAccount', function () {
-                return {
-                    executeCallbacks: function () {
-                    },
-                    executeLoginSuccessCallbacks: function () {
-                    }
-                }
-            });
-        }
-    ));
+    beforeEach(module('facebook'));
 
     describe('checkLibStatus()', function () {
 
-        it('should call callback each 100ms while lib is not loaded', inject(function (facebook, $interval) {
+        it('should notify libStatus each 100ms while lib is not loaded', inject(function (facebook, $interval, $window) {
 
             //ARRANGE
-            var callback = sinon.spy();
+            $window.FacebookLoaded = false;
+            var notify = sinon.spy();
+            facebook.libStatus.promise.then(undefined, undefined, notify);
 
             // ACT
-            facebook.checkLibStatus(callback);
             $interval.flush(300);
 
             // ASSERT
-            expect(callback.callCount).toEqual(3);
-            expect(callback.getCall(0).args).toEqual(['loading']);
+            expect(notify.callCount).toEqual(3);
+            expect(notify.getCall(0).args).toEqual(['loading']);
+        }));
+
+        it('should notify libStatus when lib failed to load', inject(function (facebook, $interval, $window) {
+
+            //ARRANGE
+            $window.FacebookLoaded = false;
+            var notify = sinon.spy();
+            facebook.libStatus.promise.then(undefined, undefined, notify);
+
+            // ACT
+            $interval.flush(facebook.MAX_LIB_LOAD_TIME_MS);
+
+            // ASSERT
+            expect(notify.getCall(49).args).toEqual(['failed']);
         }));
 
         it('should stop executing callbacks after lib is loaded', inject(function (facebook, $interval, $window) {
 
             //ARRANGE
-            var callback = sinon.spy();
+            $window.FacebookLoaded = false;
+            var notify = sinon.spy();
+            facebook.libStatus.promise.then(undefined, undefined, notify);
 
             // ACT
-            facebook.checkLibStatus(callback);
             $window.FacebookLoaded = true;
             $interval.flush(600);
 
             // ASSERT
-            expect(callback.callCount).toEqual(1);
+            expect(notify.callCount).toEqual(1);
         }));
 
-        it('should execute onLoad callbacks once, when window.FacebookLoaded is true', inject(
-            function (facebook, $interval, $window, AbstractAccount) {
+        it('should notify libStatus, when window.FacebookLoaded is true', inject(
+            function (facebook, $interval, $window) {
 
                 //ARRANGE
-                var executeCallbacksSpy = sinon.stub(facebook, 'executeCallbacks');
-                var call1 = function () {
-                };
-                var call2 = function () {
-                };
-                facebook.onLoadCallbacks.push(call1, call2);
+                $window.FacebookLoaded = false;
+                var notify = sinon.spy();
+                facebook.libStatus.promise.then(undefined, undefined, notify);
 
 
                 // ACT
-                facebook.checkLibStatus(function () {
-                });
                 $interval.flush(100);
                 $window.FacebookLoaded = true;
                 $interval.flush(500);
 
 
                 // ASSERT
-                expect(executeCallbacksSpy.callCount).toEqual(1);
-                expect(executeCallbacksSpy.getCall(0).args).toEqual([[call1, call2]]);
+                expect(notify.callCount).toEqual(2);
+                expect(notify.getCall(0).args).toEqual(['loading']);
+                expect(notify.getCall(1).args).toEqual(['loaded']);
             }));
     });
 
     describe('login()', function () {
 
-        it('executes LoginSuccessCallbacks and callback argument upon successful FB login.', inject(function (facebook, $window) {
+        it('notifies user/token promise', inject(function (facebook, $window, $rootScope) {
+            //ARRANGE
+            $window.FB = {
+                login: function (callback) {
+                    callback({token: 'xxx'});
+                },
+                api: function (x, y, callback) {
+                    callback({fbUser: 'zzz'});
+                }
+            };
+            var notifyUser = sinon.spy();
+            var notifyToken = sinon.spy();
+            facebook.user.promise.then(undefined, undefined, notifyUser);
+            facebook.authToken.promise.then(undefined, undefined, notifyToken);
 
-                //ARRANGE
-                var loginSuccessCallbacks = sinon.stub(facebook, 'executeLoginSuccessCallbacks');
-                $window.FB = {
-                    login: function (callback) {
-                        callback('facebook response');
-                    }
-                };
-                var callback = sinon.spy();
-                
+            // ACT
+            facebook.login();
+            $rootScope.$apply();
 
-                // ACT
-                facebook.login(callback);
+            // ASSERT
+            expect(notifyUser.callCount).toEqual(1);
+            expect(notifyUser.getCall(0).args).toEqual([{fbUser: 'zzz'}]);
+            expect(notifyToken.callCount).toEqual(1);
+            expect(notifyToken.getCall(0).args).toEqual([{token: 'xxx'}]);
+        }));
+        
+        it('returns user', inject(function (facebook, $window, $rootScope) {
+            //ARRANGE
+            $window.FB = {
+                login: function (callback) {
+                    callback({token: 'xxx'});
+                },
+                api: function (x, y, callback) {
+                    callback({fbUser: 'zzz'});
+                }
+            };
+            var result = undefined;
 
-                // ASSERT
-                expect(loginSuccessCallbacks.callCount).toEqual(1);
-                expect(callback.getCall(0).args).toEqual(['facebook response']);
-            })
-        );
+            // ACT
+            facebook.login().then(function(r) {
+                result = r;
+            });
+            $rootScope.$apply();
 
-        it('calls FB login.', inject(function (facebook, $window) {
-
-                //ARRANGE
-                $window.FB = {
-                    login: function () {  }
-                };
-                var FBLogin = sinon.spy($window.FB, 'login');
-                
-
-                // ACT
-                facebook.login();
-
-                // ASSERT
-                expect(FBLogin.callCount).toEqual(1);
-            })
-        );
+            // ASSERT
+            expect(result).toEqual({fbUser: 'zzz'});
+        }));
     });
 
     describe('logout()', function () {
 
-        it('executes onLogOutCallbacks and callback argument upon successful FB logout.', inject(function (facebook, $window) {
+        it('notifies user/token promises, when logout succeeded.', inject(function (facebook, $window, $rootScope) {
 
                 //ARRANGE
-                var executeCallbacks = sinon.stub(facebook, 'executeCallbacks');
                 $window.FB = {
                     logout: function (callback) {
                         callback('facebook response');
                     }
                 };
-                var callback = sinon.spy();
-                
+                var notifyUser = sinon.spy();
+                var notifyToken = sinon.spy();
+                facebook.user.promise.then(undefined, undefined, notifyUser);
+                facebook.authToken.promise.then(undefined, undefined, notifyToken);
 
                 // ACT
-                facebook.logOut(callback);
+                facebook.logOut();
+                $rootScope.$apply();
 
                 // ASSERT
-                expect(executeCallbacks.callCount).toEqual(1);
-                expect(executeCallbacks.getCall(0).args).toEqual([facebook.onLogOutCallbacks]);
-                expect(callback.getCall(0).args).toEqual(['facebook response']);
+                expect(notifyToken.callCount).toEqual(1);
+                expect(notifyToken.getCall(0).args).toEqual(['facebook response']);
+                expect(notifyUser.callCount).toEqual(1);
+                expect(notifyUser.getCall(0).args).toEqual([undefined]);
+            })
+        );
+
+        it('does not notify user/token promises, when logout fails.', inject(function (facebook, $window, $rootScope) {
+
+                //ARRANGE
+                $window.FB = {
+                    logout: function () {
+                        throw new Error();
+                    }
+                };
+                var notifyUser = sinon.spy();
+                var notifyToken = sinon.spy();
+                facebook.user.promise.then(undefined, undefined, notifyUser);
+                facebook.authToken.promise.then(undefined, undefined, notifyToken);
+
+                // ACT
+                facebook.logOut();
+                $rootScope.$apply();
+
+                // ASSERT
+                expect(notifyToken.callCount).toEqual(0);
+                expect(notifyUser.callCount).toEqual(0);
             })
         );
     });
 
-    describe('getUser()', function () {
+    describe('tryFetchUserData()', function () {
 
-        it('returns and resolves promise when FB.api() is successful.', inject(function (facebook, $window, $rootScope) {
+        it('notifies user/token promises, when FB user is connected.', inject(function (facebook, $window, $rootScope) {
 
-                //ARRANGE
-                $window.FB = {
-                    api: function (arg1, arg2, callback) {
-                        callback({ mickyMouse: 1 });
-                    }
-                };
+            //ARRANGE
+            $window.FB = {
+                getLoginStatus: function (callback) {
+                    callback({status: 'connected'});
+                },
+                api: function (x, y, callback) {
+                    callback({fbUser: 'zzz'});
+                }
+            };
+            
+            var notifyUser = sinon.spy();
+            var notifyToken = sinon.spy();
+            facebook.user.promise.then(undefined, undefined, notifyUser);
+            facebook.authToken.promise.then(undefined, undefined, notifyToken);
 
-                // ACT
-                var result = facebook.getUser();
-                $rootScope.$apply();
+            // ACT
+            facebook.tryFetchUserData();
+            $rootScope.$apply();
 
-                // ASSERT
-                expect(result.$$state.value).toEqual({ mickyMouse: 1 }); 
-            })
-        );
+            // ASSERT
+            expect(notifyToken.callCount).toEqual(1);
+            expect(notifyToken.getCall(0).args).toEqual([{status: 'connected'}]);
+            expect(notifyUser.callCount).toEqual(1);
+            expect(notifyUser.getCall(0).args).toEqual([{fbUser: 'zzz'}]);
+        }));
 
-        it('returns and rejects promise when FB.api() return error.', inject(function (facebook, $window, $rootScope) {
+        it('notifies user/token promises, when FB user is NOT connected.', inject(function (facebook, $window, $rootScope) {
 
-                //ARRANGE
-                $window.FB = {
-                    api: function (arg1, arg2, callback) {
-                        callback({ error: 1 });
-                    }
-                };
+            //ARRANGE
+            $window.FB = {
+                getLoginStatus: function (callback) {
+                    callback({status: 'unknown'});
+                },
+                api: function (x, y, callback) {
+                    callback({fbUser: 'zzz'});
+                }
+            };
 
-                // ACT
-                var result = facebook.getUser();
-                $rootScope.$apply();
+            var notifyUser = sinon.spy();
+            var notifyToken = sinon.spy();
+            facebook.user.promise.then(undefined, undefined, notifyUser);
+            facebook.authToken.promise.then(undefined, undefined, notifyToken);
 
-                // ASSERT
-                expect(result.$$state.status).toEqual(2);
-            })
-        );
+            // ACT
+            facebook.tryFetchUserData();
+            $rootScope.$apply();
 
-        it('returns and rejects promise when FB.api() return no response.', inject(function (facebook, $window, $rootScope) {
-
-                //ARRANGE
-                $window.FB = {
-                    api: function (arg1, arg2, callback) {
-                        callback();
-                    }
-                };
-
-                // ACT
-                var result = facebook.getUser();
-                $rootScope.$apply();
-
-                // ASSERT
-                expect(result.$$state.status).toEqual(2);
-            })
-        );
-    });
-
-    describe('getLoginStatus()', function () {
-        
-        it('returns and rejects promise when FB.api() return no response.', inject(function (facebook, $window) {
-
-                //ARRANGE
-                $window.FB = {
-                    getLoginStatus: function (callback) {
-                        callback({ status: 33 });
-                    }
-                };
-                var functionSpy = sinon.spy();
-
-                // ACT
-                facebook.getLoginStatus(functionSpy);
-
-                // ASSERT
-                expect(functionSpy.getCall(0).args).toEqual([33]);
-            })
-        );
+            // ASSERT
+            expect(notifyToken.callCount).toEqual(1);
+            expect(notifyToken.getCall(0).args).toEqual([{status: 'unknown'}]);
+            expect(notifyUser.callCount).toEqual(1);
+            expect(notifyUser.getCall(0).args).toEqual([undefined]);
+        }));
     });
 }); 

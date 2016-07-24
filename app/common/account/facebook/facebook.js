@@ -73,21 +73,26 @@ function facebook($interval, $q, $window) {
     }
 
     function tryFetchUserData() {
-        _getAuthToken().then(function (token) {
-            if (token.status === 'connected') {
-                _fetchUserData();
-            }
-            else {
-                self.user.notify();
-            }
+
+        return $q(function (resolve, reject) {
+            _getAuthToken().then(function (token) {
+                if (token.status === 'connected') {
+                    resolve(_fetchUserData());
+                }
+                else {
+                    reject();
+                }
+            });
         });
+
+
+
     }
 
     function _fetchUserData() {
         return $q(function (resolve, reject) {
             FB.api('/me', {fields: ['email', 'name']}, function (response) {
                 resolve(response);
-                self.user.notify(response);
             });
         });
     }

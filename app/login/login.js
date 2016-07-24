@@ -8,11 +8,11 @@ function LoginCtrl($scope, account, $timeout, $state, facebook) {
     $scope.login = login;
 
     function loginWithFacebook() {
-        facebook.login().then(loginSuccess);
+        account.loginWithFB().then(loginSuccess);
     }
 
     function login(email, password) {
-        account.signIn(email, password)
+        account.login(email, password)
             .then(loginSuccess, showError);
     }
 

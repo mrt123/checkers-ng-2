@@ -11,23 +11,23 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     activate();
 
     function activate() {
-        facebook.libStatus.promise.then(undefined, undefined, reactToFacebookLoad);
-        account.user.promise.then(undefined, undefined, onUserInfo);
+        facebook.libStatus.promise.then(undefined, undefined, onFacebookLibTransfer);
+        account.userChange.promise.then(undefined, undefined, onUserChange);
     }
     
-    function reactToFacebookLoad(libStatus) {
-        if(libStatus === 'failed') {
+    function onFacebookLibTransfer(transferStatus) {
+        if(transferStatus === 'failed') {
             vm.showLoadingBar = false;
             vm.showError = true;
         }
     }
     
-    function onUserInfo(user) {
+    function onUserChange() {
         vm.showLoadingBar = false;
         vm.showAccount = true;
-        if(user) {
+        if(account.user) {
             vm.loggedIn = true;
-            updateAccountScope(user, true);
+            updateAccountScope(account.user, true);
         }
         else {
             vm.loggedIn = false;

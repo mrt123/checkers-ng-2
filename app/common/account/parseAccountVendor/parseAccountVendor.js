@@ -33,15 +33,18 @@ function parseAccountVendor($q) {
     }
 
     function signIn(username, password) {
+        username = username ? username.toString() : '';
+        password = password ? password.toString() : '';
+        
         return $q(function (resolve, reject) {
-            Parse.User.logIn(username, password)
-                .then(function (vendorUser) {
+            Parse.User.logIn(username, password, {
+                success: function (vendorUser) {
                     var user = generateUser(vendorUser);
                     resolve(user);
-                    self.user.notify(user);
                 },
-                reject
-            );
+                error: function (vendorUser, error) {
+                    reject(error);
+                }}); 
         });
     }
 
@@ -49,7 +52,6 @@ function parseAccountVendor($q) {
         return $q(function (resolve, reject) {
             Parse.User.logOut().then(function () {
                 resolve();
-                self.user.notify();
             });
         });
     }

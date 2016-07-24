@@ -13,7 +13,7 @@ function FooterCtrl($scope, account, facebook) {
     function activate() {
         facebook.libStatus.promise.then(undefined, undefined, setFacebookLoadStatus);
         facebook.authToken.promise.then(undefined, undefined, setFacebookAuthStatus);
-        account.user.promise.then(undefined, undefined, setAccountStatus);
+        account.userChange.promise.then(undefined, undefined, setAccountStatus);
     }
 
     function setFacebookLoadStatus(status) {

@@ -23,5 +23,10 @@ function config($stateProvider) {
             url: '/login',
             templateUrl: 'login/login.html',
             controller: 'LoginCtrl'
+        })
+        .state('account-overview', {
+            url: '/account-overview',
+            templateUrl: 'account_overview/account_overview.html',
+            controller: 'AccountOverViewCtrl'
         });
 }

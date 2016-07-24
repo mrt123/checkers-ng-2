@@ -5,43 +5,73 @@ angular
 function Account(accountVendor, facebookVendor, $q) {
     var self = this;
 
+    self.signUp = signUp;
+    self.login = login;
+    self.loginWithFB  = loginWithFB;
+    self.signOut = signOut;
+    self.userChange = $q.defer();
+    self.user = {};
+
     activate();
-
-    this.signUp = accountVendor.signUp;
-    this.signIn = accountVendor.signIn;
-    this.signOut = signOut;
-
-    this.user = accountVendor.user;
 
     function activate() {
         accountVendor.init();
         facebookVendor.libStatus.promise.then(undefined, undefined, onLibStatusChange);
-        facebookVendor.user.promise.then(undefined, undefined, onFacebookUserChange);
+    }
+    
+    function login(u, p) {
+        var loginPromise = accountVendor.signIn(u, p);
+        loginPromise.then(setUser, unSetUser);
+        return loginPromise;
+    }
+    
+    function loginWithFB() {
+        var loginPromise = facebookVendor.login();
+        loginPromise.then(onFacebookUserChange, unSetUser);
+        return loginPromise;
+    }
+    
+    function signUp(email, pass, playerName) {
+        var signUpPromise = accountVendor.signUp(email, pass, playerName);
+        signUpPromise.then(setUser);
+        return signUpPromise;
     }
 
     function signOut() {
         return accountVendor.signOut()
-            .then(facebookVendor.logOut);
+            .then(facebookVendor.logOut)
+            .then(unSetUser);
     }
 
     function onLibStatusChange(libStatus) {
         if (libStatus === 'loaded') {
-            facebookVendor.tryFetchUserData();
+            facebookVendor.tryFetchUserData().then(onFacebookUserChange, onFacebookUserChange);
         }
     }
 
-    function onFacebookUserChange(facebookUser) {
+    function onFacebookUserChange(facebookUser) { console.log(111)
         if (facebookUser) {
             accountVendor.signIn(facebookUser.email, facebookUser.id).then(
-                undefined,
+                setUser,
                 createAccountForFacebookUser.bind(undefined, facebookUser));
         }
         else {
-            self.user.notify();
+            unSetUser();
         }
     }
 
     function createAccountForFacebookUser(facebookUser) {
-        accountVendor.signUp(facebookUser.email, facebookUser.id, facebookUser.name);
+        accountVendor.signUp(facebookUser.email, facebookUser.id, facebookUser.name)
+            .then(setUser);
+    }
+
+    function setUser(user) {
+        self.user = user;
+        self.userChange.notify();
+    }
+
+    function unSetUser() {
+        self.user = undefined;
+        self.userChange.notify();
     }
 }

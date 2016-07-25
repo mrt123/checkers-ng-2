@@ -27,9 +27,6 @@ function parseAccountVendor($q) {
     }
 
     function signIn(username, password) {
-        username = username ? username.toString() : '';
-        password = password ? password.toString() : '';
-
         return $q(function (resolve, reject) {
             Parse.User.logIn(username, password, {
                 success: function (vendorUser) {

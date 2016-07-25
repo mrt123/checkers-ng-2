@@ -28,5 +28,10 @@ function config($stateProvider) {
             url: '/account-overview',
             templateUrl: 'account_overview/account_overview.html',
             controller: 'AccountOverViewCtrl'
+        })
+        .state('myGames', {
+            url: '/myGames',
+            templateUrl: 'myGames/myGames.html',
+            controller: 'MyGamesCtrl'
         });
 }

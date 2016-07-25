@@ -49,7 +49,7 @@ function Account(accountVendor, facebookVendor, $q) {
         }
     }
 
-    function onFacebookUserChange(facebookUser) { console.log(111)
+    function onFacebookUserChange(facebookUser) {
         if (facebookUser) {
             accountVendor.signIn(facebookUser.email, facebookUser.id).then(
                 setUser,

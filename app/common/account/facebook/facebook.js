@@ -49,6 +49,7 @@ function facebook($interval, $q, $window) {
     }
 
     function _loginFlow() {
+        
         return $q(function (resolve, reject) {
             FB.login(function (token) {
                 resolve(token);
@@ -58,6 +59,7 @@ function facebook($interval, $q, $window) {
     }
 
     function logOut() {
+        
         $q(function (resolve, reject) {
             try {
                 FB.logout(function (response) {
@@ -84,12 +86,10 @@ function facebook($interval, $q, $window) {
                 }
             });
         });
-
-
-
     }
 
     function _fetchUserData() {
+
         return $q(function (resolve, reject) {
             FB.api('/me', {fields: ['email', 'name']}, function (response) {
                 resolve(response);
@@ -98,6 +98,7 @@ function facebook($interval, $q, $window) {
     }
 
     function _getAuthToken() {
+
         return $q(function (resolve, reject) {
             FB.getLoginStatus(function (response) {
                 resolve(response);

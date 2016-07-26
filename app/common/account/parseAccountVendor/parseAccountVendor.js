@@ -7,6 +7,7 @@ function parseAccountVendor($q) {
     self.signUp = signUp;
     self.signIn = signIn;
     self.signOut = signOut;
+    self.getUser = getUser;
     return self;
 
     function init() {
@@ -15,6 +16,7 @@ function parseAccountVendor($q) {
     }
 
     function signUp(username, password, playerName) {
+        
         return $q(function (resolve, reject) {
             Parse.User.signUp(username, password, {playerName: playerName})
                 .then(function (vendorUser) {
@@ -27,6 +29,7 @@ function parseAccountVendor($q) {
     }
 
     function signIn(username, password) {
+        
         return $q(function (resolve, reject) {
             Parse.User.logIn(username, password, {
                 success: function (vendorUser) {
@@ -41,10 +44,23 @@ function parseAccountVendor($q) {
     }
 
     function signOut() {
-        return $q(function (resolve, reject) {
-            Parse.User.logOut().then(function () {
-                resolve();
+        return $q(function (resolve, reject) { 
+            Parse.User.logOut().finally(function () {
+                resolve();   
             });
+        });
+    }
+
+    function getUser() {
+        
+        return $q(function (resolve, reject) {
+            var user = Parse.User.current();
+            if(user !== null) {
+                resolve(_generateUser(user));
+            }
+            else {
+                reject();
+            }
         });
     }
 

@@ -7,10 +7,11 @@ function Account(accountVendor, facebookVendor, $q) {
 
     self.signUp = signUp;
     self.login = login;
-    self.loginWithFB  = loginWithFB;
+    self.loginWithFB = loginWithFB;
     self.signOut = signOut;
     self.userChange = $q.defer();
-    self.user = {};
+    self.user = undefined;
+    self.facebookUser = {};
 
     activate();
 
@@ -18,51 +19,80 @@ function Account(accountVendor, facebookVendor, $q) {
         accountVendor.init();
         facebookVendor.libStatus.promise.then(undefined, undefined, onLibStatusChange);
     }
-    
+
     function login(u, p) {
+
         var loginPromise = accountVendor.signIn(u, p);
         loginPromise.then(setUser, unSetUser);
         return loginPromise;
     }
-    
+
     function loginWithFB() {
+
         var loginPromise = facebookVendor.login();
-        loginPromise.then(onFacebookUserChange, unSetUser);
+        loginPromise.then(loginFacebookUserToVendor, unSetUser);
         return loginPromise;
     }
-    
+
     function signUp(email, pass, playerName) {
+
         var signUpPromise = accountVendor.signUp(email, pass, playerName);
         signUpPromise.then(setUser);
         return signUpPromise;
     }
 
     function signOut() {
+
         return accountVendor.signOut()
-            .then(facebookVendor.logOut)
-            .then(unSetUser);
+            .then(facebookLogout)
+            .then(unSetUser, unSetUser);
+    }
+
+    function facebookLogout() {
+
+        if (self.facebookUser.email) {
+            facebookVendor.logOut();
+            self.facebookUser = {};
+        }
     }
 
     function onLibStatusChange(libStatus) {
+
         if (libStatus === 'loaded') {
-            facebookVendor.tryFetchUserData().then(onFacebookUserChange, onFacebookUserChange);
+            facebookVendor.tryFetchUserData()
+                .then(setFacebookUser)
+                .finally(checkVendorUser);
         }
     }
 
-    function onFacebookUserChange(facebookUser) {
-        if (facebookUser) {
-            accountVendor.signIn(facebookUser.email, facebookUser.id).then(
-                setUser,
-                createAccountForFacebookUser.bind(undefined, facebookUser));
+    function checkVendorUser() {
+        accountVendor.getUser().then(setUser, onVendorUserAbsent);
+    }
+
+    function onVendorUserAbsent() {
+
+        if (self.facebookUser.email) {
+            loginFacebookUserToVendor(self.facebookUser);
         }
         else {
-            unSetUser();
+            self.userChange.notify(); // TODO: rename to userEvent
         }
     }
 
-    function createAccountForFacebookUser(facebookUser) {
+    function loginFacebookUserToVendor(facebookUser) {
+        accountVendor.signIn(facebookUser.email, facebookUser.id).then(
+            setUser,
+            createVendorAccountForFacebookUser.bind(undefined, facebookUser));
+
+    }
+
+    function createVendorAccountForFacebookUser(facebookUser) {
         accountVendor.signUp(facebookUser.email, facebookUser.id, facebookUser.name)
             .then(setUser);
+    }
+
+    function setFacebookUser(user) {
+        self.facebookUser = user
     }
 
     function setUser(user) {

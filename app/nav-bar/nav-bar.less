@@ -12,15 +12,29 @@
   a {
     color: white;
   }
-
-  .logo {
-    font-size: 17px;
+  
+  .leftMenu {
+    i.logo {
+      .chIcon();
+      position: relative;
+      top: 4px;
+      font-size: 24px;
+      margin: 7px 20px 7px 25px;
+      &:before {
+        content: "\f015";
+      }
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    
     a {
       margin: 7px 20px;
       padding: 7px 0;
     }
+    
   }
-
+  
   .rightMenu {
     position: absolute;
     top: 9px;

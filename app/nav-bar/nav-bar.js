@@ -13,6 +13,7 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     function activate() {
         facebook.libStatus.promise.then(undefined, undefined, onFacebookLibTransfer);
         account.userChange.promise.then(undefined, undefined, onUserChange);
+        showProgressMsg('loading')
     }
     
     function onFacebookLibTransfer(transferStatus) {
@@ -23,8 +24,7 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
     }
     
     function onUserChange() {
-        vm.showLoadingBar = false;
-        vm.showAccount = true;
+        hideProgressMsg();
         if(account.user) {
             vm.loggedIn = true;
             updateAccountScope(account.user, true);
@@ -34,15 +34,28 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
         }
     }
 
+    function logout() {
+        showProgressMsg('logging out');
+        account.signOut().then(function() {
+            updateAccountScope({}, false);
+            hideProgressMsg();
+        });
+    }
+
     function updateAccountScope(user) {
         $timeout(function () { // avoid existing digest
             vm.username = user.playerName;
         });
     }
-
-    function logout() {
-        account.signOut().then(function() {
-            updateAccountScope({}, false);
-        });
+    
+    function showProgressMsg(msg) {
+        vm.loadingMessage = msg;
+        vm.showLoadingBar = true;
+        vm.showAccount = false
+    }
+    
+    function hideProgressMsg() {
+        vm.showLoadingBar = false;
+        vm.showAccount = true;
     }
 }

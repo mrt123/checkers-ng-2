@@ -45,9 +45,7 @@ function parseAccountVendor($q) {
 
     function signOut() {
         return $q(function (resolve, reject) { 
-            Parse.User.logOut().finally(function () {
-                resolve();   
-            });
+            Parse.User.logOut().then(resolve, resolve);
         });
     }
 

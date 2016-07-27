@@ -3,18 +3,16 @@ angular
     .controller('AccountOverViewCtrl', AccountOverViewCtrl);
 
 function AccountOverViewCtrl($scope, $timeout, account) {
-    console.log(account.user);
     $scope.user = account.user;
     
     activate();
     
     function activate() {
-        updateAccountScope(account.user.promise);
+        updateAccountScope(account.user);
         account.userChange.promise.then(undefined, undefined, updateAccountScope);
     }
 
-    function updateAccountScope(user) { console.log(user)
-        console.log(account.user);
+    function updateAccountScope(user) {
         $timeout(function () { // avoid existing digest
             $scope.user = account.user;
         });

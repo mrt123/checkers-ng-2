@@ -29,9 +29,13 @@ function Account(accountVendor, facebookVendor, $q) {
 
     function loginWithFB() {
 
-        var loginPromise = facebookVendor.login();
-        loginPromise.then(loginFacebookUserToVendor, unSetUser);
-        return loginPromise;
+        return facebookVendor.login().then(
+            function (facebookUser) {
+                setFacebookUser(facebookUser);
+                return loginFacebookUserToVendor(facebookUser)
+            },
+            unSetUser
+        );
     }
 
     function signUp(email, pass, playerName) {
@@ -42,18 +46,26 @@ function Account(accountVendor, facebookVendor, $q) {
     }
 
     function signOut() {
-
-        return accountVendor.signOut()
-            .then(facebookLogout)
-            .then(unSetUser, unSetUser);
+        return $q(function (resolve, reject) {
+            accountVendor.signOut()
+                .then(_facebookLogout)
+                .finally(function () {
+                    unSetUser();
+                    resolve();
+                });
+        });
     }
 
-    function facebookLogout() {
-
-        if (self.facebookUser.email) {
-            facebookVendor.logOut();
-            self.facebookUser = {};
-        }
+    function _facebookLogout() {
+        return $q(function (resolve, reject) {
+            if (self.facebookUser.email) {
+                self.facebookUser = {};
+                facebookVendor.logOut().then(resolve);
+            }
+            else {
+                resolve();
+            }
+        })
     }
 
     function onLibStatusChange(libStatus) {
@@ -80,7 +92,7 @@ function Account(accountVendor, facebookVendor, $q) {
     }
 
     function loginFacebookUserToVendor(facebookUser) {
-        accountVendor.signIn(facebookUser.email, facebookUser.id).then(
+        return accountVendor.signIn(facebookUser.email, facebookUser.id).then(
             setUser,
             createVendorAccountForFacebookUser.bind(undefined, facebookUser));
 

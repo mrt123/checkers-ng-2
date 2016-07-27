@@ -60,12 +60,12 @@ function facebook($interval, $q, $window) {
 
     function logOut() {
         
-        $q(function (resolve, reject) {
+        return $q(function (resolve, reject) {
             try {
                 FB.logout(function (response) {
-                    resolve(response);
                     self.user.notify();
                     self.authToken.notify(response);
+                    resolve(response);
                 });
             }
             catch (e) {

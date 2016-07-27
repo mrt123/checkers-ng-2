@@ -17,7 +17,7 @@
     
     <div class="rightMenu">
         <div class="loadingBar" ng-if="nav.showLoadingBar">
-            <i></i> ... loading
+            <i></i> ... {{nav.loadingMessage}}
         </div>
         <div class="error" ng-if="nav.showError">
             account provider failed

@@ -5,32 +5,36 @@
   position: fixed;
   right: 0;
   left: 0;
-  color: white;
+  color: #D0D6D9;
   height: 45px;
   background-color: #2b2b2b;
 
   a {
-    color: white;
+    color: #D0D6D9;
   }
   
   .leftMenu {
-    i.logo {
-      .chIcon();
-      position: relative;
-      top: 4px;
-      font-size: 24px;
-      margin: 7px 20px 7px 25px;
-      &:before {
-        content: "\f015";
-      }
-      &:hover {
-        cursor: pointer;
-      }
-    }
-    
     a {
-      margin: 7px 20px;
+      margin-left: 25px;
+      margin-bottom: 10px;
       padding: 7px 0;
+      
+      &.home {
+        margin-left: 15px;
+        i {
+          .chIcon();
+          position: relative;
+          top: 4px;
+          font-size: 24px;
+
+          &:before {
+            content: "\f015";
+          }
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
     }
     
   }

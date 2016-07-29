@@ -1,15 +1,18 @@
+<!--suppress HtmlUnknownTarget -->
 <html lang="en" ng-app="app">
 <head>
     <link rel="shortcut icon" href="img/c2.ico"/>
     <meta charset="utf-8">
     <title>Checkers</title>
+    <link rel="stylesheet" href="lib/normalize.css"/>
     <link rel="stylesheet" href="app.css"/>
 </head>
 <body>
-<ng-include src="'nav-bar/nav-bar.html'"></ng-include>
-<div class="ch-view" ui-view></div>
-<ng-include src="'footer/footer.html'"></ng-include>
-
+<div class="ch-container">
+    <ng-include src="'nav-bar/nav-bar.html'"></ng-include>
+    <div class="ch-view" ui-view></div>
+    <ng-include src="'footer/footer.html'"></ng-include>
+</div>
 <script>
     window.fbAsyncInit = function() {
         FB.init({
@@ -24,7 +27,7 @@
 <script src="//connect.facebook.net/en_US/sdk.js" async></script>
 <!--<script src="/_api/_files/hoodie.js"></script>-->
 <script src="lib/parse.js"></script>
-<script src="lib/jquery.js"></script>
+<!--<script src="lib/jquery.js"></script>-->   <!-- not used at the moment -->
 <script src="lib/angular.js"></script>
 <script src="lib/angular-ui-router.js"></script>
 <script src="templates.js"></script>

@@ -68,7 +68,7 @@ gulp.task('compile-app.js', function () {
 gulp.task('compile-app.css', function () {
     var devServer = browserSync.get('dev-server');
 
-    return gulp.src(project.CSS_FILES)
+    return gulp.src(project.LESS_FILES)
         .pipe(sourceMaps.init())
         .pipe(less())
         .pipe(cssLint({    // will report what less compile misses.

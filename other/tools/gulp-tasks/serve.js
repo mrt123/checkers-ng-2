@@ -34,5 +34,5 @@ gulp.task('serve', [], function () {
     gulp.watch(project.JS_FILES, {}, ['compile-app.js', devServer.reload]);
     gulp.watch([project.TEMPLATES], {},['compile-templates', devServer.reload]);
     gulp.watch([project.ASSETS], {},['compile-assets', devServer.reload] );
-    gulp.watch(project.CSS_FILES, ['compile-app.css']);  // inject pre-processed css without page reload.
+    gulp.watch(project.LESS_FILES, ['compile-app.css']);  // inject pre-processed css without page reload.
 });

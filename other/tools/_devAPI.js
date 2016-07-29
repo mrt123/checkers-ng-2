@@ -14,7 +14,7 @@ var _dev = (function () {
     startReloadCounter(new Date(), createDevElement());
 
     function createDevElement() {
-        return $("<div>", {
+        return angular.element("<div>", {
             'id': "dev",
             css: {
                 background: 'white',
@@ -23,7 +23,7 @@ var _dev = (function () {
                 opacity: 0.5,
                 'font-size': '16px'
             }
-        }).appendTo($('html'));
+        }).appendTo(angular.element('html'));
     }
 
     function getDiffInSeconds(date1, date2) {

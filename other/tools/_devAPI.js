@@ -1,6 +1,5 @@
 var _dev = (function () {
     
-    var log = console.log;
     var _dev = {
         debug: false,
         getService: function (serviceName) {
@@ -14,16 +13,19 @@ var _dev = (function () {
     startReloadCounter(new Date(), createDevElement());
 
     function createDevElement() {
-        return angular.element("<div>", {
-            'id': "dev",
-            css: {
-                background: 'white',
-                position: 'fixed',
-                bottom: 0,
-                opacity: 0.5,
-                'font-size': '16px'
-            }
-        }).appendTo(angular.element('html'));
+        // wrapping in extra div avoids chrome DOM inspector performance issues.
+        var devEl = angular.element('<div><div id="ch-dev"></div>');
+
+        devEl.css({
+            background: 'white',
+            position: 'fixed',
+            bottom: '0',
+            opacity: '0.5',
+            'font-size': '16px'
+        });
+        
+        angular.element(document.querySelector('html')).append(devEl);
+        return devEl;
     }
 
     function getDiffInSeconds(date1, date2) {
@@ -35,7 +37,7 @@ var _dev = (function () {
     function startReloadCounter(reloadDate, el) {
         setInterval(function () {
             var parsedSeconds = getDiffInSeconds(new Date(), reloadDate);
-            el.html('Reloaded ' + parsedSeconds + ' seconds ago.');
+            el.children().text('Reloaded ' + parsedSeconds + ' seconds ago.');
         }, 1000);
     }
 

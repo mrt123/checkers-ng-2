@@ -33,5 +33,10 @@ function config($stateProvider) {
             url: '/myGames',
             templateUrl: 'myGames/myGames.html',
             controller: 'MyGamesCtrl'
+        })
+        .state('createGame', {
+            url: '/createGame',
+            templateUrl: 'createGame/createGame.html',
+            controller: 'CreateGameCtrl'
         });
 }

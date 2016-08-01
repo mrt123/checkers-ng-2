@@ -1,3 +1,51 @@
 .ch-myGames {
-  text-align: center;
+  padding-top: 30px;
+
+  .middle {
+    width: 720px;
+    margin: 0 auto;
+    padding-top: 20px;
+    text-align: right;
+
+    .tableHolder {
+      text-align: left;
+
+      .tableTitle {
+        padding-top: 30px;
+        padding-bottom: 10px;
+      }
+
+      table.games {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        width: 100%;
+        border-collapse: collapse;
+        tr {
+          font-size: 14px;
+          line-height: 1.42857143;
+          color: #333;
+
+          th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #ddd;
+            padding: 8px;
+            line-height: 1.42857143;
+            text-align: left;
+          }
+
+          td {
+            padding: 8px;
+            line-height: 1.42857143;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+
+            span.status {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }

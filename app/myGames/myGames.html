@@ -1,6 +1,58 @@
 <div class="ch-myGames">
-    <button ng-click="createGame()">new game</button>
-    <div ng-repeat="game in games">
-        <div>{{game.objectId}}</div>
+    <div class="middle">
+        <a ui-sref="createGame">Create New Game</a>
+
+        <div class="tableHolder">
+            <div class="tableTitle">Games I've created:</div>
+            <table class="games">
+                <tr>
+                    <th>created</th>
+                    <th>opponent email</th>
+                    <th>opponent name</th>
+                    <th>status</th>
+                </tr>
+                <tr ng-repeat="game in games | orderBy: 'createdAt' : 'reverse'">
+                    <td>
+                        <span class="dateCreated">{{game.createdAt | date : 'short'}}</span>
+                    </td>
+                    <td>
+                        <span>{{game.p2Email}}</span>
+                    </td>
+                    <td>
+                        <span ng-if="game.p2">{{game.p2.playerName}}</span>
+                    </td>
+                    <td>
+                        <span class="status">{{game.status}}</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="tableHolder">
+            <div class="tableTitle">Games I'm invited to:</div>
+            <table class="games">
+                <tr>
+                    <th>created</th>
+                    <th>opponent email</th>
+                    <th>opponent name</th>
+                    <th>status</th>
+                </tr>
+                <tr ng-repeat="game in gamesInvitedTo | orderBy: 'createdAt' : 'reverse'">
+                    <td>
+                        <span class="dateCreated">{{game.createdAt | date : 'short'}}</span>
+                    </td>
+                    <td>
+                        <span>{{game.p1Email}}</span>
+                    </td>
+                    <td>
+                        <span ng-if="game.p2">{{game.p2.playerName}}</span>
+                    </td>
+                    <td>
+                        <span class="status">{{game.status}}</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
     </div>
 </div>

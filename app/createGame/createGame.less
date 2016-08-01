@@ -1,0 +1,52 @@
+.ch-createGame {
+  text-align: center;
+  
+  h1 {
+    padding-top: 20px;
+  }
+  
+  form.createGameForm {
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+
+    h1 {
+      padding-top: 35px;
+    }
+
+    input {
+      font-size: 14px;
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      border-radius: 4px;
+      display: inline-block;
+      
+      &[type=text] {
+        border: 1px solid #ccc;
+      }
+    }
+
+    input[type=submit] {
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    
+    input.createGame {
+      background-color: #4CAF50;
+      
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+    
+    input.cancelCreate {
+      background-color: #a9a9a9;
+      
+      &:hover {
+        background-color: #858585;
+      }
+    }
+  }
+}

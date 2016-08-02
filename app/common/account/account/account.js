@@ -17,13 +17,14 @@ function Account(accountVendor, facebookVendor, $q) {
 
     function activate() {
         accountVendor.init();
+        self.user = accountVendor.getUser();
         facebookVendor.libStatus.promise.then(undefined, undefined, onLibStatusChange);
     }
 
     function login(u, p) {
 
         var loginPromise = accountVendor.signIn(u, p);
-        loginPromise.then(setUser, unSetUser);
+        loginPromise.then(setUser);
         return loginPromise;
     }
 
@@ -69,28 +70,11 @@ function Account(accountVendor, facebookVendor, $q) {
     }
 
     function onLibStatusChange(libStatus) {
-
         if (libStatus === 'loaded') {
-            facebookVendor.tryFetchUserData()
-                .then(setFacebookUser)
-                .finally(checkVendorUser);
+            self.userChange.notify();
         }
     }
-
-    function checkVendorUser() {
-        accountVendor.getUser().then(setUser, onVendorUserAbsent);
-    }
-
-    function onVendorUserAbsent() {
-
-        if (self.facebookUser.email) {
-            loginFacebookUserToVendor(self.facebookUser);
-        }
-        else {
-            self.userChange.notify(); // TODO: rename to userEvent
-        }
-    }
-
+    
     function loginFacebookUserToVendor(facebookUser) {
         return accountVendor.signIn(facebookUser.email, facebookUser.id).then(
             setUser,

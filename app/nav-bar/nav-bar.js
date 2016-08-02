@@ -2,7 +2,7 @@ angular
     .module('app.NavBarCtrl', [])
     .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl(account, $scope, facebook, $timeout) {
+function NavBarCtrl(account, $scope, facebook, $timeout, $state) {
     var vm = this;
     vm.showLoadingBar = true;
     vm.loggedIn = false;
@@ -39,6 +39,7 @@ function NavBarCtrl(account, $scope, facebook, $timeout) {
         account.signOut().then(function() {
             updateAccountScope({}, false);
             hideProgressMsg();
+            $state.go('home');
         });
     }
 

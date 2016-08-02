@@ -50,16 +50,14 @@ function parseAccountVendor($q) {
     }
 
     function getUser() {
+        var user = Parse.User.current();
+        if(user !== null) {
+            return _generateUser(user);
+        }
+        else {
+            return undefined;
+        }
         
-        return $q(function (resolve, reject) {
-            var user = Parse.User.current();
-            if(user !== null) {
-                resolve(_generateUser(user));
-            }
-            else {
-                reject();
-            }
-        });
     }
 
     function _generateUser(vendorUser) {

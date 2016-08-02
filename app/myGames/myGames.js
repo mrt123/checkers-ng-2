@@ -3,7 +3,9 @@ angular
     .controller('MyGamesCtrl', MyGamesCtrl);
 
 function MyGamesCtrl($scope, games, account) {
-    $scope.games = [];
+    $scope.gamesCreated = [];
+    $scope.gamesInvitedTo = [];
+    $scope.showGames = showGames;
 
     activate();
 
@@ -13,7 +15,11 @@ function MyGamesCtrl($scope, games, account) {
     }
 
     function updateScope() {
-        $scope.games = games.created;
+        $scope.gamesCreated = games.created;
         $scope.gamesInvitedTo = games.invitedTo;
+    }
+    
+    function showGames(games) {
+        return games.length > 0;
     }
 }

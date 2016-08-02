@@ -1,10 +1,11 @@
 <div class="ch-myGames">
     <div class="middle">
-        <a ui-sref="createGame">Create New Game</a>
+        <a class="createGame" ui-sref="createGame">Create New Game</a>
 
         <div class="tableHolder">
             <div class="tableTitle">Games I've created:</div>
-            <table class="games">
+            <div class="noGamesLabel" ng-if="!showGames(gamesCreated)">You haven't created any games yet.</div>
+            <table class="games" ng-if="showGames(gamesCreated)">
                 <tr>
                     <th>created</th>
                     <th>opponent email</th>
@@ -30,7 +31,8 @@
 
         <div class="tableHolder">
             <div class="tableTitle">Games I'm invited to:</div>
-            <table class="games">
+            <div class="noGamesLabel" ng-if="!showGames(gamesInvitedTo)">You were not invited to any games yet.</div>
+            <table class="games" ng-if="showGames(gamesInvitedTo)">
                 <tr>
                     <th>created</th>
                     <th>opponent email</th>

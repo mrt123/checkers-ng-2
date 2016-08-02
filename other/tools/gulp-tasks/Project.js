@@ -2,6 +2,7 @@ var Project = function () {
     this.BUILD_PATH = '../../target';
     this.BOWER_PATH = './bower_components';
     this.APP_PATH = '../../app';
+    this.BACKEND_PATH = './backend';
     
     this.JS_SUB_MODULES = [
         this.APP_PATH + '/**/*.js',

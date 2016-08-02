@@ -1,7 +1,10 @@
-var gulp = require('gulp'),
-        browserSync = require('browser-sync'),
-        proxy = require('proxy-middleware'),
-        url = require('url');
+var gulp = require('gulp');
+var browserSync = require('browser-sync');
+var proxy = require('proxy-middleware');
+var url = require('url');
+var requireDir = require('require-dir');
+
+requireDir('./', { recurse: true } );
 
 var devServer = browserSync.create("dev-server");
 var Project = require('./Project');

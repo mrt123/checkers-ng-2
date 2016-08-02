@@ -12,7 +12,7 @@ function parseAccountVendor($q) {
 
     function init() {
         Parse.initialize("CHECKERS_2");
-        Parse.serverURL = 'http://localhost:1337/parse';
+        Parse.serverURL = 'http://localhost:3000/api';
     }
 
     function signUp(username, password, playerName) {

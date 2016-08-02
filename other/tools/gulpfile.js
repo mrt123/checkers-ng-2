@@ -8,7 +8,7 @@ gulp.task('default', ['develop']);
 
 gulp.task('develop', function (callback) {
     runSequence(
-        ['compile', 'backendServer'],
+        ['compile'],
         'serve',
         callback
     );

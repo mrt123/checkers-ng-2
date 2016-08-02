@@ -1,4 +1,5 @@
 var express = require('express');
+var http = require('http');
 var app = express();
 
 //var GameMaster = require('./GameMaster.js');
@@ -7,20 +8,14 @@ app.get('/api', function (req, res) {
     res.send('Hello World!');
 });
 
-app.post('/api/game', function (req, res) {
-
-    //var game = new GameMaster();
+app.all('/api/classes/Game', function (req, res) {
+    console.log('request body : ' + JSON.stringify(req.headers));
+    
+    var vendorUrl = 'http://127.0.0.1:6004/_api';
 
     res.send({
         message: 'So you want a new game huh?',
-        id: 123,
-        player1: {
-            name: 'Joe'
-        },
-        player2: {
-            name: 'Jill'
-        },
-        game : {}
+        id: 123
     });
 });
 

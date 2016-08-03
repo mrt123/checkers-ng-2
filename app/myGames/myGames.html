@@ -12,7 +12,7 @@
                     <th>opponent name</th>
                     <th>status</th>
                 </tr>
-                <tr ng-repeat="game in games | orderBy: 'createdAt' : 'reverse'">
+                <tr ng-repeat="game in gamesCreated | orderBy: 'createdAt' : 'reverse'">
                     <td>
                         <span class="dateCreated">{{game.createdAt | date : 'short'}}</span>
                     </td>

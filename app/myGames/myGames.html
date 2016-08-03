@@ -11,6 +11,7 @@
                     <th>opponent email</th>
                     <th>opponent name</th>
                     <th>status</th>
+                    <th>action</th>
                 </tr>
                 <tr ng-repeat="game in gamesCreated | orderBy: 'createdAt' : 'reverse'">
                     <td>
@@ -25,6 +26,9 @@
                     <td>
                         <span class="status">{{game.status}}</span>
                     </td>
+                    <td class="action">
+                        <a title="play" ng-click="playGame(game)"><i class="playIcon"></i></a>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -38,6 +42,7 @@
                     <th>opponent email</th>
                     <th>opponent name</th>
                     <th>status</th>
+                    <th>action</th>
                 </tr>
                 <tr ng-repeat="game in gamesInvitedTo | orderBy: 'createdAt' : 'reverse'">
                     <td>
@@ -51,6 +56,9 @@
                     </td>
                     <td>
                         <span class="status">{{game.status}}</span>
+                    </td>
+                    <td class="action">
+                        <a title="play" ng-click="playGame(game)"><i class="playIcon"></i></a>
                     </td>
                 </tr>
             </table>

@@ -1,3 +1,5 @@
+@import  (reference)  "../common/common";
+
 .ch-myGames {
   padding-top: 30px;
 
@@ -6,7 +8,7 @@
     margin: 0 auto;
     padding-top: 20px;
     text-align: right;
-    
+
     .createGame {
       margin-bottom: 10px;
     }
@@ -21,7 +23,7 @@
       .tableTitle {
         padding-bottom: 20px;
       }
-      
+
       .noGamesLabel {
         text-align: center;
       }
@@ -50,6 +52,24 @@
             line-height: 1.42857143;
             vertical-align: top;
             border-top: 1px solid #ddd;
+
+            &.action {
+              a {
+                
+                i.playIcon {
+                  color: red;
+                  transform: rotate(-23deg);
+                  .chIcon();
+                  &:before {
+                    content: '\f11b';
+                    font-size: 23px;
+                  }
+                  &:hover {
+                    cursor: pointer;
+                  }
+                }
+              }
+            }
 
             .status {
               font-size: 12px;

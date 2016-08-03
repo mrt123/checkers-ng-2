@@ -6,6 +6,7 @@ function MyGamesCtrl($scope, games, account) {
     $scope.gamesCreated = [];
     $scope.gamesInvitedTo = [];
     $scope.showGames = showGames;
+    $scope.playGame = playGame;
 
     activate();
 
@@ -21,5 +22,9 @@ function MyGamesCtrl($scope, games, account) {
     
     function showGames(games) {
         return games.length > 0;
+    }
+    
+    function playGame(game) {
+        console.log('play', game);
     }
 }

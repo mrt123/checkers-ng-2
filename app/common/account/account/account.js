@@ -17,8 +17,7 @@ function Account(accountVendor, facebookVendor, $q) {
 
     function activate() {
         accountVendor.init();
-        self.user = accountVendor.getUser();
-        facebookVendor.libStatus.promise.then(undefined, undefined, onLibStatusChange);
+        setUser(accountVendor.getUser());
     }
 
     function login(u, p) {
@@ -67,12 +66,6 @@ function Account(accountVendor, facebookVendor, $q) {
                 resolve();
             }
         })
-    }
-
-    function onLibStatusChange(libStatus) {
-        if (libStatus === 'loaded') {
-            self.userChange.notify();
-        }
     }
     
     function loginFacebookUserToVendor(facebookUser) {

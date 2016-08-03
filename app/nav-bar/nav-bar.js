@@ -11,41 +11,44 @@ function NavBarCtrl(account, $scope, facebook, $timeout, $state) {
     activate();
 
     function activate() {
+        showProgressMsg('loading');
+        setAccountScope();
         facebook.libStatus.promise.then(undefined, undefined, onFacebookLibTransfer);
-        account.userChange.promise.then(undefined, undefined, onUserChange);
-        showProgressMsg('loading')
+        account.userChange.promise.then(undefined, undefined, setAccountScope);
     }
     
     function onFacebookLibTransfer(transferStatus) {
+        console.log(transferStatus);
         if(transferStatus === 'failed') {
-            vm.showLoadingBar = false;
+            showProgressMsg();
             vm.showError = true;
         }
-    }
-    
-    function onUserChange() {
-        hideProgressMsg();
-        if(account.user) {
-            vm.loggedIn = true;
-            updateAccountScope(account.user, true);
-        }
-        else {
-            vm.loggedIn = false;
+        if(transferStatus === 'loaded') {
+            hideProgressMsg();
         }
     }
 
     function logout() {
         showProgressMsg('logging out');
         account.signOut().then(function() {
-            updateAccountScope({}, false);
+            setAccountScope();
             hideProgressMsg();
             $state.go('home');
         });
     }
 
-    function updateAccountScope(user) {
+    function setAccountScope() {
+
         $timeout(function () { // avoid existing digest
-            vm.username = user.playerName;
+            var usr = account.user;
+
+            if(usr) {
+                vm.loggedIn = true;
+                vm.username = usr.playerName;
+            }
+            else {
+                vm.loggedIn = false;
+            }
         });
     }
     

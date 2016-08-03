@@ -13,7 +13,7 @@ var project = new Project();
 // assuming task is sequenced externally (no dependent tasks here).
 gulp.task('serve', [], function () {
 
-    var urlObj = url.parse('http://localhost:4011/api');
+    var urlObj = url.parse('http://localhost:1337/parse');
     urlObj.route = '/api';
 
     devServer.init({

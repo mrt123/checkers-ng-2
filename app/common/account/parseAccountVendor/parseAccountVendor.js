@@ -12,7 +12,7 @@ function parseAccountVendor($q) {
 
     function init() {
         Parse.initialize("CHECKERS_2");
-        Parse.serverURL = 'http://localhost:3000/api';
+        Parse.serverURL = 'http://localhost:1337/parse';
     }
 
     function signUp(username, password, playerName) {
@@ -29,7 +29,7 @@ function parseAccountVendor($q) {
     }
 
     function signIn(username, password) {
-        
+        // TODO: handle bug when parse will not resolve/reject promise, when u/p are undefined.
         return $q(function (resolve, reject) {
             Parse.User.logIn(username, password, {
                 success: function (vendorUser) {

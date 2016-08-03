@@ -17,7 +17,7 @@ function SignUpCtrl($scope, account, $timeout, $state, facebook) {
     }
 
     function signUpSuccess() {
-        $state.go('home');
+        $state.go('myGames');
     }
 
     function showError(error) {

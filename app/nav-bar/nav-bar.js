@@ -18,7 +18,6 @@ function NavBarCtrl(account, $scope, facebook, $timeout, $state) {
     }
     
     function onFacebookLibTransfer(transferStatus) {
-        console.log(transferStatus);
         if(transferStatus === 'failed') {
             showProgressMsg();
             vm.showError = true;

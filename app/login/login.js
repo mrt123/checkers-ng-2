@@ -17,7 +17,7 @@ function LoginCtrl($scope, account, $timeout, $state, facebook) {
     }
 
     function loginSuccess() {
-        $state.go('home');
+        $state.go('myGames');
     }
 
     function showError(error) {

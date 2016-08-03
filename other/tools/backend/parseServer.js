@@ -9,7 +9,6 @@ var parseServer = new ParseServer({
     serverURL: 'http://localhost:1337/parse'
 });
 
-// Serve the Parse API on the /parse URL prefix
 app.use('/parse', parseServer);
 
 app.post('/parse/classes/Game', function (req, res, next) {

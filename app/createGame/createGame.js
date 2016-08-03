@@ -14,12 +14,12 @@ function CreateGameCtrl($scope, games, $state, account) {
     }
 
     function createGame(invitedPlayerEmail) {
-        console.log('invitedPlayerEmail', invitedPlayerEmail);
         games.create({
             p1Email: Parse.User.current().get('username'),
             p2Email: invitedPlayerEmail,
-            status: 'waiting for opponent to accept'
+            status: 'not started'
+        }).then(function () {
+            $state.go('myGames');
         });
-        $state.go('myGames');
     }
 }

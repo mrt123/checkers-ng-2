@@ -94,13 +94,18 @@ function games($q, account) {
         });
     }
 
-    function create(rawObject) {
-        getUserIdFromEmail(rawObject.p2Email).then(function (userId) {
-                _saveGame(rawObject, userId);
-            },
-            function (error) {
-                throw error;  // TODO: propagate to controller
-            });
+    function create(rawObject) {   // TODO : use userID in compound query to create Game
+        return $q(function (resolve, reject) {
+            getUserIdFromEmail(rawObject.p2Email)
+                .then(
+                function (userId) {
+                    _saveGame(rawObject, userId);
+                },
+                function (error) {
+                    throw error;  // TODO: propagate to controller
+                })
+                .then(resolve, reject);
+        });
     }
 
     function _saveGame(rawObject, opponentUserId) {
@@ -109,6 +114,7 @@ function games($q, account) {
 
         var acl = new Parse.ACL(Parse.User.current());
         acl.setReadAccess(opponentUserId, true);
+        acl.setWriteAccess(opponentUserId, true);
         game.setACL(acl);
 
         return $q(function (resolve, reject) {
@@ -116,7 +122,7 @@ function games($q, account) {
                 success: function (game) {
                     console.log("POST game :" + game.id);
                     var json = game.toJSON();
-                    self.all.push(json);
+                    self.created.push(json);
                     self.updateEvent.notify();
                     resolve(game.toJSON());
                 },

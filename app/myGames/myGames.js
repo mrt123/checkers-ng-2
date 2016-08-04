@@ -2,7 +2,7 @@ angular
     .module('app.MyGamesCtrl', [])
     .controller('MyGamesCtrl', MyGamesCtrl);
 
-function MyGamesCtrl($scope, games, account) {
+function MyGamesCtrl($scope, games, $state) {
     $scope.gamesCreated = [];
     $scope.gamesInvitedTo = [];
     $scope.showGames = showGames;
@@ -26,5 +26,6 @@ function MyGamesCtrl($scope, games, account) {
     
     function playGame(game) {
         console.log('play', game);
+        $state.go('game', {id: game['objectId']});
     }
 }

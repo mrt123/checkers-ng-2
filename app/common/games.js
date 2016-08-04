@@ -6,6 +6,8 @@ function games($q, account) {
     var self = {
         getAll: getAll,
         create: create,
+        get: get,
+        _Game: Parse.Object.extend("Game"),
         created: [],
         invitedTo: [],
         updateEvent: $q.defer()
@@ -15,7 +17,6 @@ function games($q, account) {
     return self;
 
     function activate() {
-        self.getAll();
     }
 
     function getAll() {
@@ -36,6 +37,39 @@ function games($q, account) {
                     reject(error);
                 }
             });
+        });
+    }
+    
+    function get(id) {
+        var gameQuery = new Parse.Query(self._Game);
+        gameQuery.equalTo("objectId", id);
+
+
+        return $q(function (resolve, reject) {
+            gameQuery.first({
+                success: function (result) {
+                    resolve(result.toJSON());
+                },
+                error: function (error) {
+                    console.log("Error: " + error.message);
+                    reject(error);
+                }
+            });
+        });
+        
+    }
+
+    function create(rawObject) {   // TODO : use userID in compound query to create Game
+        return $q(function (resolve, reject) {
+            getUserIdFromEmail(rawObject.p2Email)
+                .then(
+                function (userId) {
+                    _saveGame(rawObject, userId);
+                },
+                function (error) {
+                    throw error;  // TODO: propagate to controller
+                })
+                .then(resolve, reject);
         });
     }
 
@@ -91,20 +125,6 @@ function games($q, account) {
                     reject(error);
                 }
             });
-        });
-    }
-
-    function create(rawObject) {   // TODO : use userID in compound query to create Game
-        return $q(function (resolve, reject) {
-            getUserIdFromEmail(rawObject.p2Email)
-                .then(
-                function (userId) {
-                    _saveGame(rawObject, userId);
-                },
-                function (error) {
-                    throw error;  // TODO: propagate to controller
-                })
-                .then(resolve, reject);
         });
     }
 

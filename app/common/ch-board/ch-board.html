@@ -1,0 +1,33 @@
+<div class="ch-board">
+    BOARD DIRECTIVE....<br>
+    {{vm.game}}
+
+    <div class="frame">
+        <div class="fieldHolder">
+            <div ng-repeat="field in vm.fields">
+                <ch-square
+                    color="{{field.color}}"
+                    number="{{field.id}}"
+                    actions="field.actions"
+                    >
+                </ch-square>
+            </div>
+        </div>
+
+        <div class="pinHolder">
+            <ch-pin ng-repeat="pin in pins"
+                    ng-class="pin.color"
+
+                    color="{{pin.color}}"
+                    initcsstop="{{pin.top}}"
+                    initcssleft="{{pin.left}}"
+                    id="{{pin.id}}"
+
+                    api="pin.api"
+                    on-drag="pinHovers(x, y, id)"
+                    on-drop="pinDrops(x, y, id)"
+                >
+            </ch-pin>
+        </div>
+    </div>
+</div>

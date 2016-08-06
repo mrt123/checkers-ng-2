@@ -2,9 +2,9 @@ angular
     .module('app.GameCtrl', [])
     .controller('GameCtrl', MyGamesCtrl);
 
-function MyGamesCtrl($scope, games, $stateParams, Game) {
+function MyGamesCtrl($scope, games, $stateParams, GameMaster) {
 
-    var game = new Game();    window.game = game;
+    var game = new GameMaster();    window.game = game;
     var board = game.board;     window.scope = $scope;
     
     $scope.fields = game.board.fields;

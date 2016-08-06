@@ -1,14 +1,17 @@
-angular.module('Pin', []).factory('Pin',
-    function () {
+angular
+    .module('Pin', [])
+    .factory('Pin', Pin);
 
-        var Pin = function (color, id) {
-            this.color = color;
-            this.id = id;
-        };
+function Pin() {
 
-        Pin.prototype.getColor = function() {
-            return this.color;
-        };
+    var Pin = function (color, id) {
+        this.color = color;
+        this.id = id;
+    };
 
-        return Pin;
-    });
+    Pin.prototype.getColor = function() {
+        return this.color;
+    };
+
+    return Pin;
+}

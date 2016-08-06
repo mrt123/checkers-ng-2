@@ -1,55 +1,63 @@
-angular.module('Board', []).factory('Board', [
-    'Field',
-    'Pin',
-    function (Field, Pin) {
+angular
+    .module('Board', [])
+    .factory('Board', Board)
 
-        var Board = function () {
-            this.fields = this.generateFields();
-        };
 
-        Board.prototype.generateFields = function () {
-            var fields = [];
+function Board(Field) {
 
-            for (var i = 1; i <= 64; i++) {  // iterate to produce 64 squares
-                var rowNumber = Math.ceil(i / 8);
-                var column = i - ( (rowNumber - 1) * 8);
-                fields.push(new Field(i, rowNumber, column));
-            }
-            return fields;
-        };
+    var Board = function (gameMaster, board, number) {
+        this.fields = this.generateFields();
+    };
 
-        Board.prototype.getFieldsByColor = function (color) {
-            return this.fields.filter(function (field) {
-                return field.getColor() === color;
-            });
-        };
+    /**
+     * Whites always starts from 1.
+     * If you're white!!!, your presentation will invert field order.
+     */
+    Board.prototype.generateFields = function () {
+        var fields = [];
 
-        Board.prototype.getFieldByNumber = function (number) {
-            return this.fields.filter(function (field) {
-                return field.id === number;
-            })[0];
-        };
+        for (var fieldNumber = 1; fieldNumber <= 64; fieldNumber++) {  // iterate to produce 64 squares
+            var rowNumber = Math.ceil(fieldNumber / 8);
+            var columnNumber = fieldNumber - ( (rowNumber - 1) * 8);
+            fields.push(new Field(fieldNumber, rowNumber, columnNumber));
+        }
+        return fields;
+    };
 
-        Board.prototype.getFieldAtXY = function (x, y) {
-            var snapThreshold = 25;
+    Board.prototype.movePinToField = function (pin, targetField) {
+        var baseField = this.getFieldByPin(pin);
+        baseField.removePin();
+        targetField.setPin(pin);
+        return targetField;
+    };
 
-            for (var i = 0; i < this.fields.length; i++) {
-                var field = this.fields[i];
-                if (
-                    this.isNumberWithin(field.center.x, x, snapThreshold) &&
-                    this.isNumberWithin(field.center.y, y, snapThreshold)
-                ) {
-                    return field;
-                }
-            }
-            return null;
-        };
+    Board.prototype.getFieldByPin = function (pin) {
+        return this.fields.filter(function(field) {
+            return field.pin === pin;
+        })[0];
+    };
 
-        Board.prototype.isNumberWithin = function (number, target, threshold) {
-            // TODO: belongs to util class
+    Board.prototype.isDiagonalField = function (baseField, targetField, playerColor) {
+        var areFieldsInNeighbourColumns = this.areFieldsInNeighbourColumns();
+        var isTargetForward = this.isForwardField(baseField, targetField, playerColor);
+        return areFieldsInNeighbourColumns && isTargetForward;
+    };
 
-            return Math.abs(number - target) < threshold;
-        };
+    Board.prototype.areFieldsInNeighbourColumns = function (field1, field2) {
+        var columnDiff = Math.abs(field1.columnNumber - field2.columnNumber);
+        return columnDiff === 1;
+    };
 
-        return Board;
-    }]);
+    Board.prototype.isForwardField = function (baseField, targetField, playerColor) {
+        var diffToNewRow = targetField.rowNumber - baseField.rowNumber;
+
+        if (playerColor === 'white') {
+            return diffToNewRow === 1;
+        }
+        else {
+            return diffToNewRow === -1;
+        }
+    };
+
+    return Board;
+}

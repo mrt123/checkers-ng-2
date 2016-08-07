@@ -3,10 +3,12 @@ angular
     .factory('Board', Board)
 
 
-function Board(Field) {
+function Board(Field, Pin) {
 
-    var Board = function (gameMaster, board, number) {
+    var Board = function () {
         this.fields = this.generateFields();
+        this.pins = [];
+        this._insertPins();
     };
 
     /**
@@ -32,7 +34,7 @@ function Board(Field) {
     };
 
     Board.prototype.getFieldByPin = function (pin) {
-        return this.fields.filter(function(field) {
+        return this.fields.filter(function (field) {
             return field.pin === pin;
         })[0];
     };
@@ -57,6 +59,37 @@ function Board(Field) {
         else {
             return diffToNewRow === -1;
         }
+    };
+
+    Board.prototype._insertPins = function () {
+        
+        var blackFields = this.getFieldsByColor('black');
+
+        blackFields.forEach(function (field) {
+
+            // PLAYER 1 fields
+            if (field.number >= 41) {
+                this._addPinToField(field, 'black', this.pins.length);
+            }
+
+            // PLAYER 2 fields
+            if (field.number <= 24) {
+                this._addPinToField(field, 'white', this.pins.length);
+            }
+            
+        }.bind(this));
+    };
+
+    Board.prototype._addPinToField = function (field, color, id) {
+        var pin = new Pin(color, id);
+        field.setPin(pin);
+        this.pins.push(pin);
+    };
+
+    Board.prototype.getFieldsByColor = function (color) {
+        return this.fields.filter(function (field) {  
+            return field.getColor() === color;
+        });
     };
 
     return Board;

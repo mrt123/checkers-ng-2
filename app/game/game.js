@@ -5,10 +5,9 @@ angular
 function MyGamesCtrl($scope, games, $stateParams, GameMaster) {
 
     var game = new GameMaster();    window.game = game;
-    var board = game.board;     window.scope = $scope;
     
     $scope.fields = game.board.fields;
-    $scope.gameData = undefined;
+    $scope.pins = game.board.pins;
 
     activate();
 
@@ -17,7 +16,6 @@ function MyGamesCtrl($scope, games, $stateParams, GameMaster) {
     }
 
     function setGameData(game) {
-        console.log($stateParams.id);
         $scope.gameData = game;
     }
 

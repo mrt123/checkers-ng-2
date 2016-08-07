@@ -8,8 +8,7 @@ function Field() {
         this.number = number;
         this.rowNumber = rowNumber;
         this.columnNumber = columnNumber;
-        this.color = this.getColor(rowNumber, number);
-        this.pin = undefined;
+        this.color = this._determineColor(rowNumber, number);
     };
 
     Field.prototype.hasPin = function () {
@@ -36,13 +35,17 @@ function Field() {
         return (oddRow && oddNumber ) || (eveRow && evenNumber);
     };
     
-    Field.prototype.getColor = function(rowNo, fieldNo) {
+    Field.prototype._determineColor = function(rowNo, fieldNo) {
         if(this.isColorWhite(rowNo, fieldNo)){
             return 'white';
         }
         else {
             return 'black';
         }
+    };
+    
+    Field.prototype.getColor = function() {
+        return this.color;
     };
 
     return Field;

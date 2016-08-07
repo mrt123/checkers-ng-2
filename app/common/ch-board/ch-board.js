@@ -11,17 +11,18 @@ function board() {
         restrict: 'E',
         scope: {
             game: '=',
-            fields: '='
+            fields: '=',
+            pins: '='
         },
         templateUrl: 'common/ch-board/ch-board.html'
     };
 
     function link($scope, element, attrs) {
-
+            
     }
 }
 
 
 function BoardCtrl() {
-    
+    console.log(this.pins)
 }

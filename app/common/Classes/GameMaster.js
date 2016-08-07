@@ -2,7 +2,7 @@ angular
     .module('GameMaster', [])
     .factory('GameMaster', GameMaster);
 
-function GameMaster(Board) {
+function GameMaster(Board, Pin) {
 
     var GameMaster = function () {
         this.board = new Board();
@@ -29,10 +29,11 @@ function GameMaster(Board) {
 
     GameMaster.prototype.makeMove = function(playerColor, pin, targetField) {
         var baseField = this.board.getFieldByPin(pin);
-        if(this.gameMaster.isMoveLegal(playerColor, baseField, targetField)) {
-            this.gameMaster.movePinToField(pin, targetField);
+        if(this.isMoveLegal(playerColor, baseField, targetField)) {
+            this.movePinToField(pin, targetField);
         }
     };
+
 
     
     

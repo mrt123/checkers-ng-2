@@ -1,6 +1,4 @@
 <div class="ch-board">
-    BOARD DIRECTIVE....<br>
-    {{vm.game}}
 
     <div class="frame">
         <div class="fieldHolder">
@@ -15,7 +13,7 @@
         </div>
 
         <div class="pinHolder">
-            <ch-pin ng-repeat="pin in pins"
+            <ch-pin ng-repeat="pin in vm.pins"
                     ng-class="pin.color"
 
                     color="{{pin.color}}"

@@ -9,7 +9,7 @@ function Pin() {
         this.id = id;
     };
 
-    Pin.prototype.getColor = function() {
+    Pin.prototype._determineColor = function() {
         return this.color;
     };
 

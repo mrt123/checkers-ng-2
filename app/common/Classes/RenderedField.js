@@ -10,9 +10,10 @@ function RenderedField() {
     };
 
     RenderedField.prototype._getCenterCoordinates = function (field) {
+        
         return {
-            x : field['column'] * 60 - 30,
-            y : field['row'] * 60 - 30
+            x : field.columnNumber * 60 - 30,
+            y : field.rowNumber * 60 - 30
         };
     };
 

@@ -45,7 +45,7 @@ function _getScopePins(renderedBoard) {
     return scopePins;
 }
 
-function _getPin(pin, bitmapField) {  console.log(bitmapField.center)
+function _getPin(pin, bitmapField) {
     
     return {
         color: pin.color,

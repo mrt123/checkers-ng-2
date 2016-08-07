@@ -4,8 +4,8 @@
         <div class="fieldHolder">
             <div ng-repeat="field in vm.fields">
                 <ch-square
-                    color="{{field.color}}"
-                    number="{{field.id}}"
+                    color="{{field.logicalField.color}}"
+                    number="{{field.logicalField.id}}"
                     actions="field.actions"
                     >
                 </ch-square>

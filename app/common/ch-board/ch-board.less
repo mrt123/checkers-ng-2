@@ -1,6 +1,7 @@
 ch-board {
   .ch-board {
     .frame {
+      position: relative;
       padding: 20px;
       background: yellowgreen url('/img/board_frame.jpg') no-repeat;
       width: 520px;
@@ -14,7 +15,9 @@ ch-board {
         
         .pinHolder {
           position: absolute;
-          //must be 0x0 for elements behind to register mouse events.
+          left: 20px;
+          top: 20px;
+          //must be of size 0x0 for elements behind to register mouse events.
         }
       }
     }

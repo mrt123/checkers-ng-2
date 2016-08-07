@@ -2,12 +2,11 @@ angular
     .module('app.GameCtrl', [])
     .controller('GameCtrl', MyGamesCtrl);
 
-function MyGamesCtrl($scope, games, $stateParams, GameMaster) {
+function MyGamesCtrl($scope, games, $stateParams, GameMaster, RenderedBoard) {
 
     var game = new GameMaster();    window.game = game;
     
-    $scope.fields = game.board.fields;
-    $scope.pins = game.board.pins;
+    $scope.board = new RenderedBoard(game.board);
 
     activate();
 

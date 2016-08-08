@@ -1,7 +1,7 @@
 <div class="ch-board">
 
     <div class="frame">
-        <div class="fieldHolder">
+        <div class="fields">
             <div ng-repeat="field in vm.fields">
                 <ch-square
                     color="{{field.logicalField.color}}"
@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <div class="pinHolder">
+        <div class="pins">
             <ch-pin ng-repeat="pin in vm.pins"
                     ng-class="pin.color"
 

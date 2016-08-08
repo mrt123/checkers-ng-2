@@ -69,7 +69,7 @@ function ChBoardCtrl(RenderedField) {
         if (targetField !== null) {
             if (this.gameMaster.isMoveLegal(this.playerColor, originField, targetField)) {
                 _dropPinOnField(pin, targetField);
-                this.board.movePinToField(originField.pin, targetField)
+                this.gameMaster.makeMove(this.playerColor, originField.pin, targetField)
             }
             else {
                 animatePinToField(pin, originField);

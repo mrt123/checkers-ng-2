@@ -37,7 +37,8 @@ function GameMaster(Board, Pin) {
     GameMaster.prototype.makeMove = function (playerColor, pin, targetField) {
         var baseField = this.board.getFieldByPin(pin);
         if (this.isMoveLegal(playerColor, baseField, targetField)) {
-            this.movePinToField(pin, targetField);
+            this.board.movePinToField(pin, targetField);
+            this.nextPlayerColor = 'not you';
         }
     };
 

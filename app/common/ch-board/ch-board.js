@@ -25,7 +25,7 @@ function ChBoardCtrl() {
 
     this.renderedFields = this.renderedBoard.renderedFields;
     this.pins = _getScopePins(this.renderedBoard);
-    this.pinHovers = onPinHover;
+    this.onPinHover = onPinHover;
     this.activeSquare = undefined;
 
     function _getScopePins(renderedBoard) {
@@ -52,18 +52,18 @@ function ChBoardCtrl() {
         var originLogicalField = this.renderedBoard.logicalBoard.getFieldByPin(pin);
         var targetRenderedField = this.renderedBoard.getRenderedFieldAtXY(destinationX, destinationY);
         
-        if (targetRenderedField !== null) {   
-            var moveIsLegal = gameMaster.isMoveLegal(this.playerColor, originLogicalField, targetRenderedField.logicalField);
+        if (targetRenderedField !== null) {
+            var targetLogicalField = targetRenderedField.logicalField;
+            var moveIsLegal = gameMaster.isMoveLegal(this.playerColor, originLogicalField, targetLogicalField);
             
             if (moveIsLegal) {
-                this.activeSquare = this.renderedFields[targetRenderedField.logicalField.number - 1];
+                this.activeSquare = this.renderedFields[targetLogicalField.number - 1];
                 this.activeSquare.actions.highlight(); 
             }
         }
     }
 
     function _generatePin(pin, bitmapField) {
-
         return {
             color: pin.color,
             id: pin.id,

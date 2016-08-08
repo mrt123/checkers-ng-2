@@ -4,9 +4,13 @@ angular
 
 function MyGamesCtrl($scope, games, $stateParams, GameMaster, RenderedBoard) {
 
-    var game = new GameMaster();    window.game = game;
+    var gameMaster = new GameMaster();    window.gameMaster = gameMaster;
+    gameMaster.startGame({
+        firstPlayerColor: 'black'
+    });
     
-    $scope.board = new RenderedBoard(game.board);
+    $scope.renderedBoard = new RenderedBoard(gameMaster.board);
+    $scope.playerColor = 'black';
 
     activate();
 

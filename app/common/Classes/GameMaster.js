@@ -19,12 +19,19 @@ function GameMaster(Board, Pin) {
 
     GameMaster.prototype.isMoveLegal = function(playerColor, baseField, targetField) {
         var fieldHasPin = baseField.hasPin();
-        var isPlayerTurn = this.isPlayerTurn(playerColor);
-        var pinBelongsToPlayer = this.isPinBelongsToPlayer(playerColor);
-        var isForwardMove = this.board.isForwardField(baseField, targetField);
-        var isDiagonalDiagonalMove = this.board.isDiagonalField(baseField, targetField);
+
+        if (fieldHasPin) {
+            var pinBelongsToPlayer = this.isPinBelongsToPlayer(baseField.pin, playerColor);
+            var isPlayerTurn = this.isPlayerTurn(playerColor);
+            var isForwardMove = this.board.isForwardField(baseField, targetField);
+            var isDiagonalDiagonalMove = this.board.isDiagonalField(baseField, targetField);
+            
+            return pinBelongsToPlayer && isPlayerTurn && isForwardMove && isDiagonalDiagonalMove;
+        }
         
-        return fieldHasPin && isPlayerTurn && pinBelongsToPlayer && isForwardMove && isDiagonalDiagonalMove;
+        else {
+            return false;
+        }
     };
 
     GameMaster.prototype.makeMove = function(playerColor, pin, targetField) {
@@ -34,7 +41,9 @@ function GameMaster(Board, Pin) {
         }
     };
 
-
+    GameMaster.prototype.startGame = function(opts) {
+        this.nextPlayerColor = opts.firstPlayerColor;
+    };
     
     
     return GameMaster;

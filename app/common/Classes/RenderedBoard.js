@@ -19,16 +19,16 @@ function RenderedBoard(RenderedField) {
         return renderedFields;
     };
 
-    RenderedBoard.prototype.getFieldAtXY = function (x, y) {
+    RenderedBoard.prototype.getRenderedFieldAtXY = function (x, y) {
         var snapThreshold = 25;
 
         for (var i = 0; i < this.renderedFields.length; i++) {
-            var field = this.logicalBoard.fields[i];
+            var renderedField = this.renderedFields[i];
             if (
-                this._isNumberWithin(field.center.x, x, snapThreshold) &&
-                this._isNumberWithin(field.center.y, y, snapThreshold)
+                this._isNumberWithin(renderedField.center.x, x, snapThreshold) &&
+                this._isNumberWithin(renderedField.center.y, y, snapThreshold)
             ) {
-                return field;
+                return renderedField;
             }
         }
         return null;

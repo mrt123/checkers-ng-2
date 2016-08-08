@@ -9,9 +9,5 @@ function Pin() {
         this.id = id;
     };
 
-    Pin.prototype._determineColor = function() {
-        return this.color;
-    };
-
     return Pin;
 }

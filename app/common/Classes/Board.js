@@ -12,8 +12,8 @@ function Board(Field, Pin) {
     };
 
     /**
-     * Whites always starts from 1.
-     * If you're white!!!, your presentation will invert field order.
+     * WHITES always starts from 1.
+     * If you're WHITE!!!, your rendering engine will invert field order.
      */
     Board.prototype.generateFields = function () {
         var fields = [];
@@ -35,12 +35,17 @@ function Board(Field, Pin) {
 
     Board.prototype.getFieldByPin = function (pin) {
         return this.fields.filter(function (field) {
-            return field.pin === pin;
+            if(field.hasPin()) {
+                return field.pin.id === pin.id;
+            }
+            else {
+                return false;
+            }
         })[0];
     };
 
     Board.prototype.isDiagonalField = function (baseField, targetField, playerColor) {
-        var areFieldsInNeighbourColumns = this.areFieldsInNeighbourColumns();
+        var areFieldsInNeighbourColumns = this.areFieldsInNeighbourColumns(baseField, targetField);
         var isTargetForward = this.isForwardField(baseField, targetField, playerColor);
         return areFieldsInNeighbourColumns && isTargetForward;
     };

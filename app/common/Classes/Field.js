@@ -3,51 +3,51 @@ angular
     .factory('Field', Field);
 
 function Field() {
-
-    var Field = function (number, rowNumber, columnNumber) {
-        this.number = number;
-        this.rowNumber = rowNumber;
-        this.columnNumber = columnNumber;
-        this.color = this._determineColor(rowNumber, number);
-        this.pin = undefined;
-    };
-
-    Field.prototype.hasPin = function () {
-        return !this.isEmpty();
-    };
-
-    Field.prototype.isEmpty = function () {
-        return this.pin === undefined;
-    };
-
-    Field.prototype.setPin = function (pin) {
-        this.pin = pin;
-    };
-
-    Field.prototype.removePin = function () {
-        this.pin = undefined;
-    };
-
-    Field.prototype.isColorWhite = function(rowNo, fieldNo) {
-        var eveRow = rowNo % 2 == 0;
-        var oddRow = !eveRow;
-        var evenNumber = fieldNo % 2 == 0;
-        var oddNumber = !evenNumber;
-        return (oddRow && oddNumber ) || (eveRow && evenNumber);
-    };
-    
-    Field.prototype._determineColor = function(rowNo, fieldNo) {
-        if(this.isColorWhite(rowNo, fieldNo)){
-            return 'white';
+    class Field {
+        constructor(number, rowNumber, columnNumber) {
+            this.number = number;
+            this.rowNumber = rowNumber;
+            this.columnNumber = columnNumber;
+            this.color = this._determineColor(rowNumber, number);
+            this.pin = undefined;
         }
-        else {
-            return 'black';
-        }
-    };
-    
-    Field.prototype.getColor = function() {
-        return this.color;
-    };
 
+        hasPin() {
+            return !this.isEmpty();
+        }
+
+        isEmpty() {
+            return this.pin === undefined;
+        }
+
+        setPin(pin) {
+            this.pin = pin;
+        }
+
+        removePin() {
+            this.pin = undefined;
+        }
+
+        getColor() {
+            return this.color;
+        }
+
+        _isColorWhite(rowNo, fieldNo) {
+            var eveRow = rowNo % 2 == 0;
+            var oddRow = !eveRow;
+            var evenNumber = fieldNo % 2 == 0;
+            var oddNumber = !evenNumber;
+            return (oddRow && oddNumber ) || (eveRow && evenNumber);
+        }
+
+        _determineColor(rowNo, fieldNo) {
+            if (this._isColorWhite(rowNo, fieldNo)) {
+                return 'white';
+            }
+            else {
+                return 'black';
+            }
+        }
+    }
     return Field;
 }

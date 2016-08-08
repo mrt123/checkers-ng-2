@@ -4,10 +4,12 @@ angular
 
 function Pin() {
 
-    var Pin = function (color, id) {
-        this.color = color;
-        this.id = id;
-    };
+    class Pin {
+        constructor(color, id) {
+            this.color = color;
+            this.id = id;
+        }
+    }
 
     return Pin;
 }

@@ -10,7 +10,8 @@ function ChBoard() {
         link: link,
         restrict: 'E',
         scope: {
-            renderedBoard: '=',
+            gameMaster: '=',
+            board: '=',
             playerColor: '='
         },
         templateUrl: 'common/ch-board/ch-board.html'
@@ -23,24 +24,21 @@ function link($scope, element, attrs) {
 
 function ChBoardCtrl(RenderedField) {
 
-    this.renderedFields = this.renderedBoard.renderedFields;
-    this.pins = _getScopePins(this.renderedBoard);
+    this.fields = this.board.fields;
+    this.pins = _getScopePins(this.board.fields);  
     this.onPinHover = onPinHover;
     this.onPinDrop = onPinDrop;
     this.activeSquare = undefined;
 
-    function _getScopePins(renderedBoard) {
-        var scopePins = [];
+    function _getScopePins(fields) {
+        var scopePins = [];  
 
-        var renderedFields = renderedBoard.renderedFields;
-
-        for (var i = 0; i < renderedFields.length; i++) {
-
-            var renderedField = renderedFields[i];
-            var pinData = renderedField.logicalField.pin;
+        for (var i = 0; i < fields.length; i++) { 
+            var field = fields[i];
+            var pinData = field.pin;
 
             if(pinData) {
-                var scopePin = _generatePin(pinData, renderedField);
+                var scopePin = _getScopePin(pinData, field);
                 scopePins.push(scopePin);
             }
         }
@@ -48,17 +46,16 @@ function ChBoardCtrl(RenderedField) {
     }
 
     function onPinHover(destinationX, destinationY, pin) {
-        removeHighlight(this, this.activeSquare);
+        _removeHighlight(this, this.activeSquare);
 
-        var originLogicalField = this.renderedBoard.logicalBoard.getFieldByPin(pin);
-        var targetRenderedField = this.renderedBoard.getRenderedFieldAtXY(destinationX, destinationY);
+        var originField = this.board.getFieldByPin(pin);
+        var targetRenderedField = this.board.getRenderedFieldAtXY(destinationX, destinationY);
         
         if (targetRenderedField !== null) {
-            var targetLogicalField = targetRenderedField.logicalField;
-            var moveIsLegal = gameMaster.isMoveLegal(this.playerColor, originLogicalField, targetLogicalField);
-            
+            var moveIsLegal = this.gameMaster.isMoveLegal(this.playerColor, originField, targetRenderedField);
+
             if (moveIsLegal) {
-                this.activeSquare = this.renderedFields[targetLogicalField.number - 1];
+                this.activeSquare = this.fields[targetRenderedField.number - 1];
                 this.activeSquare.actions.highlight(); 
             }
         }
@@ -66,35 +63,31 @@ function ChBoardCtrl(RenderedField) {
 
     function onPinDrop (destinationX, destinationY, pin) {
 
-        var originLogicalField = this.renderedBoard.logicalBoard.getFieldByPin(pin);
-        var originRenderedField = new RenderedField(originLogicalField);   // TODO impl inhertiance to avoid referencing multiple types
-        var targetRenderedField = this.renderedBoard.getRenderedFieldAtXY(destinationX, destinationY);
+        var originField = this.board.getFieldByPin(pin);
+        var targetField = this.board.getRenderedFieldAtXY(destinationX, destinationY);
 
-        if (targetRenderedField !== null) {
-            var targetLogicalField = targetRenderedField.logicalField;
-            
-
-            if (gameMaster.isMoveLegal(originLogicalField, targetLogicalField)) { // drop the Pin
-                var newFieldX = targetLogicalField.center.x - 30;
-                var newFieldY = targetLogicalField.center.y - 30;
-
-                //  show dropping of the Pin
-                pin.api.leaveAt(newFieldX, newFieldY);
-
-                // update game
-                gameMaster.board.movePinToField(originLogicalField.pin, targetLogicalField)
+        if (targetField !== null) {
+            if (this.gameMaster.isMoveLegal(this.playerColor, originField, targetField)) {
+                _dropPinOnField(pin, targetField);
+                this.board.movePinToField(originField.pin, targetField)
             }
             else {
-                returnPinToField(pin, originRenderedField);
+                animatePinToField(pin, originField);
             }
-            removeHighlight(this.activeSquare);
         }
         else {
-            returnPinToField(pin, originRenderedField);
+            animatePinToField(pin, originField);
         }
+        _removeHighlight(this, this.activeSquare);
+    }
+    
+    function _dropPinOnField(pin, field) {
+        var x = field.center.x - 30;
+        var y = field.center.y - 30;
+        pin.api.leaveAt(x, y);
     }
 
-    function _generatePin(pin, bitmapField) {
+    function _getScopePin(pin, bitmapField) {
         return {
             color: pin.color,
             id: pin.id,
@@ -103,17 +96,17 @@ function ChBoardCtrl(RenderedField) {
         }
     }
 
-    function removeHighlight(scope, square) {
+    function _removeHighlight(scope, square) {
         if (square  !== undefined) {
-            square.actions.removeHighlight(); // bound to directive!
+            square.actions.removeHighlight(); // bound to directive!  
             scope.activeSquare = undefined;  // prevent repeat deHighlight if no new highlight been made!
         }
     }
 
-    function returnPinToField(pin, field) {
-        var fieldX = field.center.x - 30;
-        var fieldY = field.center.y - 30;
-        pin.api.animateTo(fieldX, fieldY);
+    function animatePinToField(pin, field) {
+        var x = field.center.x - 30;
+        var y = field.center.y - 30;
+        pin.api.animateTo(x, y);
     }
 }
 

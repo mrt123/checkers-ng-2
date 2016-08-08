@@ -2,10 +2,10 @@
 
     <div class="frame">
         <div class="fields">
-            <div ng-repeat="field in vm.renderedFields">
+            <div ng-repeat="field in vm.fields">
                 <ch-square
-                    color="{{field.logicalField.color}}"
-                    number="{{field.logicalField.id}}"
+                    color="{{field.color}}"
+                    number="{{field.id}}"
                     actions="field.actions"
                     >
                 </ch-square>

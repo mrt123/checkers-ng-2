@@ -8,7 +8,7 @@ function Board(Field, Pin) {
     var Board = function () {
         this.fields = this.generateFields();
         this.pins = [];
-        this._insertPins();
+        this._insertPins();  
     };
 
     /**

@@ -9,42 +9,42 @@ function GameMaster(Board, Pin) {
         this.nextPlayerColor = undefined;
     };
 
-    GameMaster.prototype.isPlayerTurn = function(playerColor) {
+    GameMaster.prototype.isPlayerTurn = function (playerColor) {
         return playerColor === this.nextPlayerColor;
     };
 
-    GameMaster.prototype.isPinBelongsToPlayer = function(pin, playerColor) {
+    GameMaster.prototype.isPinBelongsToPlayer = function (pin, playerColor) {
         return pin.color === playerColor;
     };
 
-    GameMaster.prototype.isMoveLegal = function(playerColor, baseField, targetField) {
-        var fieldHasPin = baseField.hasPin();
+    GameMaster.prototype.isMoveLegal = function (playerColor, baseField, targetField) {
 
-        if (fieldHasPin) {
+        if (baseField.hasPin()) {
             var pinBelongsToPlayer = this.isPinBelongsToPlayer(baseField.pin, playerColor);
             var isPlayerTurn = this.isPlayerTurn(playerColor);
             var isForwardMove = this.board.isForwardField(baseField, targetField);
             var isDiagonalDiagonalMove = this.board.isDiagonalField(baseField, targetField);
-            
-            return pinBelongsToPlayer && isPlayerTurn && isForwardMove && isDiagonalDiagonalMove;
+
+            return pinBelongsToPlayer && isPlayerTurn && isForwardMove && isDiagonalDiagonalMove
+                && targetField.isEmpty();
         }
-        
+
         else {
             return false;
         }
     };
 
-    GameMaster.prototype.makeMove = function(playerColor, pin, targetField) {
+    GameMaster.prototype.makeMove = function (playerColor, pin, targetField) {
         var baseField = this.board.getFieldByPin(pin);
-        if(this.isMoveLegal(playerColor, baseField, targetField)) {
+        if (this.isMoveLegal(playerColor, baseField, targetField)) {
             this.movePinToField(pin, targetField);
         }
     };
 
-    GameMaster.prototype.startGame = function(opts) {
+    GameMaster.prototype.startGame = function (opts) {
         this.nextPlayerColor = opts.firstPlayerColor;
     };
-    
-    
+
+
     return GameMaster;
 }

@@ -9,7 +9,8 @@ function MyGamesCtrl($scope, games, $stateParams, GameMaster, RenderedBoard) {
         firstPlayerColor: 'black'
     });
     
-    $scope.renderedBoard = new RenderedBoard(gameMaster.board);
+    $scope.gameMaster = gameMaster;
+    $scope.board = new RenderedBoard(gameMaster.board);
     $scope.playerColor = 'black';
 
     activate();

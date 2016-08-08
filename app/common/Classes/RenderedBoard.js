@@ -2,41 +2,43 @@ angular
     .module('RenderedBoard', [])
     .factory('RenderedBoard', RenderedBoard);
 
-function RenderedBoard(RenderedField) {
+function RenderedBoard(Board, RenderedField) {
 
-    var RenderedBoard = function (logicalBoard) {
-        this.logicalBoard = logicalBoard;
-        this.renderedFields = this._getRenderedFields(logicalBoard.fields);
-    };
-
-
-    RenderedBoard.prototype._getRenderedFields = function (logicalFields) {
-        var renderedFields = [];
-        for (var i = 0; i < logicalFields.length; i++) {
-            var logicalField = logicalFields[i];
-            renderedFields.push(new RenderedField(logicalField));
+    class RenderedBoard extends Board {
+        constructor() {
+            super();
+            this.fields = this._getRenderedFields();
         }
-        return renderedFields;
-    };
 
-    RenderedBoard.prototype.getRenderedFieldAtXY = function (x, y) {
-        var snapThreshold = 25;
-
-        for (var i = 0; i < this.renderedFields.length; i++) {
-            var renderedField = this.renderedFields[i];
-            if (
-                this._isNumberWithin(renderedField.center.x, x, snapThreshold) &&
-                this._isNumberWithin(renderedField.center.y, y, snapThreshold)
-            ) {
-                return renderedField;
+        _getRenderedFields() {
+            var renderedFields = [];
+            var fields = this.fields;
+            for (var i = 0; i < fields.length; i++) {
+                var field = fields[i];
+                renderedFields.push(new RenderedField(field));
             }
+            return renderedFields;
         }
-        return null;
-    };
 
-    RenderedBoard.prototype._isNumberWithin = function (number, target, threshold) {
-        return Math.abs(number - target) < threshold;
-    };
+        getRenderedFieldAtXY(x, y) {
+            var snapThreshold = 25;
+
+            for (var i = 0; i < this.fields.length; i++) {
+                var field = this.fields[i];
+                if (
+                    this._isNumberWithin(field.center.x, x, snapThreshold) &&
+                    this._isNumberWithin(field.center.y, y, snapThreshold)
+                ) {
+                    return field;
+                }
+            }
+            return null;
+        }
+
+        _isNumberWithin(number, target, threshold) {
+            return Math.abs(number - target) < threshold;
+        }
+    }
 
     return RenderedBoard;
 }

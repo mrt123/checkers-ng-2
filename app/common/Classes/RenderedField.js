@@ -4,37 +4,19 @@ angular
 
 function RenderedField(Field) {
 
-    var RenderedField = function (field, edgePixelSize) {
-        this.logicalField = field;
-        this.center = this._getCenterCoordinates(field);
-    };
-
-    RenderedField.prototype._getCenterCoordinates = function (field) {
-        
-        return {
-            x : field.columnNumber * 60 - 30,
-            y : field.rowNumber * 60 - 30
-        };
-    };
-
-    return RenderedField;
-}
-
-
-function zzz() {
-
-    // TODO: replace class with below ES6 syntax
-    
     class RenderedField extends Field {
         constructor(field, edgePixelSize) {
-            super();
-            this.center = this._getCenterCoordinates(field);
+            super(field.number, field.rowNumber, field.columnNumber);
+            this.pin = field.pin;
+            this.center = this._getCenterCoordinates(this);
         }
-        _getCenterCoordinates() {
+        _getCenterCoordinates(field) {
             return {
                 x : field.columnNumber * 60 - 30,
                 y : field.rowNumber * 60 - 30
             };
         }
     }
+
+    return RenderedField;
 }

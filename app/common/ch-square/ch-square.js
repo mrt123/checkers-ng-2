@@ -1,4 +1,6 @@
-angular.module('ch-square', []).directive('chSquare', [function () {
+angular
+    .module('ch-square', [])
+    .directive('chSquare', [function () {
 
     return {
         restrict: 'E',

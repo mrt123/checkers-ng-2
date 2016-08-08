@@ -2,7 +2,7 @@
 
     <div class="frame">
         <div class="fields">
-            <div ng-repeat="field in vm.fields">
+            <div ng-repeat="field in vm.renderedFields">
                 <ch-square
                     color="{{field.logicalField.color}}"
                     number="{{field.logicalField.id}}"
@@ -22,8 +22,8 @@
                     id="{{pin.id}}"
 
                     api="pin.api"
-                    on-drag="pinHovers(x, y, id)"
-                    on-drop="pinDrops(x, y, id)"
+                    on-drag="vm.pinHovers(x, y, pin)"
+                    on-drop="vm.pinDrops(x, y, pin)"
                 >
             </ch-pin>
         </div>

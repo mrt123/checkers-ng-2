@@ -9,6 +9,7 @@ function Field() {
         this.rowNumber = rowNumber;
         this.columnNumber = columnNumber;
         this.color = this._determineColor(rowNumber, number);
+        this.pin = undefined;
     };
 
     Field.prototype.hasPin = function () {

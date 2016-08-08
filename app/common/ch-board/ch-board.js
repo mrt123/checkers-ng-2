@@ -21,11 +21,12 @@ function link($scope, element, attrs) {
 
 }
 
-function ChBoardCtrl() {
+function ChBoardCtrl(RenderedField) {
 
     this.renderedFields = this.renderedBoard.renderedFields;
     this.pins = _getScopePins(this.renderedBoard);
     this.onPinHover = onPinHover;
+    this.onPinDrop = onPinDrop;
     this.activeSquare = undefined;
 
     function _getScopePins(renderedBoard) {
@@ -60,6 +61,36 @@ function ChBoardCtrl() {
                 this.activeSquare = this.renderedFields[targetLogicalField.number - 1];
                 this.activeSquare.actions.highlight(); 
             }
+        }
+    }
+
+    function onPinDrop (destinationX, destinationY, pin) {
+
+        var originLogicalField = this.renderedBoard.logicalBoard.getFieldByPin(pin);
+        var originRenderedField = new RenderedField(originLogicalField);   // TODO impl inhertiance to avoid referencing multiple types
+        var targetRenderedField = this.renderedBoard.getRenderedFieldAtXY(destinationX, destinationY);
+
+        if (targetRenderedField !== null) {
+            var targetLogicalField = targetRenderedField.logicalField;
+            
+
+            if (gameMaster.isMoveLegal(originLogicalField, targetLogicalField)) { // drop the Pin
+                var newFieldX = targetLogicalField.center.x - 30;
+                var newFieldY = targetLogicalField.center.y - 30;
+
+                //  show dropping of the Pin
+                pin.api.leaveAt(newFieldX, newFieldY);
+
+                // update game
+                gameMaster.board.movePinToField(originLogicalField.pin, targetLogicalField)
+            }
+            else {
+                returnPinToField(pin, originRenderedField);
+            }
+            removeHighlight(this.activeSquare);
+        }
+        else {
+            returnPinToField(pin, originRenderedField);
         }
     }
 

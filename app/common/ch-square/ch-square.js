@@ -14,9 +14,6 @@ angular
             actions: '='
         },
         link: function (scope, element, attr) {
-            scope.$on('debug', function (event, value) {
-                scope.debug = value;
-            });
 
             scope.actions = {
                 highlight: highlight.bind(undefined, element),

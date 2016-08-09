@@ -19,9 +19,6 @@ angular.module('ch-pin', []).
                 reportDrop: '&onDrop'
             },
             link: function (scope, element, attr) {
-                scope.$on('debug', function (event, value) {
-                    scope.debug = value;
-                });
 
                 var zIndexDefault = 100;
                 var zIndexActive = 101;

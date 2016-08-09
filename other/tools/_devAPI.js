@@ -20,8 +20,8 @@ setTimeout(function () {
 
     function startReloadCounter(reloadDate, el) {
         setInterval(function () {
-            var parsedSeconds = getDiffInSeconds(new Date(), reloadDate);
-            el.children().text('Reloaded ' + parsedSeconds + ' seconds ago.');
+            var secondsSincePageReload = getDiffInSeconds(new Date(), reloadDate);
+            el.children().text('Reloaded ' + secondsSincePageReload + ' seconds ago.');
         }, 1000);
     }
 
@@ -57,34 +57,32 @@ setTimeout(function () {
     function generateDebugInfoOnElements(elements, viewUpdater) {
 
         for (var i = 0; i < elements.length; i++) {
-            var squareMatrixEl = elements[i];
-            viewUpdater(squareMatrixEl);
+            var el = elements[i];
+            viewUpdater(el);
         }
     }
 
     function pinViewUpdater(el) {
         var newDiv = $('<div>', {
             'class': 'debug',
+            text: el.getAttribute('id'),
             css: {
                 color: 'red',
                 'text-align': 'center',
                 'line-height': '60px'
             }
         });
-
-        return newDiv
-            .text(el.getAttribute('id'))
-            .appendTo(el);
+        
+        newDiv.appendTo(el);
     }
 
     function squareViewUpdater(el) {
         var newDiv = $('<div>', {
-            'class': 'debug'
+            'class': 'debug',
+            text: el.getAttribute('number')
         });
 
-        return newDiv
-            .text(el.getAttribute('number'))
-            .appendTo($(el).find('.matrix'));
+        newDiv.appendTo($(el).find('.matrix'));
     }
 }, 1);
 

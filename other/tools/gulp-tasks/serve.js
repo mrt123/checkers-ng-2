@@ -34,7 +34,7 @@ gulp.task('serve', [], function () {
 
     // XXX: '**/*' or '/**/*' will watch entire drive
     // TODO: pipe watch output to modules without getting src again!
-    gulp.watch(project.JS_FILES, {}, ['compile-app.js', devServer.reload]);
+    gulp.watch([project.JS_FILES, project.DEV_FILES], {}, ['compile-app.js', devServer.reload]);
     gulp.watch([project.TEMPLATES], {},['compile-templates', devServer.reload]);
     gulp.watch([project.ASSETS], {},['compile-assets', devServer.reload] );
     gulp.watch(project.LESS_FILES, ['compile-app.css']);  // inject pre-processed css without page reload.

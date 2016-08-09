@@ -19,11 +19,11 @@ function NavBarCtrl(account, $scope, facebook, $timeout, $state) {
     
     function onFacebookLibTransfer(transferStatus) {
         if(transferStatus === 'failed') {
-            showProgressMsg();
+            vm.showLoadingBar = false;
             vm.showError = true;
         }
         if(transferStatus === 'loaded') {
-            hideProgressMsg();
+            showAccount();
         }
     }
 
@@ -31,7 +31,7 @@ function NavBarCtrl(account, $scope, facebook, $timeout, $state) {
         showProgressMsg('logging out');
         account.signOut().then(function() {
             setAccountScope();
-            hideProgressMsg();
+            showAccount();
             $state.go('home');
         });
     }
@@ -57,7 +57,7 @@ function NavBarCtrl(account, $scope, facebook, $timeout, $state) {
         vm.showAccount = false
     }
     
-    function hideProgressMsg() {
+    function showAccount() {
         vm.showLoadingBar = false;
         vm.showAccount = true;
     }

@@ -43,3 +43,13 @@ var _dev = (function () {
 
     return _dev;
 })();
+
+/**
+ * TODO: inject numbers to fields and discs in debug mode
+ *      $('ch-square')     attr: number="31"
+ *      $('ch-pin')     attr:   id="7"
+ *      
+ *      TODO: remove debug code from ch-pin , ch-square , controllers and templates
+ */
+
+

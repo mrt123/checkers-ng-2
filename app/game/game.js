@@ -4,8 +4,7 @@ angular
 
 function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard, $timeout) {
 
-    var board = new RenderedBoard();
-    board.init();
+    var board = new RenderedBoard().init();
     var gameMaster = new GameMaster(board);
     var gameData = undefined;
 

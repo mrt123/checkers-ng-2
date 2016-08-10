@@ -9,18 +9,13 @@ function RenderedBoard(Board, RenderedField) {
             super();
         }
 
-        init() {
-            this.fields = this.generateFields();
-            this.fields = this._getRenderedFields();
-            this._insertPins();  // should be compatible with RenderedFields
-            return this;
-        }
-
-        _getRenderedFields() { // TODO: this has near identical impl with Field
+        _generateFields() {
             var fields = [];
 
             for (var fieldNumber = 1; fieldNumber <= 64; fieldNumber++) {
-                fields.push(new RenderedField(fieldNumber));
+                var field = new RenderedField(fieldNumber);
+                this._addPinToFieldWhenNeeded(field);
+                fields.push(field);
             }
             return fields;
         }

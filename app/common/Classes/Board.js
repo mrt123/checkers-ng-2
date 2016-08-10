@@ -1,7 +1,6 @@
 angular
     .module('Board', [])
-    .factory('Board', Board)
-
+    .factory('Board', Board);
 
 function Board(Field, Pin) {
 
@@ -11,8 +10,7 @@ function Board(Field, Pin) {
     };
 
     Board.prototype.init = function () {
-        this.fields = this.generateFields();
-        this._insertPins();
+        this.fields = this._generateFields();
         return this;
     };
 
@@ -24,15 +22,32 @@ function Board(Field, Pin) {
      * WHITES always starts from 1.
      * If you're WHITE!!!, your rendering engine will invert field order.
      */
-    Board.prototype.generateFields = function () {
+    Board.prototype._generateFields = function () {
         var fields = [];
 
         for (var fieldNumber = 1; fieldNumber <= 64; fieldNumber++) {  // iterate to produce 64 squares
-            fields.push(new Field(fieldNumber));
+            var field = new Field(fieldNumber);
+            this._addPinToFieldWhenNeeded(field);
+            fields.push(field);
         }
         return fields;
     };
- 
+
+    Board.prototype._addPinToFieldWhenNeeded = function (field) {
+
+        if(field.color === 'black') {
+            // PLAYER 1 fields
+            if (field.number >= 41) {
+                this._addPinToField(field, 'black');
+            }
+
+            // PLAYER 2 fields
+            if (field.number <= 24) {
+                this._addPinToField(field, 'white');
+            }
+        }
+    };
+    
     Board.prototype.movePinToField = function (pin, targetField) {
         var baseField = this.getFieldByPin(pin);
         baseField.removePin();
@@ -73,35 +88,10 @@ function Board(Field, Pin) {
         }
     };
 
-    Board.prototype._insertPins = function () {
-        
-        var blackFields = this.getFieldsByColor('black');
-
-        blackFields.forEach(function (field) {
-
-            // PLAYER 1 fields
-            if (field.number >= 41) {
-                this._addPinToField(field, 'black', this.pins.length);
-            }
-
-            // PLAYER 2 fields
-            if (field.number <= 24) {
-                this._addPinToField(field, 'white', this.pins.length);
-            }
-            
-        }.bind(this));
-    };
-
-    Board.prototype._addPinToField = function (field, color, pinId) {
-        var pin = new Pin(color, pinId);
+    Board.prototype._addPinToField = function (field, color) {
+        var pin = new Pin(color, this.pins.length);
         field.setPin(pin);
         this.pins.push(pin);
-    };
-
-    Board.prototype.getFieldsByColor = function (color) {
-        return this.fields.filter(function (field) {  
-            return field.getColor() === color;
-        });
     };
 
     Board.prototype._fromJSON = function(json) {

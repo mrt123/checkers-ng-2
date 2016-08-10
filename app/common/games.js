@@ -6,8 +6,10 @@ function games($q, account) {
     var self = {
         getAll: getAll,
         create: create,
+        saveCurrentGameAttributes: saveCurrentGameAttributes,
         get: get,
         _Game: Parse.Object.extend("Game"),
+        _currentGame: undefined,
         created: [],
         invitedTo: [],
         updateEvent: $q.defer()
@@ -43,11 +45,11 @@ function games($q, account) {
     function get(id) {
         var gameQuery = new Parse.Query(self._Game);
         gameQuery.equalTo("objectId", id);
-
-
+        
         return $q(function (resolve, reject) {
             gameQuery.first({
                 success: function (result) {
+                    self._currentGame = result;
                     resolve(result.toJSON());
                 },
                 error: function (error) {
@@ -56,7 +58,7 @@ function games($q, account) {
                 }
             });
         });
-        
+
     }
 
     function create(rawObject) {   // TODO : use userID in compound query to create Game
@@ -64,7 +66,7 @@ function games($q, account) {
             getUserIdFromEmail(rawObject.p2Email)
                 .then(
                 function (userId) {
-                    _saveGame(rawObject, userId);
+                    _saveRawObjectAsGame(rawObject, userId);
                 },
                 function (error) {
                     throw error;  // TODO: propagate to controller
@@ -128,7 +130,28 @@ function games($q, account) {
         });
     }
 
-    function _saveGame(rawObject, opponentUserId) {
+    function saveCurrentGameAttributes(attributes) {
+
+        return $q(function (resolve, reject) {
+
+            self._currentGame.save(attributes, {
+                success: function (vendorGame) {
+                    console.log("POST game :" + vendorGame.id);
+                    self._currentGame(vendorGame);
+
+                    self.updateEvent.notify();
+                    resolve();
+                },
+                error: function (game, error) {
+                    console.log('failed game save', gameData);
+                    console.log("Error", error);
+                    reject();
+                }
+            });
+        });
+    }
+
+    function _saveRawObjectAsGame(rawObject, opponentUserId) {
         var Game = Parse.Object.extend("Game");
         var game = new Game();
 

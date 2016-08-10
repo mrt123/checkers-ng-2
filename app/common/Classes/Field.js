@@ -4,11 +4,11 @@ angular
 
 function Field() {
     class Field {
-        constructor(number, rowNumber, columnNumber) {
+        constructor(number) {
             this.number = number;
-            this.rowNumber = rowNumber;
-            this.columnNumber = columnNumber;
-            this.color = this._determineColor(rowNumber, number);
+            this.rowNumber = this._getRowNumber(number);
+            this.columnNumber = this._getColumnNumber(number);
+            this.color = this._determineColor(number);
             this.pin = undefined;
         }
 
@@ -40,13 +40,27 @@ function Field() {
             return (oddRow && oddNumber ) || (eveRow && evenNumber);
         }
 
-        _determineColor(rowNo, fieldNo) {
-            if (this._isColorWhite(rowNo, fieldNo)) {
+        _determineColor(fieldNo) {
+            if (this._isColorWhite(this.rowNumber, fieldNo)) {
                 return 'white';
             }
             else {
                 return 'black';
             }
+        }
+
+        _getRowNumber(fieldNumber) {
+            return Math.ceil(fieldNumber / 8);
+        }
+
+        _getColumnNumber(fieldNumber) {
+            var rowNumber = this._getRowNumber(fieldNumber);
+            return fieldNumber - ( (rowNumber - 1) * 8);
+        }
+
+        _fromJSON(json) {
+            var obj = JSON.parse(json);
+            return Object.assign(new Field(obj.number), obj);
         }
     }
     return Field;

@@ -7,17 +7,22 @@ function RenderedBoard(Board, RenderedField) {
     class RenderedBoard extends Board {
         constructor() {
             super();
-            this.fields = this._getRenderedFields();
         }
 
-        _getRenderedFields() {
-            var renderedFields = [];
-            var fields = this.fields;
-            for (var i = 0; i < fields.length; i++) {
-                var field = fields[i];
-                renderedFields.push(new RenderedField(field));
+        init() {
+            this.fields = this.generateFields();
+            this.fields = this._getRenderedFields();
+            this._insertPins();  // should be compatible with RenderedFields
+            return this;
+        }
+
+        _getRenderedFields() { // TODO: this has near identical impl with Field
+            var fields = [];
+
+            for (var fieldNumber = 1; fieldNumber <= 64; fieldNumber++) {
+                fields.push(new RenderedField(fieldNumber));
             }
-            return renderedFields;
+            return fields;
         }
 
         getRenderedFieldAtXY(x, y) {

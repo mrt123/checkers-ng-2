@@ -6,9 +6,18 @@ angular
 function Board(Field, Pin) {
 
     var Board = function () {
-        this.fields = this.generateFields();
+        this.fields = [];
         this.pins = [];
-        this._insertPins();  
+    };
+
+    Board.prototype.init = function () {
+        this.fields = this.generateFields();
+        this._insertPins();
+        return this;
+    };
+
+    Board.prototype.initFromJSON = function () {
+        // TODO:
     };
 
     /**
@@ -19,13 +28,11 @@ function Board(Field, Pin) {
         var fields = [];
 
         for (var fieldNumber = 1; fieldNumber <= 64; fieldNumber++) {  // iterate to produce 64 squares
-            var rowNumber = Math.ceil(fieldNumber / 8);
-            var columnNumber = fieldNumber - ( (rowNumber - 1) * 8);
-            fields.push(new Field(fieldNumber, rowNumber, columnNumber));
+            fields.push(new Field(fieldNumber));
         }
         return fields;
     };
-
+ 
     Board.prototype.movePinToField = function (pin, targetField) {
         var baseField = this.getFieldByPin(pin);
         baseField.removePin();
@@ -85,8 +92,8 @@ function Board(Field, Pin) {
         }.bind(this));
     };
 
-    Board.prototype._addPinToField = function (field, color, id) {
-        var pin = new Pin(color, id);
+    Board.prototype._addPinToField = function (field, color, pinId) {
+        var pin = new Pin(color, pinId);
         field.setPin(pin);
         this.pins.push(pin);
     };
@@ -95,6 +102,11 @@ function Board(Field, Pin) {
         return this.fields.filter(function (field) {  
             return field.getColor() === color;
         });
+    };
+
+    Board.prototype._fromJSON = function(json) {
+        var obj = JSON.parse(json);
+        return Object.assign(new Board(obj.number), obj);
     };
 
     return Board;

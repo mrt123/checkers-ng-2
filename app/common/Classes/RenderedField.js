@@ -5,9 +5,8 @@ angular
 function RenderedField(Field) {
 
     class RenderedField extends Field {
-        constructor(field, edgePixelSize) {
-            super(field.number, field.rowNumber, field.columnNumber);
-            this.pin = field.pin;
+        constructor(number, edgePixelSize) {
+            super(number);
             this.center = this._getCenterCoordinates(this);
         }
         _getCenterCoordinates(field) {

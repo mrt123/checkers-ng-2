@@ -12,6 +12,7 @@ function ChBoard() {
         scope: {
             gameMaster: '=',
             board: '=',
+            boardChangeEvent: '=',
             playerColor: '='
         },
         templateUrl: 'common/ch-board/ch-board.html'
@@ -22,7 +23,7 @@ function link($scope, element, attrs) {
 
 }
 
-function ChBoardCtrl(RenderedField) {
+function ChBoardCtrl() {
 
     this.fields = this.board.fields;
     this.pins = _getScopePins(this.board.fields);  
@@ -68,7 +69,7 @@ function ChBoardCtrl(RenderedField) {
 
         if (targetField !== null) {
             if (this.gameMaster.isMoveLegal(this.playerColor, originField, targetField)) {
-                _dropPinOnField(pin, targetField);
+                _dropPinOnField(pin, targetField, this.boardChangeEvent);
                 this.gameMaster.makeMove(this.playerColor, originField.pin, targetField)
             }
             else {
@@ -81,10 +82,11 @@ function ChBoardCtrl(RenderedField) {
         _removeHighlight(this, this.activeSquare);
     }
     
-    function _dropPinOnField(pin, field) {
+    function _dropPinOnField(pin, field, eventToNotify) { 
         var x = field.center.x - 30;
         var y = field.center.y - 30;
         pin.api.leaveAt(x, y);
+        eventToNotify.notify();
     }
 
     function _getScopePin(pin, bitmapField) {

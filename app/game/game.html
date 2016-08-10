@@ -3,7 +3,12 @@
     
     
     <div ng-if="board">
-        <ch-board board="board" game-master="gameMaster" player-color="playerColor"></ch-board>
+        <ch-board 
+            board="board" 
+            game-master="gameMaster"  
+            board-change-event="boardChangeEvent" 
+            player-color="playerColor">
+        </ch-board>
     </div>
     
 </div>

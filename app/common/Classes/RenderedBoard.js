@@ -20,6 +20,17 @@ function RenderedBoard(Board, RenderedField) {
             return fields;
         }
 
+        _generateFieldsFromObjects(objectsArray) {
+            var fields = [];
+
+            for (var i = 0; i < objectsArray.length; i++) {
+                var json = objectsArray[i];
+                var field = RenderedField._fromObject(json);
+                fields.push(field);
+            }
+            return fields;
+        }
+
         getRenderedFieldAtXY(x, y) {
             var snapThreshold = 25;
 

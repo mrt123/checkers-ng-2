@@ -9,6 +9,7 @@ function RenderedField(Field) {
             super(number);
             this.center = this._getCenterCoordinates(this);
         }
+        
         _getCenterCoordinates(field) {
             return {
                 x : field.columnNumber * 60 - 30,

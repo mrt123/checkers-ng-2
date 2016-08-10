@@ -58,9 +58,8 @@ function Field() {
             return fieldNumber - ( (rowNumber - 1) * 8);
         }
 
-        static _fromJSON(json) {
-            var obj = JSON.parse(json);
-            return Object.assign(new Field(obj.number), obj);
+        static _fromObject(obj) {
+            return Object.assign(new this(obj.number), obj);
         }
     }
     return Field;

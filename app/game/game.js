@@ -4,7 +4,7 @@ angular
 
 function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard, $timeout) {
 
-    var board = new RenderedBoard().init();
+    var board = new RenderedBoard().init();  // TODO: move init to createGame
     var gameMaster = new GameMaster(board);
     var gameData = undefined;
 
@@ -26,10 +26,10 @@ function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard,
         $scope.boardChangeEvent.promise.then(undefined, undefined, saveGameData);
     }
 
-    function setGameData(game) { console.log(game);
-        window.gameData = game;
-        gameData = game;
+    function setGameData(gameData) { console.log(gameData);
+        window.gameData = gameData;
         //board.fields = game.fields;
+        board.populateFieldsFromObjects(gameData.fields);
         $timeout(function () { 
             //$scope.board = board;  console.log($scope.board);
         });

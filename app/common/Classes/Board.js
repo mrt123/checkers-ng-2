@@ -14,8 +14,8 @@ function Board(Field, Pin) {
         return this;
     };
 
-    Board.prototype.initFromJSON = function () {
-        // TODO:
+    Board.prototype.populateFieldsFromObjects = function(objectsArray) {
+       this.fields =  this._generateFieldsFromObjects(objectsArray);
     };
 
     /**
@@ -25,9 +25,20 @@ function Board(Field, Pin) {
     Board.prototype._generateFields = function () {
         var fields = [];
 
-        for (var fieldNumber = 1; fieldNumber <= 64; fieldNumber++) {  // iterate to produce 64 squares
+        for (var fieldNumber = 1; fieldNumber <= 64; fieldNumber++) {
             var field = new Field(fieldNumber);
             this._addPinToFieldWhenNeeded(field);
+            fields.push(field);
+        }
+        return fields;
+    };
+    
+    Board.prototype._generateFieldsFromObjects = function (objectsArray) {
+        var fields = [];
+
+        for (var i = 0; i < objectsArray.length; i++) {
+            var json = objectsArray[i];
+            var field = Field._fromObject(json);
             fields.push(field);
         }
         return fields;
@@ -92,11 +103,6 @@ function Board(Field, Pin) {
         var pin = new Pin(color, this.pins.length);
         field.setPin(pin);
         this.pins.push(pin);
-    };
-
-    Board.prototype._fromJSON = function(json) {
-        var obj = JSON.parse(json);
-        return Object.assign(new Board(obj.number), obj);
     };
 
     return Board;

@@ -4,8 +4,8 @@ angular
 
 function GameMaster(Board, Pin) {
 
-    var GameMaster = function () {
-        this.board = new Board();
+    var GameMaster = function (board) {
+        this.board = board;
         this.nextPlayerColor = undefined;
     };
 

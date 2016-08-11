@@ -14,8 +14,9 @@ function Board(Field, Pin) {
         return this;
     };
 
-    Board.prototype.populateFieldsFromObjects = function(objectsArray) {
+    Board.prototype.initFromPlainFieldsObjects = function(objectsArray) {
        this.fields =  this._generateFieldsFromObjects(objectsArray);
+        return this;
     };
 
     /**
@@ -38,7 +39,7 @@ function Board(Field, Pin) {
 
         for (var i = 0; i < objectsArray.length; i++) {
             var json = objectsArray[i];
-            var field = Field._fromObject(json);
+            var field = Field.fromPlainObject(json);
             fields.push(field);
         }
         return fields;
@@ -103,6 +104,19 @@ function Board(Field, Pin) {
         var pin = new Pin(color, this.pins.length);
         field.setPin(pin);
         this.pins.push(pin);
+    };
+
+    Board.prototype.toPlainObject = function() {
+        var plainFieldObjects = [];
+
+        for (var i = 0; i < this.fields.length; i++) {
+            var nativeField = this.fields[i];
+            plainFieldObjects.push(nativeField.toPlainObject());
+        }
+        
+        return {
+            fields: plainFieldObjects
+        }
     };
 
     return Board;

@@ -2,7 +2,7 @@ angular
     .module('Field', [])
     .factory('Field', Field);
 
-function Field() {
+function Field(Pin) {
     class Field {
         constructor(number) {
             this.number = number;
@@ -58,8 +58,26 @@ function Field() {
             return fieldNumber - ( (rowNumber - 1) * 8);
         }
 
-        static _fromObject(obj) {
-            return Object.assign(new this(obj.number), obj);
+        static fromPlainObject(obj) {
+            var nativeField = Object.assign(new this(obj.number), obj);
+
+            if (nativeField.pin) {
+                nativeField.pin = Pin.fromPlainObject(nativeField.pin);
+            }
+            return nativeField;
+        }
+
+        toPlainObject() {
+            var plainPinObject = undefined;
+
+            if (this.pin) {
+                plainPinObject = this.pin.toPlainObject();
+            }
+
+            return {
+                number: this.number,
+                pin: plainPinObject
+            }
         }
     }
     return Field;

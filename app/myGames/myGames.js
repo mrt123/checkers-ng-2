@@ -25,7 +25,6 @@ function MyGamesCtrl($scope, games, $state) {
     }
     
     function playGame(game) {
-        console.log('play', game);
         $state.go('game', {id: game['objectId']});
     }
 }

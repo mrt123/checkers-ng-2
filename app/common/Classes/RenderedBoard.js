@@ -25,7 +25,7 @@ function RenderedBoard(Board, RenderedField) {
 
             for (var i = 0; i < objectsArray.length; i++) {
                 var json = objectsArray[i];
-                var field = RenderedField._fromObject(json);
+                var field = RenderedField.fromPlainObject(json);
                 fields.push(field);
             }
             return fields;

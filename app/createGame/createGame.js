@@ -3,7 +3,7 @@ angular
     .controller('CreateGameCtrl', CreateGameCtrl);
 
 
-function CreateGameCtrl($scope, games, $state, account) {
+function CreateGameCtrl($scope, games, $state, Board) {
 
     $scope.createGame = createGame;
 
@@ -14,10 +14,14 @@ function CreateGameCtrl($scope, games, $state, account) {
     }
 
     function createGame(invitedPlayerEmail) {
+        var board = new Board().init();
+        var fieldsData = board.toPlainObject().fields;
+        
         games.create({
             p1Email: Parse.User.current().get('username'),
             p2Email: invitedPlayerEmail,
-            status: 'not started'
+            nextPlayerColor: 'black',
+            fields: fieldsData
         }).then(function () {
             $state.go('myGames');
         });

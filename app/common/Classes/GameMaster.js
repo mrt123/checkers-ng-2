@@ -42,8 +42,8 @@ function GameMaster(Board, Pin) {
         }
     };
 
-    GameMaster.prototype.startGame = function (opts) {
-        this.nextPlayerColor = opts.firstPlayerColor;
+    GameMaster.prototype.setNextPlayerColor = function (playerColor) {
+        this.nextPlayerColor = playerColor;
     };
 
 

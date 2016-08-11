@@ -4,66 +4,39 @@ angular
 
 function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard, $timeout) {
 
-    var board = new RenderedBoard().init();  // TODO: move init to createGame
-    var gameMaster = new GameMaster(board);
-    var gameData = undefined;
-
-    window.gameMaster = gameMaster;
-    gameMaster.startGame({
-        firstPlayerColor: 'black'
-    });
-
-    $scope.gameMaster = gameMaster;
-    $scope.board = gameMaster.board;
+    var board;
     $scope.playerColor = 'black';
     $scope.boardChangeEvent = $q.defer();
 
     activate();
 
     function activate() {
-        games.get($stateParams.id).then(setGameData);
-
+        games.get($stateParams.id).then(initGame);
         $scope.boardChangeEvent.promise.then(undefined, undefined, saveGameData);
     }
 
-    function setGameData(gameData) { console.log(gameData);
-        window.gameData = gameData;
-        //board.fields = game.fields;
-        board.populateFieldsFromObjects(gameData.fields);
-        $timeout(function () { 
-            //$scope.board = board;  console.log($scope.board);
-        });
-        
+    function initGame(gameData) {            window.gameData = gameData;
 
+        board = new RenderedBoard().initFromPlainFieldsObjects(gameData.fields);
+        var gameMaster = new GameMaster(board);                         window.gameMaster = gameMaster;
+        gameMaster.setNextPlayerColor(gameData.nextPlayerColor);
+
+        initGameScope(gameMaster);
+    }
+    
+    function initGameScope(gameMaster) {
+        $timeout(function () {
+            $scope.gameMaster = gameMaster;
+            $scope.board = gameMaster.board;
+        });
     }
 
     function saveGameData() {
-        console.log('board move executed', board);
-        
-        var fieldData = getFieldData(board.fields);
-        var status = getGameStatus(gameMaster);
+        var fieldData = board.toPlainObject().fields;
 
         games.saveCurrentGameAttributes({
             fields: fieldData,
-            status: status
+            nextPlayerColor: gameMaster.nextPlayerColor   // TODO: toggling pColor should happen on backend
         });
     }
-
-    function getGameStatus(gameMaster) {
-        var nextPlayer = gameMaster.nextPlayerColor;
-        return nextPlayer + 'turn';
-    }
-
-    function getFieldData(fields) {
-        var fieldData = [];
-        for (var i = 0; i < fields.length; i++) {
-            var field = fields[i];
-            fieldData.push({
-                number: field.number,
-                pin: field.pin
-            });
-        }
-        return fieldData;
-    }
-
 }

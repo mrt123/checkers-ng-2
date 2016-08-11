@@ -84,6 +84,6 @@ setTimeout(function () {
 
         newDiv.appendTo($(el).find('.matrix'));
     }
-}, 1);
+}, 2000);
 
 // TODO: hold debug state in local storage

@@ -5,7 +5,7 @@
     "homepage": "https://github.com/mrt123/checkers",
     "private": true,
     "dependencies": {
-        "angularjs": "*",
+        "angular": "*",
         "font-awesome": "*",
         "jquery": "*",
         "less": "*",

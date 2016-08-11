@@ -44,7 +44,6 @@ function GameMaster(Board, Pin, BoardMove) {
         }
 
         setActivePlayerColor(playerColor) {
-            console.log(111, playerColor)
             this.activePlayerColor = playerColor;
         }
 

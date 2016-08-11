@@ -18,6 +18,7 @@ gulp.task('serve', [], function () {
 
     devServer.init({
         port: 3000,
+        ghostMode: false,
         server: {
             baseDir: project.BUILD_PATH,
             middleware: [proxy(urlObj)]   // TODO: use routes: option instead

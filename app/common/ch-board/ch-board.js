@@ -12,6 +12,7 @@ function ChBoard() {
         scope: {
             gameMaster: '=',
             board: '=',
+            flipBoard: '=',
             boardChangeEvent: '=',
             playerColor: '='
         },
@@ -24,7 +25,8 @@ function link($scope, element, attrs) {
 }
 
 function ChBoardCtrl() {
-
+    
+    this.flipClass = this.flipBoard ? 'flip' : '';  
     this.fields = this.board.fields;
     this.pins = _getScopePins(this.board.fields);  
     this.onPinHover = onPinHover;
@@ -89,12 +91,12 @@ function ChBoardCtrl() {
         eventToNotify.notify();
     }
 
-    function _getScopePin(pin, bitmapField) {
+    function _getScopePin(pin, renderedField) {
         return {
             color: pin.color,
             id: pin.id,
-            top: bitmapField.center.y,
-            left: bitmapField.center.x
+            top: renderedField.center.y,
+            left: renderedField.center.x
         }
     }
 

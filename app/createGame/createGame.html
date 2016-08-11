@@ -2,6 +2,11 @@
     <h1>new game</h1>
     <form class="createGameForm">
         <input type="text" placeholder="enter opponent email" ng-model="invitedPlayerEmail">
-        <input class="createGame" type="submit" value="create" ng-click="createGame(invitedPlayerEmail)">
+        <label for="playerColor">select color: </label>
+        <select id="playerColor" ng-model="playerColor">
+            <option value="white">white</option>
+            <option value="black">black</option>
+        </select>
+        <input class="createGame" type="submit" value="create" ng-click="createGame(invitedPlayerEmail, playerColor)">
     </form>
 </div>

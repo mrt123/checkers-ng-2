@@ -10,6 +10,7 @@ angular.module('ch-pin', []).
                 // & create a delegate function
                 // for @var remember to use hyphen based notation on bound attributes.
 
+                isBoardFlipped: '=',
                 initCssTop: '=',
                 initCssLeft: '=',
                 id: '@',
@@ -54,12 +55,19 @@ angular.module('ch-pin', []).
                     element.addClass('active');
                 }
 
-                function mouseMove(event) {
+                function mouseMove(event, flip) {
                     // update css values to match relative to container.
                     var differenceX = event.pageX - markX;
                     var differenceY = event.pageY - markY;
-                    newX = startX + differenceX;
-                    newY = startY + differenceY;
+                    if(scope.isBoardFlipped) {
+                        newX = startX - differenceX;
+                        newY = startY - differenceY;
+                    }
+                    else {
+                        newX = startX + differenceX;
+                        newY = startY + differenceY;
+                    }
+
                     moveToXY(element, newX, newY);
 
                     scope.reportDrag({  // reports centered coordinates!

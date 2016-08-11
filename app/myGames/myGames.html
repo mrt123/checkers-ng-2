@@ -24,7 +24,7 @@
                         <span ng-if="game.p2">{{game.p2.playerName}}</span>
                     </td>
                     <td>
-                        <span class="status">{{game.status}}</span>
+                        <span class="status">{{game.activePlayerColor}} is next</span>
                     </td>
                     <td class="action">
                         <a title="play" ng-click="playGame(game)"><i class="playIcon"></i></a>
@@ -55,7 +55,7 @@
                         <span ng-if="game.p2">{{game.p2.playerName}}</span>
                     </td>
                     <td>
-                        <span class="status">{{game.status}}</span>
+                        <span class="status">{{game.activePlayerColor}} is next</span>
                     </td>
                     <td class="action">
                         <a title="play" ng-click="playGame(game)"><i class="playIcon"></i></a>

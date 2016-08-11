@@ -2,10 +2,10 @@ angular
     .module('app.GameCtrl', [])
     .controller('GameCtrl', MyGamesCtrl);
 
-function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard, $timeout) {
+function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard, $timeout, account) {
 
     var board;
-    $scope.playerColor = 'black';
+
     $scope.boardChangeEvent = $q.defer();
 
     activate();
@@ -19,15 +19,16 @@ function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard,
 
         board = new RenderedBoard().initFromPlainFieldsObjects(gameData.fields);
         var gameMaster = new GameMaster(board);                         window.gameMaster = gameMaster;
-        gameMaster.setNextPlayerColor(gameData.nextPlayerColor);
+        gameMaster.setActivePlayerColor(gameData.activePlayerColor);
 
-        initGameScope(gameMaster);
+        initGameScope(gameMaster, gameData);
     }
     
-    function initGameScope(gameMaster) {
+    function initGameScope(gameMaster, gameData) {
         $timeout(function () {
             $scope.gameMaster = gameMaster;
             $scope.board = gameMaster.board;
+            $scope.isBoardFlipped = !isPlayer1(account, gameData);
         });
     }
 
@@ -36,7 +37,11 @@ function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard,
 
         games.saveCurrentGameAttributes({
             fields: fieldData,
-            nextPlayerColor: gameMaster.nextPlayerColor   // TODO: toggling pColor should happen on backend
+            activePlayerColor: gameMaster.getNextPlayerColor()   // TODO: toggling pColor should happen on backend
         });
+    }
+
+    function isPlayer1(account, gameData) {
+        return (account.user.email === gameData.p1Email);
     }
 }

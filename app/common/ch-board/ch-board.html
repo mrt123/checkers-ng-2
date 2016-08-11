@@ -1,6 +1,6 @@
 <div class="ch-board">
 
-    <div class="frame">
+    <div class="frame {{vm.flipClass}}">
         <div class="fields">
             <div ng-repeat="field in vm.fields">
                 <ch-square
@@ -16,6 +16,7 @@
             <ch-pin ng-repeat="pin in vm.pins"
                     ng-class="pin.color"
 
+                    is-board-flipped="vm.flipBoard"
                     color="{{pin.color}}"
                     initcsstop="{{pin.top}}"
                     initcssleft="{{pin.left}}"

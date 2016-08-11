@@ -26,12 +26,12 @@ function games($q, account) {
             var allMyGamesQuery = constructGetAlQuery();
             allMyGamesQuery.find({
                 success: function (results) {
-                    console.log("GET games: " + results.length);
-                    var json = convertArrayToJson(results);
-                    setInvitedFromAll(json);
-                    setCreatedFromAll(json);
+                    console.log("GET games: ", results.length);
+                    var allGamesJSON = convertArrayToJson(results);
+                    setInvitedGames(allGamesJSON);
+                    setCreatedGames(allGamesJSON);
                     self.updateEvent.notify();
-                    resolve(json);
+                    resolve(allGamesJSON);
                 },
                 error: function (error) {
                     console.log("Error: " + error.message);
@@ -81,7 +81,7 @@ function games($q, account) {
         });
     }
 
-    function setCreatedFromAll(allGames) {
+    function setCreatedGames(allGames) {
         self.created = getCreatedFromAll(allGames);
     }
 
@@ -91,7 +91,7 @@ function games($q, account) {
         });
     }
 
-    function setInvitedFromAll(formattedResults) {
+    function setInvitedGames(formattedResults) {
         self.invitedTo = getInvitationsFromAll(formattedResults);
     }
 
@@ -99,13 +99,13 @@ function games($q, account) {
     function constructGetAlQuery() {
         var Game = Parse.Object.extend("Game");
 
-        var gamesICreatedQuery = new Parse.Query(Game);
-        gamesICreatedQuery.equalTo("p1Email", Parse.User.current().get('username'));
+        var gamesCreatedByMeQuery = new Parse.Query(Game);
+        gamesCreatedByMeQuery.equalTo("p1Email", account.user.email);
 
         var gamesImInvitedToQuery = new Parse.Query(Game);
-        gamesImInvitedToQuery.equalTo("p2Email", Parse.User.current().get('username'));
+        gamesImInvitedToQuery.equalTo("p2Email", account.user.email);
 
-        var mainQuery = Parse.Query.or(gamesICreatedQuery, gamesImInvitedToQuery);
+        var mainQuery = Parse.Query.or(gamesCreatedByMeQuery, gamesImInvitedToQuery);
         return mainQuery;
     }
 

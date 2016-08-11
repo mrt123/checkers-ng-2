@@ -2,7 +2,7 @@ angular
     .module('GameMaster', [])
     .factory('GameMaster', GameMaster);
 
-function GameMaster(Board, Pin) {
+function GameMaster(Board, Pin, BoardMove) {
 
     class GameMaster {
         constructor(board) {
@@ -34,36 +34,6 @@ function GameMaster(Board, Pin) {
                 return false;
             }
         }
-        
-        //getRowCountToTargetField(startField, targetField) {
-        //    var startRow = startField.rowNumber;
-        //    var targetRow = targetField.rowNumber;
-        //    
-        //    if(this.activePlayerColor ==='black') {
-        //        return startRow - targetRow;
-        //    }
-        //    else {
-        //        return targetRow - startRow;
-        //    }
-        //}
-        //
-        //getColumnDiff(startField, targetField) {
-        //    return startField.columnNumber - targetField.columnNumber; 
-        //}
-        //
-        //is1stepForwardMove(startField, targetField) {
-        //    
-        //    // TODO: include player check 
-        //    return getRowCountToTargetField(startField, targetField) === 1;
-        //}
-        //
-        //isDiagonalMove(startField, targetField) {
-        //    
-        //}
-        //
-        //is1stepDiagonalMove(startField, targetField) {
-        //    
-        //}
 
         makeMove(playerColor, pin, targetField) {
             var baseField = this.board.getFieldByPin(pin);

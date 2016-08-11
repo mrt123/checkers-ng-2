@@ -28,8 +28,18 @@ function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard,
         $timeout(function () {
             $scope.gameMaster = gameMaster;
             $scope.board = gameMaster.board;
+            $scope.playerColor = getPlayerColor(account, gameData);  // required to decide if move is legal 
             $scope.isBoardFlipped = !isPlayer1(account, gameData);
         });
+    }
+
+    function getPlayerColor(account, gameData) {
+        if(isPlayer1(account, gameData)) {
+            return gameData.p1Color;
+        }
+        else {
+            return gameData.p2Color;
+        }
     }
 
     function saveGameData() {

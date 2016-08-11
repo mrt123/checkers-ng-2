@@ -25,7 +25,6 @@ function link($scope, element, attrs) {
 }
 
 function ChBoardCtrl() {
-    
     this.flipClass = this.flipBoard ? 'flip' : '';  
     this.fields = this.board.fields;
     this.pins = _getScopePins(this.board.fields);  

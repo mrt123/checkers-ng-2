@@ -47,7 +47,7 @@ function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard,
 
         games.saveCurrentGameAttributes({
             fields: fieldData,
-            activePlayerColor: gameMaster.getNextPlayerColor()   // TODO: toggling pColor should happen on backend
+            activePlayerColor: gameMaster.activePlayerColor   // TODO: toggling pColor should happen on backend
         });
     }
 

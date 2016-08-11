@@ -18,13 +18,24 @@ function GameMaster(Board, Pin) {
             return pin.color === playerColor;
         }
 
-        isMoveLegal(playerColor, startField, targetField) {
+        isMoveLegal(startField, targetField) {
+            
             if (startField.hasPin()) {
-                var pinBelongsToPlayer = this.isPinBelongsToPlayer(startField.pin, playerColor);
-                var isPlayerTurn = this.isPlayerTurn(playerColor);
-                var isForwardMove = this.board.isForwardField(startField, targetField);
+                var pinBelongsToPlayer = this.isPinBelongsToPlayer(startField.pin, this.playerColor);
+                var isPlayerTurn = this.isPlayerTurn(this.playerColor);
+                var isForwardMove = this.board.isForwardField(startField, targetField, this.activePlayerColor);
                 var isDiagonalDiagonalMove = this.board.isDiagonalField(startField, targetField);
+                
+                //console.log('pinBelongsToPlayer', pinBelongsToPlayer);
+                //console.log('isPlayerTurn', isPlayerTurn);
 
+                
+                if(targetField.isEmpty()) {
+                    //console.log('targetField.isEmpty()', targetField.isEmpty());
+                    console.log('isForwardMove',isForwardMove );
+                    console.log('isDiagonalDiagonalMove', isDiagonalDiagonalMove);
+                }
+                
                 return pinBelongsToPlayer && isPlayerTurn && isForwardMove && isDiagonalDiagonalMove
                     && targetField.isEmpty();
             }
@@ -36,18 +47,18 @@ function GameMaster(Board, Pin) {
 
         makeMove(playerColor, pin, targetField) {
             var baseField = this.board.getFieldByPin(pin);
-            if (this.isMoveLegal(playerColor, baseField, targetField)) {
+            if (this.isMoveLegal(baseField, targetField)) {
                 this.board.movePinToField(pin, targetField);
                 this.activePlayerColor = this.getNextPlayerColor(playerColor);
             }
         }
 
-        setActivePlayerColor(playerColor) {
+        setActivePlayerColor(playerColor) { console.log(111, playerColor)
             this.activePlayerColor = playerColor;
         }
 
-        static getNextPlayerColor(playerColor) {
-            return 'black' ? 'white' : 'black';
+        getNextPlayerColor(playerColor) {
+            return playerColor  === 'black' ? 'white' : 'black';
         }
     }
     

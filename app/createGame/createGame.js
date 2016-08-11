@@ -23,11 +23,15 @@ function CreateGameCtrl($scope, games, $state, Board, Player, GameMaster, accoun
             p1Email: account.user.email,
             p1Color: playerColor,
             p2Email: invitedPlayerEmail,
-            p2Color: GameMaster.getNextPlayerColor(playerColor),
+            p2Color: getNextPlayerColor(playerColor),
             activePlayerColor: playerColor,
             fields: fieldsData
         }).then(function () {
             $state.go('myGames');
         });
+    }
+
+    function getNextPlayerColor(playerColor) {
+        return playerColor  === 'black' ? 'white' : 'black';
     }
 }

@@ -54,7 +54,7 @@ function ChBoardCtrl() {
         var targetRenderedField = this.board.getRenderedFieldAtXY(destinationX, destinationY);
         
         if (targetRenderedField !== null) {
-            var moveIsLegal = this.gameMaster.isMoveLegal(this.playerColor, originField, targetRenderedField);
+            var moveIsLegal = this.gameMaster.isMoveLegal(originField, targetRenderedField);
 
             if (moveIsLegal) {
                 this.activeSquare = this.fields[targetRenderedField.number - 1];
@@ -69,7 +69,7 @@ function ChBoardCtrl() {
         var targetField = this.board.getRenderedFieldAtXY(destinationX, destinationY);
 
         if (targetField !== null) {
-            if (this.gameMaster.isMoveLegal(this.playerColor, originField, targetField)) {
+            if (this.gameMaster.isMoveLegal(originField, targetField)) {
                 _dropPinOnField(pin, targetField, this.boardChangeEvent);
                 this.gameMaster.makeMove(this.playerColor, originField.pin, targetField)
             }

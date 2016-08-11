@@ -79,7 +79,7 @@ function Board(Field, Pin) {
     };
 
     Board.prototype.isDiagonalField = function (baseField, targetField, playerColor) {
-        var areFieldsInNeighbourColumns = this.areFieldsInNeighbourColumns(baseField, targetField);
+        var areFieldsInNeighbourColumns = this.areFieldsInNeighbourColumns(baseField, targetField, playerColor);
         var isTargetForward = this.isForwardField(baseField, targetField, playerColor);
         return areFieldsInNeighbourColumns && isTargetForward;
     };

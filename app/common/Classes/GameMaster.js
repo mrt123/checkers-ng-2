@@ -14,29 +14,19 @@ function GameMaster(Board, Pin) {
             return playerColor === this.activePlayerColor;
         }
 
-        isPinBelongsToPlayer(pin, playerColor) {
+        pinBelongsToPlayer(pin, playerColor) {
             return pin.color === playerColor;
         }
 
-        isMoveLegal(startField, targetField) {
-            
-            if (startField.hasPin()) {
-                var pinBelongsToPlayer = this.isPinBelongsToPlayer(startField.pin, this.playerColor);
-                var isPlayerTurn = this.isPlayerTurn(this.playerColor);
-                var isForwardMove = this.board.isForwardField(startField, targetField, this.activePlayerColor);
-                var isDiagonalDiagonalMove = this.board.isDiagonalField(startField, targetField);
-                
-                //console.log('pinBelongsToPlayer', pinBelongsToPlayer);
-                //console.log('isPlayerTurn', isPlayerTurn);
+        isMoveLegal(playerColor, startField, targetField) {
 
-                
-                if(targetField.isEmpty()) {
-                    //console.log('targetField.isEmpty()', targetField.isEmpty());
-                    console.log('isForwardMove',isForwardMove );
-                    console.log('isDiagonalDiagonalMove', isDiagonalDiagonalMove);
-                }
-                
-                return pinBelongsToPlayer && isPlayerTurn && isForwardMove && isDiagonalDiagonalMove
+            if (startField.hasPin()) {
+                var pinBelongsToActivePlayer = this.pinBelongsToPlayer(startField.pin, playerColor);
+                var isPlayerTurn = this.isPlayerTurn(playerColor);
+                var isForwardMove = this.board.isForwardField(startField, targetField, playerColor);
+                var isDiagonalMove = this.board.isDiagonalField(startField, targetField, playerColor);
+
+                return pinBelongsToActivePlayer && isPlayerTurn && isForwardMove && isDiagonalMove
                     && targetField.isEmpty();
             }
 
@@ -44,23 +34,54 @@ function GameMaster(Board, Pin) {
                 return false;
             }
         }
+        
+        //getRowCountToTargetField(startField, targetField) {
+        //    var startRow = startField.rowNumber;
+        //    var targetRow = targetField.rowNumber;
+        //    
+        //    if(this.activePlayerColor ==='black') {
+        //        return startRow - targetRow;
+        //    }
+        //    else {
+        //        return targetRow - startRow;
+        //    }
+        //}
+        //
+        //getColumnDiff(startField, targetField) {
+        //    return startField.columnNumber - targetField.columnNumber; 
+        //}
+        //
+        //is1stepForwardMove(startField, targetField) {
+        //    
+        //    // TODO: include player check 
+        //    return getRowCountToTargetField(startField, targetField) === 1;
+        //}
+        //
+        //isDiagonalMove(startField, targetField) {
+        //    
+        //}
+        //
+        //is1stepDiagonalMove(startField, targetField) {
+        //    
+        //}
 
         makeMove(playerColor, pin, targetField) {
             var baseField = this.board.getFieldByPin(pin);
-            if (this.isMoveLegal(baseField, targetField)) {
+            if (this.isMoveLegal(playerColor, baseField, targetField)) {
                 this.board.movePinToField(pin, targetField);
                 this.activePlayerColor = this.getNextPlayerColor(playerColor);
             }
         }
 
-        setActivePlayerColor(playerColor) { console.log(111, playerColor)
+        setActivePlayerColor(playerColor) {
+            console.log(111, playerColor)
             this.activePlayerColor = playerColor;
         }
 
         getNextPlayerColor(playerColor) {
-            return playerColor  === 'black' ? 'white' : 'black';
+            return playerColor === 'black' ? 'white' : 'black';
         }
     }
-    
+
     return GameMaster;
 }

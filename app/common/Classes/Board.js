@@ -121,6 +121,16 @@ function Board(Field, Pin) {
                 fields: plainFieldObjects
             }
         }
+        
+        getFieldAtPosition(rowNumber, columnNumber) {
+            return this.fields.filter(function(field) {
+                return this._isFieldAtPosition(field, rowNumber, columnNumber);
+            }, this)[0];
+        }
+        
+        _isFieldAtPosition(field, rowNumber, columnNumber) {
+            return (field.rowNumber === rowNumber) && (field.columnNumber === columnNumber)
+        }
     }
 
     return Board;

@@ -2,7 +2,7 @@ angular
     .module('GameMaster', [])
     .factory('GameMaster', GameMaster);
 
-function GameMaster(Board, Pin, BoardMove) {
+function GameMaster(Board, Pin, LegalMove) {
 
     class GameMaster {
         constructor(board) {
@@ -18,26 +18,44 @@ function GameMaster(Board, Pin, BoardMove) {
             return pin.color === playerColor;
         }
 
-        isMoveLegal(playerColor, startField, targetField) {
+        isPlayerAllowedToMove(playerColor, startField) {
 
             if (startField.hasPin()) {
                 var pinBelongsToActivePlayer = this.pinBelongsToPlayer(startField.pin, playerColor);
                 var isPlayerTurn = this.isPlayerTurn(playerColor);
-                var isForwardMove = this.board.isForwardField(startField, targetField, playerColor);
-                var isDiagonalMove = this.board.isDiagonalField(startField, targetField, playerColor);
-
-                return pinBelongsToActivePlayer && isPlayerTurn && isForwardMove && isDiagonalMove
-                    && targetField.isEmpty();
+                return pinBelongsToActivePlayer && isPlayerTurn;
             }
-
             else {
                 return false;
             }
         }
 
+        isMoveLegal(playerColor, startField, targetField) {
+
+            var playerAllowedToMove = this.isPlayerAllowedToMove(playerColor, startField);
+
+            var move = new LegalMove(playerColor, startField, targetField, this.board);
+            var isOneSpaceLegalMove = move.isOneSpaceLegal();
+            var isOneSpaceJumpMove = move.isOneSpaceJumpLegal();
+            var moveIsLegal = isOneSpaceLegalMove || isOneSpaceJumpMove;
+            
+            console.log('--------------------------------------------');
+            console.log('playerAllowedToMove', playerAllowedToMove);
+            console.log('isOneSpaceLegalMove', isOneSpaceLegalMove);
+            console.log('isOneSpaceJumpMove', isOneSpaceJumpMove);
+
+            
+            return playerAllowedToMove && moveIsLegal;
+        }
+
         makeMove(playerColor, pin, targetField) {
-            var baseField = this.board.getFieldByPin(pin);
-            if (this.isMoveLegal(playerColor, baseField, targetField)) {
+            var startField = this.board.getFieldByPin(pin);
+
+
+            //var move = new LegalMove(playerColor, startField, targetField, this.board);
+            //debugger;
+
+            if (this.isMoveLegal(playerColor, startField, targetField)) {
                 this.board.movePinToField(pin, targetField);
                 this.activePlayerColor = this.getNextPlayerColor(playerColor);
             }

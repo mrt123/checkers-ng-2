@@ -2,7 +2,7 @@ angular
     .module('GameMaster', [])
     .factory('GameMaster', GameMaster);
 
-function GameMaster(Board, Pin, LegalMove) {
+function GameMaster(Board, Pin, BoardMove, CheckersMove) {
 
     class GameMaster {
         constructor(board) {
@@ -31,29 +31,21 @@ function GameMaster(Board, Pin, LegalMove) {
         }
 
         isMoveLegal(playerColor, startField, targetField) {
-
-            var playerAllowedToMove = this.isPlayerAllowedToMove(playerColor, startField);
-
-            var move = new LegalMove(playerColor, startField, targetField, this.board);
-            var isOneSpaceLegalMove = move.isOneSpaceLegal();
-            var isOneSpaceJumpMove = move.isOneSpaceJumpLegal();
-            var moveIsLegal = isOneSpaceLegalMove || isOneSpaceJumpMove;
             
+            var playerAllowedToMove = this.isPlayerAllowedToMove(playerColor, startField);
             console.log('--------------------------------------------');
             console.log('playerAllowedToMove', playerAllowedToMove);
-            console.log('isOneSpaceLegalMove', isOneSpaceLegalMove);
-            console.log('isOneSpaceJumpMove', isOneSpaceJumpMove);
 
-            
-            return playerAllowedToMove && moveIsLegal;
+            var boardMove = new BoardMove(playerColor, startField, targetField, this.board);
+            return playerAllowedToMove && CheckersMove.isLegal(boardMove);
         }
 
         makeMove(playerColor, pin, targetField) {
             var startField = this.board.getFieldByPin(pin);
 
 
-            //var move = new LegalMove(playerColor, startField, targetField, this.board);
-            //debugger;
+            //var move = new BoardMove(playerColor, startField, targetField, this.board);
+            //CheckersMove.isLegal(boardMove)   debugger;
 
             if (this.isMoveLegal(playerColor, startField, targetField)) {
                 this.board.movePinToField(pin, targetField);

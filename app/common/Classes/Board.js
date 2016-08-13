@@ -81,28 +81,6 @@ function Board(Field, Pin) {
             })[0];
         }
 
-        isDiagonalField(baseField, targetField, playerColor) {
-            var areFieldsInNeighbourColumns = this.areFieldsInNeighbourColumns(baseField, targetField, playerColor);
-            var isTargetForward = this.isForwardField(baseField, targetField, playerColor);
-            return areFieldsInNeighbourColumns && isTargetForward;
-        }
-
-        areFieldsInNeighbourColumns(field1, field2) {
-            var columnDiff = Math.abs(field1.columnNumber - field2.columnNumber);
-            return columnDiff === 1;
-        }
-
-        isForwardField(baseField, targetField, playerColor) {
-            var diffToNewRow = targetField.rowNumber - baseField.rowNumber;
-
-            if (playerColor === 'white') {
-                return diffToNewRow === 1;
-            }
-            else {
-                return diffToNewRow === -1;
-            }
-        }
-
         _addPinToField(field, color) {
             var pin = new Pin(color, this.pins.length);
             field.setPin(pin);

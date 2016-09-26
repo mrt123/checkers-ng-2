@@ -46,19 +46,32 @@ function games($q, account) {
         var gameQuery = new Parse.Query(self._Game);
         gameQuery.equalTo("objectId", id);
         
-        return $q(function (resolve, reject) {
-            gameQuery.first({
-                success: function (result) {
-                    self._currentGame = result;
-                    resolve(result.toJSON());
-                },
-                error: function (error) {
-                    console.log("Error: " + error.message);
-                    reject(error);
-                }
-            });
+        var deferred = $q.defer();
+        
+        gameQuery.first({
+            success: function (result) {
+                self._currentGame = result;
+                deferred.resolve(result.toJSON());
+            },
+            error: function (error) {
+                console.log("Error: " + error.message);
+                deferred.reject(error);
+            }
         });
 
+
+        subscribeToQuery(gameQuery, deferred);
+        
+        return deferred.promise;
+    }
+    
+    function subscribeToQuery(query, deferred) {
+        
+        let subscription = query.subscribe();
+        subscription.on('update', (object) => {
+            console.log('object updated');
+            deferred.notify();
+        });
     }
 
     function create(rawObject) {   // TODO : use userID in compound query to create Game

@@ -11,8 +11,11 @@ function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard,
     activate();
 
     function activate() {
-        games.get($stateParams.id).then(initGame);
+        var gamePromise = games.get($stateParams.id).then(initGame);
         $scope.boardChangeEvent.promise.then(undefined, undefined, saveGameData);
+        
+        // need to subscribe to update events on this game here or in games
+        
     }
 
     function initGame(gameData) {            window.gameData = gameData;

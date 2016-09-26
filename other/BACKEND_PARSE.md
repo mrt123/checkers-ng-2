@@ -35,3 +35,8 @@ You should get a response similar to this:
 Test JavaScript: [using-parse-sdks-with-parse-server](https://github.com/ParsePlatform/parse-server/wiki/Parse-Server-Guide#using-parse-sdks-with-parse-server)
 JavaScript SDK GUIDE: https://parse.com/docs/js/guide#users
 JavaScript SDK API: https://parse.com/docs/js/api/classes/Parse.User.html
+##### LiveQuery
+[Setup LiveQuery for Server and Client](https://github.com/ParsePlatform/parse-server/wiki/Parse-LiveQuery)
+[LiveQuery guide to client](http://parseplatform.github.io/docs/js/guide/#live-queries)
+
+

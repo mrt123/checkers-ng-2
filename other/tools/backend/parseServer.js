@@ -19,7 +19,7 @@ app.post('/parse/classes/Game', function (req, res, next) {
     next(); // pass control to the next handler
 });
 
-let httpServer = require('http').createServer(app);
+var httpServer = require('http').createServer(app);
 httpServer.listen(1337, function () {
     console.log('parse-server-example running on port 1337.');
 });

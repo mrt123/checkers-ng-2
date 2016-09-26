@@ -11,15 +11,12 @@ function MyGamesCtrl($q, $scope, games, $stateParams, GameMaster, RenderedBoard,
     activate();
 
     function activate() {
-        var gamePromise = games.get($stateParams.id).then(initGame);
+        games.get($stateParams.id).then(undefined, undefined, initGame); // todo replace initGame on update with updateGame
         $scope.boardChangeEvent.promise.then(undefined, undefined, saveGameData);
-        
-        // need to subscribe to update events on this game here or in games
-        
     }
 
     function initGame(gameData) {            window.gameData = gameData;
-
+        console.log('initGame');
         board = new RenderedBoard().initFromPlainFieldsObjects(gameData.fields);
         var gameMaster = new GameMaster(board);                         window.gameMaster = gameMaster;
         gameMaster.setActivePlayerColor(gameData.activePlayerColor);

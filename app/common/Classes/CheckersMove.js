@@ -25,8 +25,8 @@ function CheckersMove() {
         static isLegal(boardMove) {
             var isOneSpaceLegalMove = CheckersMove._isOneSpaceLegal(boardMove);
             var isOneSpaceJumpMove = CheckersMove._isOneSpaceJumpLegal(boardMove);
-            console.log('isOneSpaceLegalMove', isOneSpaceLegalMove);
-            console.log('isOneSpaceJumpMove', isOneSpaceJumpMove);
+            //console.log('isOneSpaceLegalMove', isOneSpaceLegalMove);
+            //console.log('isOneSpaceJumpMove', isOneSpaceJumpMove);
             return isOneSpaceLegalMove || isOneSpaceJumpMove;
         }
 

@@ -51,7 +51,7 @@ function games($q, account) {
         gameQuery.first({
             success: function (result) {
                 self._currentGame = result;
-                deferred.resolve(result.toJSON());
+                deferred.notify(result.toJSON());
             },
             error: function (error) {
                 console.log("Error: " + error.message);
@@ -67,10 +67,10 @@ function games($q, account) {
     
     function subscribeToQuery(query, deferred) {
         
-        let subscription = query.subscribe();
+        var subscription = query.subscribe();
         subscription.on('update', (object) => {
-            console.log('object updated');
-            deferred.notify();
+            console.log('remote update received', object.toJSON());
+            deferred.notify(object.toJSON());
         });
     }
 
@@ -168,10 +168,11 @@ function games($q, account) {
         var Game = Parse.Object.extend("Game");
         var game = new Game();
 
-        var acl = new Parse.ACL(Parse.User.current());
-        acl.setReadAccess(opponentUserId, true);
-        acl.setWriteAccess(opponentUserId, true);
-        game.setACL(acl);
+        // TODO: bring back ACL , when subscribe is figured out
+        //var acl = new Parse.ACL(Parse.User.current());
+        //acl.setReadAccess(opponentUserId, true);
+        //acl.setWriteAccess(opponentUserId, true);
+        //game.setACL(acl);
 
         return $q(function (resolve, reject) {
             game.save(rawObject, {

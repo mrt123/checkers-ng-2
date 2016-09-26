@@ -15,6 +15,9 @@ function GameMaster(Board, Pin, BoardMove, CheckersMove) {
         }
 
         pinBelongsToPlayer(pin, playerColor) {
+            
+            //console.log('pin.color', pin.color);
+            //console.log('playerColor', playerColor);
             return pin.color === playerColor;
         }
 
@@ -33,8 +36,8 @@ function GameMaster(Board, Pin, BoardMove, CheckersMove) {
         isMoveLegal(playerColor, startField, targetField) {
             
             var playerAllowedToMove = this.isPlayerAllowedToMove(playerColor, startField);
-            console.log('--------------------------------------------');
-            console.log('playerAllowedToMove', playerAllowedToMove);
+            //console.log('--------------------------------------------');
+            //console.log('playerAllowedToMove', playerAllowedToMove);
 
             var boardMove = new BoardMove(playerColor, startField, targetField, this.board);
             return playerAllowedToMove && CheckersMove.isLegal(boardMove);
